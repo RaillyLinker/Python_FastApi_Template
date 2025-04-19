@@ -1,15 +1,15 @@
-from fastapi.openapi.utils import get_openapi
-from fastapi import FastAPI
+import fastapi
+import fastapi.openapi.utils as openapi_utils
 
 
 class SwaggerConf:
     @staticmethod
-    def custom_openapi(app: FastAPI):
+    def custom_openapi(app: fastapi.FastAPI):
         if app.openapi_schema:
             return app.openapi_schema
 
         openapi_schema = (
-            get_openapi(
+            openapi_utils.get_openapi(
                 title="SAMPLE-API",
                 description="API 명세입니다.",
                 version="1.0.0",
