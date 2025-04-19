@@ -1,4 +1,11 @@
+import uuid
+import time
+
+
 class AppConf:
+    # 서버 고유값 (런타임 시에 고정되도록 생성)
+    server_uuid = f"{int(time.time() * 1000)}/{uuid.uuid4()}"
+
     # controllers 폴더 위치(main.py 기중)
     controllers_package_name = "controllers"
 
