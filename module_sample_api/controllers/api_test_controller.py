@@ -186,4 +186,31 @@ def get_request_test(
         query_param_string_list_nullable
     )
 
+
+# ----
+class GetRequestTestWithPathParamOutputVo(pydantic.BaseModel):
+    path_param_int: int = pydantic.Field(
+        ...,
+        alias="pathParamInt",
+        description="입력한 Int Path 파라미터",
+        examples=[1]
+    )
+
+
+@router.get(
+    "/get-request/{pathParamInt}",
+    response_model=GetRequestTestWithPathParamOutputVo,
+    summary="Get 요청 테스트 (Path Parameter)",
+    description="Path Parameter 를 받는 Get 메소드 요청 테스트",
+)
+def get_request_test_with_path_param(
+        path_param_int: int = fastapi.Path(
+            ...,
+            alias="pathParamInt",
+            description="Int Path 파라미터",
+            example=1
+        )
+):
+    return service.get_request_test_with_path_param(path_param_int)
+
 # ----

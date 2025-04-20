@@ -32,4 +32,15 @@ def get_request_test(
         ).model_dump()
     )
 
+
+# ----
+# (Get 요청 테스트 (Path Parameter))
+def get_request_test_with_path_param(path_param_int):
+    return fastapi.responses.JSONResponse(
+        status_code=200,
+        content=controller.GetRequestTestWithPathParamOutputVo(
+            pathParamInt=path_param_int
+        ).model_dump()
+    )
+
 # ----
