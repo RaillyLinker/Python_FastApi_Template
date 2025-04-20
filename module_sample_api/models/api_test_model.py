@@ -2,6 +2,7 @@ import typing
 import pydantic
 
 
+# [그룹 모델]
 # (Get 요청 테스트 (Query Parameter))
 class GetRequestTestOutputVo(pydantic.BaseModel):
     query_param_string: str = (

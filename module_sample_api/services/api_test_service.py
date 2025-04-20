@@ -3,6 +3,7 @@ import fastapi
 import typing
 
 
+# [그룹 서비스]
 # (Get 요청 테스트 (Query Parameter))
 def get_request_test(
         query_param_string: str,

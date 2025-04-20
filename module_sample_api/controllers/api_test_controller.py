@@ -1,9 +1,9 @@
 import fastapi
 import typing
-import pydantic
 import module_sample_api.services.api_test_service as service
 import module_sample_api.models.api_test_model as model
 
+# [그룹 컨트롤러]
 # Router 설정
 router = fastapi.APIRouter(
     prefix="/api-test",  # 전체 경로 앞에 붙는 prefix
