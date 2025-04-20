@@ -1,4 +1,4 @@
-import module_sample_api.controllers.api_test_controller as controller
+import module_sample_api.models.api_test_model as model
 import fastapi
 import typing
 
@@ -18,29 +18,51 @@ def get_request_test(
 ):
     return fastapi.responses.JSONResponse(
         status_code=200,
-        content=controller.GetRequestTestOutputVo(
-            queryParamString=query_param_string,
-            queryParamStringNullable=query_param_string_nullable,
-            queryParamInt=query_param_int,
-            queryParamIntNullable=query_param_int_nullable,
-            queryParamDouble=query_param_double,
-            queryParamDoubleNullable=query_param_double_nullable,
-            queryParamBoolean=query_param_boolean,
-            queryParamBooleanNullable=query_param_boolean_nullable,
-            queryParamStringList=query_param_string_list,
-            queryParamStringListNullable=query_param_string_list_nullable
+        content=model.GetRequestTestOutputVo(
+            query_param_string=query_param_string,
+            query_param_string_nullable=query_param_string_nullable,
+            query_param_int=query_param_int,
+            query_param_int_nullable=query_param_int_nullable,
+            query_param_double=query_param_double,
+            query_param_double_nullable=query_param_double_nullable,
+            query_param_boolean=query_param_boolean,
+            query_param_boolean_nullable=query_param_boolean_nullable,
+            query_param_string_list=query_param_string_list,
+            query_param_string_list_nullable=query_param_string_list_nullable
         ).model_dump()
     )
 
 
 # ----
 # (Get 요청 테스트 (Path Parameter))
-def get_request_test_with_path_param(path_param_int):
+def get_request_test_with_path_param(
+        path_param_int: int
+):
     return fastapi.responses.JSONResponse(
         status_code=200,
-        content=controller.GetRequestTestWithPathParamOutputVo(
-            pathParamInt=path_param_int
+        content=model.GetRequestTestWithPathParamOutputVo(
+            path_param_int=path_param_int
         ).model_dump()
     )
 
+
 # ----
+# (Post 요청 테스트 (application-json))
+def post_request_test_with_application_json_type_request_body(
+        request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
+):
+    return fastapi.responses.JSONResponse(
+        status_code=200,
+        content=model.PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(
+            request_body_string=request_body.request_body_string,
+            request_body_string_nullable=request_body.request_body_string_nullable,
+            request_body_int=request_body.request_body_int,
+            request_body_int_nullable=request_body.request_body_int_nullable,
+            request_body_double=request_body.request_body_double,
+            request_body_double_nullable=request_body.request_body_double_nullable,
+            request_body_boolean=request_body.request_body_boolean,
+            request_body_boolean_nullable=request_body.request_body_boolean_nullable,
+            request_body_string_list=request_body.request_body_string_list,
+            request_body_string_list_nullable=request_body.request_body_string_list_nullable
+        ).model_dump()
+    )
