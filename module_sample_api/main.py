@@ -3,8 +3,8 @@ import fastapi
 import importlib
 import pkgutil
 import os
-import configurations.app_conf as app_conf
-import configurations.swagger_conf as swagger_conf
+import module_sample_api.configurations.app_conf as app_conf
+import module_sample_api.configurations.swagger_conf as swagger_conf
 
 # [FastAPI 실행 Main]
 # 현재 파일이 속한 디렉토리 경로
