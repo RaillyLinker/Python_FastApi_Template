@@ -19,7 +19,7 @@ router = fastapi.APIRouter(
     summary="Get 요청 테스트 (Query Parameter)",
     description="Query Parameter 를 받는 Get 메소드 요청 테스트"
 )
-def get_request_test(
+async def get_request_test(
         query_param_string: str =
         fastapi.Query(
             ...,
@@ -91,7 +91,7 @@ def get_request_test(
             example=["testString1", "testString2"]
         )
 ):
-    return service.get_request_test(
+    return await service.get_request_test(
         query_param_string,
         query_param_string_nullable,
         query_param_int,
@@ -112,7 +112,7 @@ def get_request_test(
     summary="Get 요청 테스트 (Path Parameter)",
     description="Path Parameter 를 받는 Get 메소드 요청 테스트",
 )
-def get_request_test_with_path_param(
+async def get_request_test_with_path_param(
         path_param_int: int = fastapi.Path(
             ...,
             alias="pathParamInt",
@@ -120,7 +120,7 @@ def get_request_test_with_path_param(
             example=1
         )
 ):
-    return service.get_request_test_with_path_param(path_param_int)
+    return await service.get_request_test_with_path_param(path_param_int)
 
 
 # ----
@@ -130,10 +130,10 @@ def get_request_test_with_path_param(
     summary="Post 요청 테스트 (application-json)",
     description="application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트"
 )
-def post_request_test_with_application_json_type_request_body(
+async def post_request_test_with_application_json_type_request_body(
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
 ):
-    return service.post_request_test_with_application_json_type_request_body(request_body)
+    return await service.post_request_test_with_application_json_type_request_body(request_body)
 
 
 # ----
@@ -143,10 +143,10 @@ def post_request_test_with_application_json_type_request_body(
     summary="Post 요청 테스트 (application-json, 객체 파라미터 포함)",
     description="application-json 형태의 Request Body(객체 파라미터 포함) 를 받는 Post 메소드 요청 테스트"
 )
-def post_request_test_with_application_json_type_request_body2(
+async def post_request_test_with_application_json_type_request_body2(
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo
 ):
-    return service.post_request_test_with_application_json_type_request_body2(request_body)
+    return await service.post_request_test_with_application_json_type_request_body2(request_body)
 
 
 # ----
@@ -156,5 +156,5 @@ def post_request_test_with_application_json_type_request_body2(
     summary="Post 요청 테스트 (입출력값 없음)",
     description="입출력값이 없는 Post 메소드 요청 테스트"
 )
-def post_request_test_with_no_input_and_output():
-    return service.post_request_test_with_no_input_and_output()
+async def post_request_test_with_no_input_and_output():
+    return await service.post_request_test_with_no_input_and_output()

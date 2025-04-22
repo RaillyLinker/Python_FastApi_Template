@@ -5,7 +5,7 @@ import typing
 
 # [그룹 서비스]
 # (Get 요청 테스트 (Query Parameter))
-def get_request_test(
+async def get_request_test(
         query_param_string: str,
         query_param_string_nullable: typing.Optional[str],
         query_param_int: int,
@@ -36,7 +36,7 @@ def get_request_test(
 
 # ----
 # (Get 요청 테스트 (Path Parameter))
-def get_request_test_with_path_param(
+async def get_request_test_with_path_param(
         path_param_int: int
 ):
     return fastapi.responses.JSONResponse(
@@ -49,7 +49,7 @@ def get_request_test_with_path_param(
 
 # ----
 # (Post 요청 테스트 (application-json))
-def post_request_test_with_application_json_type_request_body(
+async def post_request_test_with_application_json_type_request_body(
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
 ):
     return fastapi.responses.JSONResponse(
@@ -71,7 +71,7 @@ def post_request_test_with_application_json_type_request_body(
 
 # ----
 # (Post 요청 테스트 (application-json, 객체 파라미터 포함))
-def post_request_test_with_application_json_type_request_body2(
+async def post_request_test_with_application_json_type_request_body2(
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo
 ):
     # objectVoList 변환
@@ -127,7 +127,7 @@ def post_request_test_with_application_json_type_request_body2(
 
 # ----
 # (Post 요청 테스트 (입출력값 없음))
-def post_request_test_with_no_input_and_output():
+async def post_request_test_with_no_input_and_output():
     return fastapi.responses.JSONResponse(
         status_code=200,
         content=None
