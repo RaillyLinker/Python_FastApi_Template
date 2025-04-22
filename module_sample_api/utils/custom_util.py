@@ -16,8 +16,12 @@ def split_file_path(file_path: str) -> Tuple[str, Optional[str]]:
 # (Multipart File을 로컬에 저장)
 # 반환값 : 저장된 파일명
 def multipart_file_local_save(
+        # 파일을 저장할 로컬 위치 Path
         save_directory_path: str,
+        # 저장할 파일명(파일명 뒤에 (현재 일시 yyyy_MM_dd_'T'_HH_mm_ss_SSS_z) 가 붙습니다.)
+        # null 이라면 multipartFile 의 originalFilename 을 사용합니다.
         file_name: Optional[str],
+        # 저장할 MultipartFile
         multipart_file: fastapi.UploadFile
 ) -> str:
     # 파일 저장 기본 디렉토리 생성
@@ -35,7 +39,8 @@ def multipart_file_local_save(
     file_extension = f".{file_extension}" if file_extension else ""
 
     # 파일명에 날짜/시간 추가
-    saved_file_name = f"{file_name_with_out_extension}({datetime.now().strftime('%Y_%m_%d_T%H_%M_%S_%f')}){file_extension}"
+    saved_file_name = \
+        f"{file_name_with_out_extension}({datetime.now().strftime('%Y_%m_%d_T%H_%M_%S_%f')}){file_extension}"
 
     # multipartFile을 targetPath에 저장
     target_path = os.path.join(save_directory_path, saved_file_name)
