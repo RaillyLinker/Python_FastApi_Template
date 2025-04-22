@@ -158,3 +158,106 @@ async def post_request_test_with_application_json_type_request_body2(
 )
 async def post_request_test_with_no_input_and_output():
     return await service.post_request_test_with_no_input_and_output()
+
+
+# ----
+@router.post(
+    "/post-request-x-www-form-urlencoded",
+    response_model=model.PostRequestTestWithFormTypeRequestBodyOutputVo,
+    summary="Post 요청 테스트 (x-www-form-urlencoded)",
+    description="x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트"
+)
+async def post_request_test_with_form_type_request_body(
+        request_form_string: str =
+        fastapi.Form(
+            ...,
+            alias="requestFormString",
+            validation_alias="requestFormString",
+            description="String Form 파라미터",
+            example="testString"
+        ),
+        request_form_string_nullable: typing.Optional[str] =
+        fastapi.Form(
+            None,
+            alias="requestFormStringNullable",
+            validation_alias="requestFormStringNullable",
+            description="String Nullable Form 파라미터",
+            example="testString"
+        ),
+        request_form_int: int =
+        fastapi.Form(
+            ...,
+            alias="requestFormInt",
+            validation_alias="requestFormInt",
+            description="Int Form 파라미터",
+            example=1
+        ),
+        request_form_int_nullable: typing.Optional[int] =
+        fastapi.Form(
+            None,
+            alias="requestFormIntNullable",
+            validation_alias="requestFormIntNullable",
+            description="Int Nullable Form 파라미터",
+            example=1
+        ),
+        request_form_double: float =
+        fastapi.Form(
+            ...,
+            alias="requestFormDouble",
+            validation_alias="requestFormDouble",
+            description="Double Form 파라미터",
+            example=1.1
+        ),
+        request_form_double_nullable: typing.Optional[float] =
+        fastapi.Form(
+            None,
+            alias="requestFormDoubleNullable",
+            validation_alias="requestFormDoubleNullable",
+            description="Double Nullable Form 파라미터",
+            example=1.1
+        ),
+        request_form_boolean: bool =
+        fastapi.Form(
+            ...,
+            alias="requestFormBoolean",
+            validation_alias="requestFormBoolean",
+            description="Boolean Form 파라미터",
+            example=True
+        ),
+        request_form_boolean_nullable: typing.Optional[bool] =
+        fastapi.Form(
+            None,
+            alias="requestFormBooleanNullable",
+            validation_alias="requestFormBooleanNullable",
+            description="Boolean Nullable Form 파라미터",
+            example=True
+        ),
+        request_form_string_list: typing.List[str] =
+        fastapi.Form(
+            ...,
+            alias="requestFormStringList",
+            validation_alias="requestFormStringList",
+            description="StringList Form 파라미터",
+            example=["testString1", "testString2"]
+        ),
+        request_form_string_list_nullable: typing.Optional[typing.List[str]] =
+        fastapi.Form(
+            None,
+            alias="requestFormStringListNullable",
+            validation_alias="requestFormStringListNullable",
+            description="StringList Nullable Form 파라미터",
+            example=["testString1", "testString2"]
+        )
+):
+    return await service.post_request_test_with_form_type_request_body(
+        request_form_string,
+        request_form_string_nullable,
+        request_form_int,
+        request_form_int_nullable,
+        request_form_double,
+        request_form_double_nullable,
+        request_form_boolean,
+        request_form_boolean_nullable,
+        request_form_string_list,
+        request_form_string_list_nullable
+    )

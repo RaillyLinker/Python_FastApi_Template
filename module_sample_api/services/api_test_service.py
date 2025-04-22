@@ -80,20 +80,20 @@ async def post_request_test_with_application_json_type_request_body2(
         sub_object_vo_list: typing.List[
             model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput] = [
             model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput(
-                requestBodyString=sub.request_body_string,
-                requestBodyStringList=sub.request_body_string_list
+                request_body_string=sub.request_body_string,
+                request_body_string_list=sub.request_body_string_list
             ) for sub in object_vo.sub_object_vo_list
         ]
 
         object_vo_output = model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput(
-            requestBodyString=object_vo.request_body_string,
-            requestBodyStringList=object_vo.request_body_string_list,
-            subObjectVo=
+            request_body_string=object_vo.request_body_string,
+            request_body_string_list=object_vo.request_body_string_list,
+            sub_object_vo=
             model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput(
-                requestBodyString=object_vo.sub_object_vo.request_body_string,
-                requestBodyStringList=object_vo.sub_object_vo.request_body_string_list
+                request_body_string=object_vo.sub_object_vo.request_body_string,
+                request_body_string_list=object_vo.sub_object_vo.request_body_string_list
             ),
-            subObjectVoList=sub_object_vo_list
+            sub_object_vo_list=sub_object_vo_list
         )
         object_vo_list.append(object_vo_output)
 
@@ -101,26 +101,26 @@ async def post_request_test_with_application_json_type_request_body2(
     sub_object_vo_list_single: typing.List[
         model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput] = [
         model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput(
-            requestBodyString=sub.request_body_string,
-            requestBodyStringList=sub.request_body_string_list
+            request_body_string=sub.request_body_string,
+            request_body_string_list=sub.request_body_string_list
         ) for sub in request_body.object_vo.sub_object_vo_list
     ]
 
     object_vo_single = model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput(
-        requestBodyString=request_body.object_vo.request_body_string,
-        requestBodyStringList=request_body.object_vo.request_body_string_list,
-        subObjectVo=model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput(
-            requestBodyString=request_body.object_vo.sub_object_vo.request_body_string,
-            requestBodyStringList=request_body.object_vo.sub_object_vo.request_body_string_list
+        request_body_string=request_body.object_vo.request_body_string,
+        request_body_string_list=request_body.object_vo.request_body_string_list,
+        sub_object_vo=model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput(
+            request_body_string=request_body.object_vo.sub_object_vo.request_body_string,
+            request_body_string_list=request_body.object_vo.sub_object_vo.request_body_string_list
         ),
-        subObjectVoList=sub_object_vo_list_single
+        sub_object_vo_list=sub_object_vo_list_single
     )
 
     return fastapi.responses.JSONResponse(
         status_code=200,
         content=model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(
-            objectVo=object_vo_single,
-            objectVoList=object_vo_list
+            object_vo=object_vo_single,
+            object_vo_list=object_vo_list
         ).model_dump()
     )
 
@@ -131,4 +131,35 @@ async def post_request_test_with_no_input_and_output():
     return fastapi.responses.JSONResponse(
         status_code=200,
         content=None
+    )
+
+
+# ----
+# (Post 요청 테스트 (x-www-form-urlencoded))
+async def post_request_test_with_form_type_request_body(
+        request_form_string,
+        request_form_string_nullable,
+        request_form_int,
+        request_form_int_nullable,
+        request_form_double,
+        request_form_double_nullable,
+        request_form_boolean,
+        request_form_boolean_nullable,
+        request_form_string_list,
+        request_form_string_list_nullable
+):
+    return fastapi.responses.JSONResponse(
+        status_code=200,
+        content=model.PostRequestTestWithFormTypeRequestBodyOutputVo(
+            request_form_string=request_form_string,
+            request_form_string_nullable=request_form_string_nullable,
+            request_form_int=request_form_int,
+            request_form_int_nullable=request_form_int_nullable,
+            request_form_double=request_form_double,
+            request_form_double_nullable=request_form_double_nullable,
+            request_form_boolean=request_form_boolean,
+            request_form_boolean_nullable=request_form_boolean_nullable,
+            request_form_string_list=request_form_string_list,
+            request_form_string_list_nullable=request_form_string_list_nullable
+        ).model_dump()
     )
