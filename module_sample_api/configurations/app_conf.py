@@ -2,6 +2,7 @@ import uuid
 import time
 
 
+# [API 설정 상수]
 class AppConf:
     # 서버 고유값 (런타임 시에 고정되도록 생성)
     server_uuid = f"{int(time.time() * 1000)}/{uuid.uuid4()}"

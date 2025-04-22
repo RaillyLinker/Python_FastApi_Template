@@ -2,6 +2,7 @@ import fastapi
 import fastapi.openapi.utils as openapi_utils
 
 
+# [Swagger 문서 설정]
 class SwaggerConf:
     @staticmethod
     def custom_openapi(app: fastapi.FastAPI):
