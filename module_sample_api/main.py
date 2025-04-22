@@ -1,3 +1,4 @@
+import logging
 import sys
 import os
 import uvicorn
@@ -5,32 +6,28 @@ import fastapi
 import importlib
 import pkgutil
 import fastapi.middleware.cors as cors_middle_ware
-import argparse  # argparse 라이브러리 추가
+import argparse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import module_sample_api.configurations.app_conf as app_conf
 import module_sample_api.configurations.swagger_conf as swagger_conf
 import module_sample_api.middlewares.limit_upload_size_middleware as limit_upload_size_middleware
+import module_sample_api.configurations.logging_config as logging_config
 
 # [FastAPI 실행 Main]
-# python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
-parser = argparse.ArgumentParser(description="Run FastAPI application")
-parser.add_argument('--profile', type=str, default='local', help="Specify the profile (default: 'local')")
-args = parser.parse_args()
-app_conf.AppConf.server_profile = args.profile.lower()
-
-# 현재 파일이 속한 디렉토리 경로
-dir_path = os.path.dirname(os.path.abspath(__file__))
-
-# 디렉토리 경로에서 폴더명만 추출 (main.py 파일은 모듈 폴더 바로 안에 위치 해야 함)
-folder_name = os.path.basename(dir_path)
-
 # FastAPI 객체 생성
 app = fastapi.FastAPI()
+
+# 로깅 설정
+logging_config.setup_logging()
 
 # Swagger 설정 적용
 app.openapi = lambda: swagger_conf.SwaggerConf.custom_openapi(app)
 
+# 현재 파일이 속한 디렉토리 경로
+dir_path = os.path.dirname(os.path.abspath(__file__))
+# 디렉토리 경로에서 폴더명만 추출 (main.py 파일은 모듈 폴더 바로 안에 위치 해야 함)
+folder_name = os.path.basename(dir_path)
 # controllers 디렉토리에 있는 모든 라우터 등록
 for _, module_name, _ in pkgutil.iter_modules([dir_path + "/" + app_conf.AppConf.controllers_package_name]):
     module = importlib.import_module(f"{folder_name}.{app_conf.AppConf.controllers_package_name}.{module_name}")
@@ -49,9 +46,22 @@ app.add_middleware(
 
 # FastAPI 서버 실행
 if __name__ == "__main__":
+    # python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
+    parser = argparse.ArgumentParser(description="Run FastAPI application")
+    parser.add_argument('--profile', type=str, default='local', help="Specify the profile (default: 'local')")
+    args = parser.parse_args()
+    app_conf.AppConf.server_profile = args.profile.lower()
+
+    # 서버 실행 정보 로깅
+    logging.info("<<FastAPI Startup>>")
+    logging.info(f"port : {app_conf.AppConf.uvicorn_port}")
+    logging.info(f"serverName : {app_conf.AppConf.server_name}")
+    logging.info(f"Profile : {app_conf.AppConf.server_profile}")
+    logging.info(f"serverUuid : {app_conf.AppConf.server_uuid}")
+
     uvicorn.run(
         "main:app",
-        host=app_conf.AppConf.unicorn_host,
-        port=app_conf.AppConf.unicorn_port,
-        reload=app_conf.AppConf.unicorn_reload
+        host=app_conf.AppConf.uvicorn_host,
+        port=app_conf.AppConf.uvicorn_port,
+        reload=app_conf.AppConf.uvicorn_reload
     )
