@@ -5,6 +5,7 @@ import pkgutil
 import os
 import module_sample_api.configurations.app_conf as app_conf
 import module_sample_api.configurations.swagger_conf as swagger_conf
+import module_sample_api.middlewares.limit_upload_size_middleware as limit_upload_size_middleware
 
 # [FastAPI 실행 Main]
 # 현재 파일이 속한 디렉토리 경로
@@ -24,6 +25,9 @@ for _, module_name, _ in pkgutil.iter_modules([dir_path + "/" + app_conf.AppConf
     module = importlib.import_module(f"{folder_name}.{app_conf.AppConf.controllers_package_name}.{module_name}")
     if hasattr(module, "router") and isinstance(module.router, fastapi.APIRouter):
         app.include_router(module.router)
+
+# 파일 업로드 사이즈 제한 미들웨어 등록
+app.add_middleware(limit_upload_size_middleware.LimitUploadSizeMiddleware)
 
 # FastAPI 서버 실행
 if __name__ == "__main__":
