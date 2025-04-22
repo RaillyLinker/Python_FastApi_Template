@@ -123,3 +123,12 @@ def post_request_test_with_application_json_type_request_body2(
             objectVoList=object_vo_list
         ).model_dump()
     )
+
+
+# ----
+# (Post 요청 테스트 (입출력값 없음))
+def post_request_test_with_no_input_and_output():
+    return fastapi.responses.JSONResponse(
+        status_code=200,
+        content=None
+    )
