@@ -1,9 +1,12 @@
+import sys
+import os
 import uvicorn
 import fastapi
 import importlib
 import pkgutil
-import os
 import fastapi.middleware.cors as cors_middle_ware
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import module_sample_api.configurations.app_conf as app_conf
 import module_sample_api.configurations.swagger_conf as swagger_conf
 import module_sample_api.middlewares.limit_upload_size_middleware as limit_upload_size_middleware
