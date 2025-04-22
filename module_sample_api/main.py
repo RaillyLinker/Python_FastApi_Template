@@ -15,6 +15,12 @@ import module_sample_api.middlewares.limit_upload_size_middleware as limit_uploa
 import module_sample_api.configurations.logging_config as logging_config
 
 # [FastAPI 실행 Main]
+# python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
+parser = argparse.ArgumentParser(description="Run FastAPI application")
+parser.add_argument('--profile', type=str, default='local', help="Specify the profile (default: 'local')")
+args = parser.parse_args()
+app_conf.AppConf.server_profile = args.profile.lower()
+
 # FastAPI 객체 생성
 app = fastapi.FastAPI()
 
@@ -45,13 +51,8 @@ app.add_middleware(
 )
 
 # FastAPI 서버 실행
+# main.py 위쪽 코드 부터 순차 실행 후 __main__ 코드 실행. 그리고 다시 위 코드가 __main__ 앞까지 실행 됩니다.
 if __name__ == "__main__":
-    # python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
-    parser = argparse.ArgumentParser(description="Run FastAPI application")
-    parser.add_argument('--profile', type=str, default='local', help="Specify the profile (default: 'local')")
-    args = parser.parse_args()
-    app_conf.AppConf.server_profile = args.profile.lower()
-
     # 서버 실행 정보 로깅
     logging.info("<<FastAPI Startup>>")
     logging.info(f"port : {app_conf.AppConf.uvicorn_port}")
@@ -63,5 +64,5 @@ if __name__ == "__main__":
         "main:app",
         host=app_conf.AppConf.uvicorn_host,
         port=app_conf.AppConf.uvicorn_port,
-        reload=app_conf.AppConf.uvicorn_reload
+        reload=False  # 개발 환경에서 코드 변경시 자동으로 서버 재시작 기능(오동작 우려가 있기에 False 고정)
     )

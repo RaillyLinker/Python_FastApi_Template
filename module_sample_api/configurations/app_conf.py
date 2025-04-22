@@ -24,9 +24,6 @@ class AppConf:
     # 서버 점유 포트
     uvicorn_port = 8080
 
-    # 코드를 수정 하면 서버를 자동으로 재시작(reload) 해주는 개발용 기능
-    uvicorn_reload = True
-
     # 파일 업로드 제한 사이즈
     max_upload_size = 10 * 1024 * 1024  # 10MB
 
