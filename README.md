@@ -15,3 +15,8 @@
 > conda env export > environment.yaml<br>
 > 입력 <br>
 > conda env create --file environment.yaml
+
+- 배포시 모듈 실행은, 프로젝트 루트 경로에서,
+> python module_sample_api/main.py --profile dev
+
+이런식으로
