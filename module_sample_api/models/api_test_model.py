@@ -521,3 +521,91 @@ class PostRequestTestWithFormTypeRequestBodyOutputVo(pydantic.BaseModel):
             examples=[["testString1", "testString2"]]
         )
     )
+
+
+# ----
+# (Post 요청 테스트 (multipart/form-data))
+class PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(pydantic.BaseModel):
+    class Config:
+        validate_by_name = True
+
+    request_form_string: str = (
+        pydantic.Field(
+            ...,
+            alias="requestFormString",
+            description="입력한 String Form 파라미터",
+            examples=["testString"]
+        )
+    )
+    request_form_string_nullable: typing.Optional[str] = (
+        pydantic.Field(
+            None,
+            alias="requestFormStringNullable",
+            description="입력한 String Nullable Form 파라미터",
+            examples=["testString"]
+        )
+    )
+    request_form_int: int = (
+        pydantic.Field(
+            ...,
+            alias="requestFormInt",
+            description="입력한 Int Form 파라미터",
+            examples=[1]
+        )
+    )
+    request_form_int_nullable: typing.Optional[int] = (
+        pydantic.Field(
+            None,
+            alias="requestFormIntNullable",
+            description="입력한 Int Nullable Form 파라미터",
+            examples=[1]
+        )
+    )
+    request_form_double: float = (
+        pydantic.Field(
+            ...,
+            alias="requestFormDouble",
+            description="입력한 Double Form 파라미터",
+            examples=[1.1]
+        )
+    )
+    request_form_double_nullable: typing.Optional[float] = (
+        pydantic.Field(
+            None,
+            alias="requestFormDoubleNullable",
+            description="입력한 Double Nullable Form 파라미터",
+            examples=[1.1]
+        )
+    )
+    request_form_boolean: bool = (
+        pydantic.Field(
+            ...,
+            alias="requestFormBoolean",
+            description="입력한 Boolean Form 파라미터",
+            examples=[True]
+        )
+    )
+    request_form_boolean_nullable: typing.Optional[bool] = (
+        pydantic.Field(
+            None,
+            alias="requestFormBooleanNullable",
+            description="입력한 Boolean Nullable Form 파라미터",
+            examples=[True]
+        )
+    )
+    request_form_string_list: typing.List[str] = (
+        pydantic.Field(
+            ...,
+            alias="requestFormStringList",
+            description="입력한 StringList Form 파라미터",
+            examples=[["testString1", "testString2"]]
+        )
+    )
+    request_form_string_list_nullable: typing.Optional[typing.List[str]] = (
+        pydantic.Field(
+            None,
+            alias="requestFormStringListNullable",
+            description="입력한 StringList Nullable Form 파라미터",
+            examples=[["testString1", "testString2"]]
+        )
+    )

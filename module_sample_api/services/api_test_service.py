@@ -2,6 +2,7 @@ import module_sample_api.models.api_test_model as model
 import fastapi
 import typing
 import module_sample_api.utils.custom_util as custom_util
+import os
 
 
 # [그룹 서비스]
@@ -152,6 +153,49 @@ async def post_request_test_with_form_type_request_body(
     return fastapi.responses.JSONResponse(
         status_code=200,
         content=model.PostRequestTestWithFormTypeRequestBodyOutputVo(
+            request_form_string=request_form_string,
+            request_form_string_nullable=request_form_string_nullable,
+            request_form_int=request_form_int,
+            request_form_int_nullable=request_form_int_nullable,
+            request_form_double=request_form_double,
+            request_form_double_nullable=request_form_double_nullable,
+            request_form_boolean=request_form_boolean,
+            request_form_boolean_nullable=request_form_boolean_nullable,
+            request_form_string_list=request_form_string_list,
+            request_form_string_list_nullable=request_form_string_list_nullable
+        ).model_dump()
+    )
+
+
+# ----
+# (Post 요청 테스트 (x-www-form-urlencoded))
+async def post_request_test_with_multipart_form_type_request_body(
+        request_form_string: str,
+        request_form_string_nullable: typing.Optional[str],
+        request_form_int: int,
+        request_form_int_nullable: typing.Optional[int],
+        request_form_double: float,
+        request_form_double_nullable: typing.Optional[float],
+        request_form_boolean: bool,
+        request_form_boolean_nullable: typing.Optional[bool],
+        request_form_string_list: typing.List[str],
+        request_form_string_list_nullable: typing.Optional[typing.List[str]],
+        multipart_file: fastapi.UploadFile,
+        multipart_file_nullable: typing.Optional[fastapi.UploadFile]
+):
+    # 저장 경로 설정
+    save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
+
+    # 파일 저장 (필수)
+    custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+
+    # 파일 저장 (nullable)
+    if multipart_file_nullable is not None:
+        custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
+
+    return fastapi.responses.JSONResponse(
+        status_code=200,
+        content=model.PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(
             request_form_string=request_form_string,
             request_form_string_nullable=request_form_string_nullable,
             request_form_int=request_form_int,
