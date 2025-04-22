@@ -23,3 +23,19 @@ class AppConf:
 
     # 파일 업로드 제한 사이즈
     max_upload_size = 10 * 1024 * 1024  # 10MB
+
+    # CORS Origins
+    # 허용 origin 전체 ["*"], 또는 특정 ["https://example.com"]
+    cors_allow_origins = ["*"]
+
+    # CORS Credentials
+    # 쿠키, 인증 정보(Authorization 헤더 등)를 포함한 요청을 허용할지 여부
+    cors_allow_credentials = True
+
+    # CORS Methods
+    # 허용 Method GET, POST, PUT, DELETE 등
+    cors_allow_methods = ["*"]
+
+    # CORS Headers
+    # 요청 시 어떤 헤더들을 허용할지 설정
+    cors_allow_headers = ["*"]
