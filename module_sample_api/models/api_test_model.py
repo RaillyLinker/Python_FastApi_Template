@@ -5,6 +5,9 @@ import pydantic
 # [그룹 모델]
 # (Get 요청 테스트 (Query Parameter))
 class GetRequestTestOutputVo(pydantic.BaseModel):
+    class Config:
+        validate_by_name = True
+
     query_param_string: str = (
         pydantic.Field(
             ...,
@@ -86,13 +89,13 @@ class GetRequestTestOutputVo(pydantic.BaseModel):
         )
     )
 
-    class Config:
-        validate_by_name = True
-
 
 # ----
 # (Get 요청 테스트 (Path Parameter))
 class GetRequestTestWithPathParamOutputVo(pydantic.BaseModel):
+    class Config:
+        validate_by_name = True
+
     path_param_int: int = pydantic.Field(
         ...,
         alias="pathParamInt",
@@ -100,13 +103,13 @@ class GetRequestTestWithPathParamOutputVo(pydantic.BaseModel):
         examples=[1]
     )
 
-    class Config:
-        validate_by_name = True
-
 
 # ----
 # (Post 요청 테스트 (application-json))
 class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(pydantic.BaseModel):
+    class Config:
+        validate_by_name = True
+
     request_body_string: str = (
         pydantic.Field(
             ...,
@@ -188,11 +191,11 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(pydantic.BaseMode
         )
     )
 
+
+class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseModel):
     class Config:
         validate_by_name = True
 
-
-class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseModel):
     request_body_string: str = (
         pydantic.Field(
             ...,
@@ -274,5 +277,147 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseMod
         )
     )
 
+
+# ----
+# (Post 요청 테스트 (application-json, 객체 파라미터 포함))
+class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(pydantic.BaseModel):
     class Config:
         validate_by_name = True
+
+    class ObjectVoInput(pydantic.BaseModel):
+        request_body_string: str = (
+            pydantic.Field(
+                ...,
+                alias="requestBodyString",
+                description="String Body 파라미터",
+                examples=["testString"]
+            )
+        )
+
+        request_body_string_list: typing.List[str] = (
+            pydantic.Field(
+                ...,
+                alias="requestBodyStringList",
+                description="StringList Body 파라미터",
+                examples=[["testString1", "testString2"]]
+            )
+        )
+
+        class SubObjectVoInput(pydantic.BaseModel):
+            request_body_string: str = (
+                pydantic.Field(
+                    ...,
+                    alias="requestBodyString",
+                    description="String Body 파라미터",
+                    examples=["testString"]
+                )
+            )
+            request_body_string_list: typing.List[str] = (
+                pydantic.Field(
+                    ...,
+                    alias="requestBodyStringList",
+                    description="StringList Body 파라미터",
+                    examples=[["testString1", "testString2"]]
+                )
+            )
+
+        sub_object_vo: SubObjectVoInput = (
+            pydantic.Field(
+                ...,
+                alias="subObjectVo",
+                description="서브 객체 타입 파라미터"
+            )
+        )
+        sub_object_vo_list: typing.List[SubObjectVoInput] = (
+            pydantic.Field(
+                ...,
+                alias="subObjectVoList",
+                description="서브 객체 타입 리스트 파라미터"
+            )
+        )
+
+    object_vo: ObjectVoInput = (
+        pydantic.Field(
+            ...,
+            alias="objectVo",
+            description="객체 타입 파라미터"
+        )
+    )
+    object_vo_list: typing.List[ObjectVoInput] = (
+        pydantic.Field(
+            ...,
+            alias="objectVoList",
+            description="객체 타입 리스트 파라미터"
+        )
+    )
+
+
+class PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(pydantic.BaseModel):
+    class Config:
+        validate_by_name = True
+
+    class ObjectVoOutput(pydantic.BaseModel):
+        request_body_string: str = (
+            pydantic.Field(
+                ...,
+                alias="requestBodyString",
+                description="String Body 파라미터",
+                examples=["testString"]
+            )
+        )
+        request_body_string_list: typing.List[str] = (
+            pydantic.Field(
+                ...,
+                alias="requestBodyStringList",
+                description="StringList Body 파라미터",
+                examples=[["testString1", "testString2"]]
+            )
+        )
+
+        class SubObjectVoOutput(pydantic.BaseModel):
+            request_body_string: str = (
+                pydantic.Field(
+                    ...,
+                    alias="requestBodyString",
+                    description="String Body 파라미터",
+                    examples=["testString"]
+                )
+            )
+            request_body_string_list: typing.List[str] = (
+                pydantic.Field(
+                    ...,
+                    alias="requestBodyStringList",
+                    description="StringList Body 파라미터",
+                    examples=[["testString1", "testString2"]]
+                )
+            )
+
+        sub_object_vo: SubObjectVoOutput = (
+            pydantic.Field(
+                ...,
+                alias="subObjectVo",
+                description="서브 객체 타입 파라미터"
+            )
+        )
+        sub_object_vo_list: typing.List[SubObjectVoOutput] = (
+            pydantic.Field(
+                ...,
+                alias="subObjectVoList",
+                description="서브 객체 타입 리스트 파라미터"
+            )
+        )
+
+    object_vo: ObjectVoOutput = (
+        pydantic.Field(
+            ...,
+            alias="objectVo",
+            description="객체 타입 파라미터"
+        )
+    )
+    object_vo_list: typing.List[ObjectVoOutput] = (
+        pydantic.Field(
+            ...,
+            alias="objectVoList",
+            description="객체 타입 리스트 파라미터"
+        )
+    )

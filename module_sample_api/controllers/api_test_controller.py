@@ -134,3 +134,16 @@ def post_request_test_with_application_json_type_request_body(
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
 ):
     return service.post_request_test_with_application_json_type_request_body(request_body)
+
+
+# ----
+@router.post(
+    "/post-request-application-json-with-object-param",
+    response_model=model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo,
+    summary="Post 요청 테스트 (application-json, 객체 파라미터 포함)",
+    description="application-json 형태의 Request Body(객체 파라미터 포함) 를 받는 Post 메소드 요청 테스트"
+)
+async def post_request_test_with_application_json_type_request_body2(
+        request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo
+):
+    return service.post_request_test_with_application_json_type_request_body2(request_body)
