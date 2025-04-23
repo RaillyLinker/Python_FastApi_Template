@@ -20,7 +20,8 @@ app = FastAPI()
 
 # python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
 parser = ArgumentParser(description="Run FastAPI application")
-parser.add_argument('--profile', type=str, default='local', help="Specify the profile (default: 'local')")
+parser.add_argument('--profile', type=str, default=AppConf.server_profile,
+                    help="Specify the profile (default: 'local')")
 args = parser.parse_args()
 AppConf.server_profile = args.profile.lower()
 
@@ -35,8 +36,9 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 # 디렉토리 경로에서 폴더명만 추출 (main.py 파일은 모듈 폴더 바로 안에 위치 해야 함)
 folder_name = os.path.basename(dir_path)
 # controllers 디렉토리에 있는 모든 라우터 등록
-for _, module_name, _ in iter_modules([dir_path + "/" + AppConf.controllers_package_name]):
-    module = importlib.import_module(f"{folder_name}.{AppConf.controllers_package_name}.{module_name}")
+controllers_package_name = "controllers"
+for _, module_name, _ in iter_modules([dir_path + "/" + controllers_package_name]):
+    module = importlib.import_module(f"{folder_name}.{controllers_package_name}.{module_name}")
     if hasattr(module, "router") and isinstance(module.router, APIRouter):
         app.include_router(module.router)
 

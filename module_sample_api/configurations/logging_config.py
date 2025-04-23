@@ -30,7 +30,7 @@ def setup_logging():
     # 로깅 포메터 생성
     formatter = CustomFormatter(message_format)
 
-    log_file = os.path.join(log_dir, f"{app_conf.AppConf.server_profile}_current_log.log")
+    log_file = os.path.join(log_dir, f"{app_conf.AppConf.server_profile}_logfile.log")
 
     # 로그 파일 생성 핸들러
     # 파일 크기가 설정 크기를 넘어서면 로그 파일 분할(오래된 파일일수록 뒤에 붙은 숫자가 커짐)

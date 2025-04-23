@@ -4,17 +4,14 @@ from time import time
 
 # [API 설정 상수]
 class AppConf:
-    # 서버명(로그 파일 등을 이 기준으로 사용하기에 모듈별 수정 필요)
-    server_name = "sample_api"
-
-    # 서버 고유값 (런타임 시에 고정되도록 생성)
-    server_uuid = f"{int(time() * 1000)}/{uuid4()}"
-
     # 서버 실행 프로필(local, dev, profile, ...)
+    # 서버 실행시 python 입력값을 기반으로 입력됨
+    # python 입력값이 없을시 아래 설정값이 기본
+    # 이 프로필을 기반으로 아래 값들을 설정 해도 됩니다.
     server_profile = "local"
 
-    # controllers 폴더 위치(main.py 기중)
-    controllers_package_name = "controllers"
+    # 서버명(로그 파일 등을 이 기준으로 사용하기에 모듈별 수정 필요)
+    server_name = "sample_api"
 
     # 서버 타임존 설정(로깅 필터 등에 사용)
     server_timezone = "Asia/Seoul"
@@ -45,3 +42,21 @@ class AppConf:
     # CORS Headers
     # 요청 시 어떤 헤더들을 허용할지 설정
     cors_allow_headers = ["*"]
+
+    # Swagger 문서 공지
+    swagger_doc_title = "SAMPLE-API"
+    swagger_doc_description = "API 명세입니다."
+    swagger_doc_version = "1.0.0"
+    swagger_doc_contact = {
+        "name": "Railly Linker",
+        "url": "https://railly-linker.tistory.com",
+        "email": "raillylinker@gmail.com",
+    }
+    swagger_doc_license_info = {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT",
+    }
+
+    # ---- (자동 할당 상수) ----
+    # 서버 고유값 (런타임 시에 고정되도록 생성)
+    server_uuid = f"{int(time() * 1000)}/{uuid4()}"
