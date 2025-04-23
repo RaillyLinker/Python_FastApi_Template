@@ -401,3 +401,123 @@ async def post_request_test_with_multipart_form_type_request_body(
         multipart_file,
         multipart_file_nullable
     )
+
+
+# ----
+@router.post(
+    "/post-request-multipart-form-data2",
+    response_model=model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo,
+    summary="Post 요청 테스트2 (multipart/form-data)",
+    description="multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)<br>"
+                "파일 리스트가 null 이 아니라면 저장"
+)
+async def post_request_test_with_multipart_form_type_request_body2(
+        request_form_string: str =
+        Form(
+            ...,
+            alias="requestFormString",
+            validation_alias="requestFormString",
+            description="String Form 파라미터",
+            examples=["testString"]
+        ),
+        request_form_string_nullable: Optional[str] =
+        Form(
+            None,
+            alias="requestFormStringNullable",
+            validation_alias="requestFormStringNullable",
+            description="String Nullable Form 파라미터",
+            examples=["testString"]
+        ),
+        request_form_int: int =
+        Form(
+            ...,
+            alias="requestFormInt",
+            validation_alias="requestFormInt",
+            description="Int Form 파라미터",
+            examples=[1]
+        ),
+        request_form_int_nullable: Optional[int] =
+        Form(
+            None,
+            alias="requestFormIntNullable",
+            validation_alias="requestFormIntNullable",
+            description="Int Nullable Form 파라미터",
+            examples=[1]
+        ),
+        request_form_double: float =
+        Form(
+            ...,
+            alias="requestFormDouble",
+            validation_alias="requestFormDouble",
+            description="Double Form 파라미터",
+            examples=[1.1]
+        ),
+        request_form_double_nullable: Optional[float] =
+        Form(
+            None,
+            alias="requestFormDoubleNullable",
+            validation_alias="requestFormDoubleNullable",
+            description="Double Nullable Form 파라미터",
+            examples=[1.1]
+        ),
+        request_form_boolean: bool =
+        Form(
+            ...,
+            alias="requestFormBoolean",
+            validation_alias="requestFormBoolean",
+            description="Boolean Form 파라미터",
+            examples=[True]
+        ),
+        request_form_boolean_nullable: Optional[bool] =
+        Form(
+            None,
+            alias="requestFormBooleanNullable",
+            validation_alias="requestFormBooleanNullable",
+            description="Boolean Nullable Form 파라미터",
+            examples=[True]
+        ),
+        request_form_string_list: List[str] =
+        Form(
+            ...,
+            alias="requestFormStringList",
+            validation_alias="requestFormStringList",
+            description="StringList Form 파라미터",
+            examples=[["testString1", "testString2"]]
+        ),
+        request_form_string_list_nullable: Optional[List[str]] =
+        Form(
+            None,
+            alias="requestFormStringListNullable",
+            validation_alias="requestFormStringListNullable",
+            description="StringList Nullable Form 파라미터",
+            examples=[["testString1", "testString2"]]
+        ),
+        multipart_file_list: List[UploadFile] =
+        File(
+            ...,
+            alias="multipartFile",
+            validation_alias="multipartFile",
+            description="멀티 파트 파일"
+        ),
+        multipart_file_list_nullable: Optional[List[UploadFile]] =
+        File(
+            None,
+            alias="multipartFileNullable",
+            validation_alias="multipartFileNullable",
+            description="멀티 파트 파일 Nullable"
+        ),
+):
+    return await service.post_request_test_with_multipart_form_type_request_body2(
+        request_form_string,
+        request_form_string_nullable,
+        request_form_int,
+        request_form_int_nullable,
+        request_form_double,
+        request_form_double_nullable,
+        request_form_boolean,
+        request_form_boolean_nullable,
+        request_form_string_list,
+        request_form_string_list_nullable,
+        multipart_file_list,
+        multipart_file_list_nullable
+    )

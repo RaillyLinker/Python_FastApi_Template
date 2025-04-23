@@ -609,3 +609,91 @@ class PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(BaseModel):
             examples=[["testString1", "testString2"]]
         )
     )
+
+
+# ----
+# (Post 요청 테스트2 (multipart/form-data))
+class PostRequestTestWithMultipartFormTypeRequestBody2OutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    request_form_string: str = (
+        Field(
+            ...,
+            alias="requestFormString",
+            description="입력한 String Form 파라미터",
+            examples=["testString"]
+        )
+    )
+    request_form_string_nullable: Optional[str] = (
+        Field(
+            None,
+            alias="requestFormStringNullable",
+            description="입력한 String Nullable Form 파라미터",
+            examples=["testString"]
+        )
+    )
+    request_form_int: int = (
+        Field(
+            ...,
+            alias="requestFormInt",
+            description="입력한 Int Form 파라미터",
+            examples=[1]
+        )
+    )
+    request_form_int_nullable: Optional[int] = (
+        Field(
+            None,
+            alias="requestFormIntNullable",
+            description="입력한 Int Nullable Form 파라미터",
+            examples=[1]
+        )
+    )
+    request_form_double: float = (
+        Field(
+            ...,
+            alias="requestFormDouble",
+            description="입력한 Double Form 파라미터",
+            examples=[1.1]
+        )
+    )
+    request_form_double_nullable: Optional[float] = (
+        Field(
+            None,
+            alias="requestFormDoubleNullable",
+            description="입력한 Double Nullable Form 파라미터",
+            examples=[1.1]
+        )
+    )
+    request_form_boolean: bool = (
+        Field(
+            ...,
+            alias="requestFormBoolean",
+            description="입력한 Boolean Form 파라미터",
+            examples=[True]
+        )
+    )
+    request_form_boolean_nullable: Optional[bool] = (
+        Field(
+            None,
+            alias="requestFormBooleanNullable",
+            description="입력한 Boolean Nullable Form 파라미터",
+            examples=[True]
+        )
+    )
+    request_form_string_list: List[str] = (
+        Field(
+            ...,
+            alias="requestFormStringList",
+            description="입력한 StringList Form 파라미터",
+            examples=[["testString1", "testString2"]]
+        )
+    )
+    request_form_string_list_nullable: Optional[List[str]] = (
+        Field(
+            None,
+            alias="requestFormStringListNullable",
+            description="입력한 StringList Nullable Form 파라미터",
+            examples=[["testString1", "testString2"]]
+        )
+    )

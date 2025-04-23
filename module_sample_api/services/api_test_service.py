@@ -222,3 +222,48 @@ async def post_request_test_with_multipart_form_type_request_body(
             request_form_string_list_nullable=request_form_string_list_nullable
         ).model_dump()
     )
+
+
+# ----
+# (Post 요청 테스트 (x-www-form-urlencoded))
+async def post_request_test_with_multipart_form_type_request_body2(
+        request_form_string: str,
+        request_form_string_nullable: Optional[str],
+        request_form_int: int,
+        request_form_int_nullable: Optional[int],
+        request_form_double: float,
+        request_form_double_nullable: Optional[float],
+        request_form_boolean: bool,
+        request_form_boolean_nullable: Optional[bool],
+        request_form_string_list: List[str],
+        request_form_string_list_nullable: Optional[List[str]],
+        multipart_file_list: List[UploadFile],
+        multipart_file_list_nullable: Optional[List[UploadFile]]
+):
+    # 저장 경로 설정
+    save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
+
+    # 파일 저장 (필수)
+    for multipart_file in multipart_file_list:
+        custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+
+    # 파일 저장 (nullable)
+    if multipart_file_list_nullable is not None:
+        for multipart_file_nullable in multipart_file_list_nullable:
+            custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
+
+    return responses.JSONResponse(
+        status_code=200,
+        content=model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo(
+            request_form_string=request_form_string,
+            request_form_string_nullable=request_form_string_nullable,
+            request_form_int=request_form_int,
+            request_form_int_nullable=request_form_int_nullable,
+            request_form_double=request_form_double,
+            request_form_double_nullable=request_form_double_nullable,
+            request_form_boolean=request_form_boolean,
+            request_form_boolean_nullable=request_form_boolean_nullable,
+            request_form_string_list=request_form_string_list,
+            request_form_string_list_nullable=request_form_string_list_nullable
+        ).model_dump()
+    )
