@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response
+from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
 import module_sample_api.models.api_test_model as model
@@ -19,8 +19,11 @@ router = APIRouter(
     summary="기본 요청 테스트 API",
     description="이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.",
 )
-async def basic_request_test():
-    return await service.basic_request_test()
+async def basic_request_test(
+        request: Request,
+        response: Response
+):
+    return await service.basic_request_test(request, response)
 
 
 # ----
@@ -29,8 +32,11 @@ async def basic_request_test():
     summary="요청 Redirect 테스트 API",
     description="이 API 를 요청하면 /api-test 로 Redirect 됩니다.",
 )
-async def redirect_test():
-    return await service.redirect_test()
+async def redirect_test(
+        request: Request,
+        response: Response
+):
+    return await service.redirect_test(request, response)
 
 
 # ----
@@ -41,6 +47,8 @@ async def redirect_test():
     description="Query Parameter 를 받는 Get 메소드 요청 테스트"
 )
 async def get_request_test(
+        request: Request,
+        response: Response,
         query_param_string: str =
         Query(
             ...,
@@ -113,6 +121,8 @@ async def get_request_test(
         )
 ):
     return await service.get_request_test(
+        request,
+        response,
         query_param_string,
         query_param_string_nullable,
         query_param_int,
@@ -134,6 +144,8 @@ async def get_request_test(
     description="Path Parameter 를 받는 Get 메소드 요청 테스트",
 )
 async def get_request_test_with_path_param(
+        request: Request,
+        response: Response,
         path_param_int: int = Path(
             ...,
             alias="pathParamInt",
@@ -141,7 +153,7 @@ async def get_request_test_with_path_param(
             example=1
         )
 ):
-    return await service.get_request_test_with_path_param(path_param_int)
+    return await service.get_request_test_with_path_param(request, response, path_param_int)
 
 
 # ----
@@ -152,9 +164,11 @@ async def get_request_test_with_path_param(
     description="application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트"
 )
 async def post_request_test_with_application_json_type_request_body(
+        request: Request,
+        response: Response,
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
 ):
-    return await service.post_request_test_with_application_json_type_request_body(request_body)
+    return await service.post_request_test_with_application_json_type_request_body(request, response, request_body)
 
 
 # ----
@@ -165,9 +179,11 @@ async def post_request_test_with_application_json_type_request_body(
     description="application-json 형태의 Request Body(객체 파라미터 포함) 를 받는 Post 메소드 요청 테스트"
 )
 async def post_request_test_with_application_json_type_request_body2(
+        request: Request,
+        response: Response,
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo
 ):
-    return await service.post_request_test_with_application_json_type_request_body2(request_body)
+    return await service.post_request_test_with_application_json_type_request_body2(request, response, request_body)
 
 
 # ----
@@ -176,8 +192,11 @@ async def post_request_test_with_application_json_type_request_body2(
     summary="Post 요청 테스트 (입출력값 없음)",
     description="입출력값이 없는 Post 메소드 요청 테스트"
 )
-async def post_request_test_with_no_input_and_output():
-    return await service.post_request_test_with_no_input_and_output()
+async def post_request_test_with_no_input_and_output(
+        request: Request,
+        response: Response
+):
+    return await service.post_request_test_with_no_input_and_output(request, response)
 
 
 # ----
@@ -188,6 +207,8 @@ async def post_request_test_with_no_input_and_output():
     description="x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트"
 )
 async def post_request_test_with_form_type_request_body(
+        request: Request,
+        response: Response,
         request_form_string: str =
         Form(
             ...,
@@ -270,6 +291,8 @@ async def post_request_test_with_form_type_request_body(
         )
 ):
     return await service.post_request_test_with_form_type_request_body(
+        request,
+        response,
         request_form_string,
         request_form_string_nullable,
         request_form_int,
@@ -292,6 +315,8 @@ async def post_request_test_with_form_type_request_body(
                 "MultipartFile 파라미터가 null 이 아니라면 저장"
 )
 async def post_request_test_with_multipart_form_type_request_body(
+        request: Request,
+        response: Response,
         request_form_string: str =
         Form(
             ...,
@@ -388,6 +413,8 @@ async def post_request_test_with_multipart_form_type_request_body(
         ),
 ):
     return await service.post_request_test_with_multipart_form_type_request_body(
+        request,
+        response,
         request_form_string,
         request_form_string_nullable,
         request_form_int,
@@ -412,6 +439,8 @@ async def post_request_test_with_multipart_form_type_request_body(
                 "파일 리스트가 null 이 아니라면 저장"
 )
 async def post_request_test_with_multipart_form_type_request_body2(
+        request: Request,
+        response: Response,
         request_form_string: str =
         Form(
             ...,
@@ -508,6 +537,8 @@ async def post_request_test_with_multipart_form_type_request_body2(
         ),
 ):
     return await service.post_request_test_with_multipart_form_type_request_body2(
+        request,
+        response,
         request_form_string,
         request_form_string_nullable,
         request_form_int,
@@ -534,6 +565,8 @@ async def post_request_test_with_multipart_form_type_request_body2(
                 "아래 예시에서는 모두 JsonString 형식으로 만들었지만, ObjectList 타입만 이런식으로 처리하세요."
 )
 async def post_request_test_with_multipart_form_type_request_body3(
+        request: Request,
+        response: Response,
         json_string: str =
         Form(
             ...,
@@ -656,6 +689,8 @@ async def post_request_test_with_multipart_form_type_request_body3(
         ),
 ):
     return await service.post_request_test_with_multipart_form_type_request_body3(
+        request,
+        response,
         json_string,
         multipart_file,
         multipart_file_nullable
@@ -668,8 +703,11 @@ async def post_request_test_with_multipart_form_type_request_body3(
     summary="인위적 에러 발생 테스트",
     description="요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)"
 )
-async def generate_error_test():
-    return await service.generate_error_test()
+async def generate_error_test(
+        request: Request,
+        response: Response
+):
+    return await service.generate_error_test(request, response)
 
 
 # ----
@@ -695,6 +733,7 @@ async def generate_error_test():
     }
 )
 async def return_result_code_through_headers(
+        request: Request,
         response: Response,
         error_type: model.ReturnResultCodeThroughHeadersErrorTypeEnum =
         Query(
@@ -704,4 +743,4 @@ async def return_result_code_through_headers(
             example="A"
         )
 ):
-    return await service.return_result_code_through_headers(response, error_type)
+    return await service.return_result_code_through_headers(request, response, error_type)

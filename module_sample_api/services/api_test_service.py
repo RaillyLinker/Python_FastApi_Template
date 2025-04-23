@@ -1,5 +1,5 @@
 import os
-from fastapi import responses, UploadFile, status
+from fastapi import UploadFile, status, Response, Request
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
 from module_sample_api.configurations.app_conf import AppConf
@@ -10,19 +10,27 @@ import json
 
 # [그룹 서비스]
 # (기본 요청 테스트 API)
-async def basic_request_test():
+async def basic_request_test(
+        request: Request,
+        response: Response
+):
     return AppConf.server_profile
 
 
 # ----
 # (요청 Redirect 테스트 API)
-async def redirect_test():
+async def redirect_test(
+        request: Request,
+        response: Response
+):
     return RedirectResponse(url="/api-test")
 
 
 # ----
 # (Get 요청 테스트 (Query Parameter))
 async def get_request_test(
+        request: Request,
+        response: Response,
         query_param_string: str,
         query_param_string_nullable: Optional[str],
         query_param_int: int,
@@ -34,61 +42,58 @@ async def get_request_test(
         query_param_string_list: List[str],
         query_param_string_list_nullable: Optional[List[str]]
 ):
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.GetRequestTestOutputVo(
-            query_param_string=query_param_string,
-            query_param_string_nullable=query_param_string_nullable,
-            query_param_int=query_param_int,
-            query_param_int_nullable=query_param_int_nullable,
-            query_param_double=query_param_double,
-            query_param_double_nullable=query_param_double_nullable,
-            query_param_boolean=query_param_boolean,
-            query_param_boolean_nullable=query_param_boolean_nullable,
-            query_param_string_list=query_param_string_list,
-            query_param_string_list_nullable=query_param_string_list_nullable
-        ).model_dump()
+    return model.GetRequestTestOutputVo(
+        query_param_string=query_param_string,
+        query_param_string_nullable=query_param_string_nullable,
+        query_param_int=query_param_int,
+        query_param_int_nullable=query_param_int_nullable,
+        query_param_double=query_param_double,
+        query_param_double_nullable=query_param_double_nullable,
+        query_param_boolean=query_param_boolean,
+        query_param_boolean_nullable=query_param_boolean_nullable,
+        query_param_string_list=query_param_string_list,
+        query_param_string_list_nullable=query_param_string_list_nullable
     )
 
 
 # ----
 # (Get 요청 테스트 (Path Parameter))
 async def get_request_test_with_path_param(
+        request: Request,
+        response: Response,
         path_param_int: int
 ):
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.GetRequestTestWithPathParamOutputVo(
-            path_param_int=path_param_int
-        ).model_dump()
+    return model.GetRequestTestWithPathParamOutputVo(
+        path_param_int=path_param_int
     )
 
 
 # ----
 # (Post 요청 테스트 (application-json))
 async def post_request_test_with_application_json_type_request_body(
+        request: Request,
+        response: Response,
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
 ):
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(
-            request_body_string=request_body.request_body_string,
-            request_body_string_nullable=request_body.request_body_string_nullable,
-            request_body_int=request_body.request_body_int,
-            request_body_int_nullable=request_body.request_body_int_nullable,
-            request_body_double=request_body.request_body_double,
-            request_body_double_nullable=request_body.request_body_double_nullable,
-            request_body_boolean=request_body.request_body_boolean,
-            request_body_boolean_nullable=request_body.request_body_boolean_nullable,
-            request_body_string_list=request_body.request_body_string_list,
-            request_body_string_list_nullable=request_body.request_body_string_list_nullable
-        ).model_dump()
+    return model.PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(
+        request_body_string=request_body.request_body_string,
+        request_body_string_nullable=request_body.request_body_string_nullable,
+        request_body_int=request_body.request_body_int,
+        request_body_int_nullable=request_body.request_body_int_nullable,
+        request_body_double=request_body.request_body_double,
+        request_body_double_nullable=request_body.request_body_double_nullable,
+        request_body_boolean=request_body.request_body_boolean,
+        request_body_boolean_nullable=request_body.request_body_boolean_nullable,
+        request_body_string_list=request_body.request_body_string_list,
+        request_body_string_list_nullable=request_body.request_body_string_list_nullable
     )
 
 
 # ----
 # (Post 요청 테스트 (application-json, 객체 파라미터 포함))
 async def post_request_test_with_application_json_type_request_body2(
+        request: Request,
+        response: Response,
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo
 ):
     # objectVoList 변환
@@ -133,27 +138,26 @@ async def post_request_test_with_application_json_type_request_body2(
         sub_object_vo_list=sub_object_vo_list_single
     )
 
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(
-            object_vo=object_vo_single,
-            object_vo_list=object_vo_list
-        ).model_dump()
+    return model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(
+        object_vo=object_vo_single,
+        object_vo_list=object_vo_list
     )
 
 
 # ----
 # (Post 요청 테스트 (입출력값 없음))
-async def post_request_test_with_no_input_and_output():
-    return responses.JSONResponse(
-        status_code=200,
-        content=None
-    )
+async def post_request_test_with_no_input_and_output(
+        request: Request,
+        response: Response
+):
+    return None
 
 
 # ----
 # (Post 요청 테스트 (x-www-form-urlencoded))
 async def post_request_test_with_form_type_request_body(
+        request: Request,
+        response: Response,
         request_form_string: str,
         request_form_string_nullable: Optional[str],
         request_form_int: int,
@@ -165,26 +169,25 @@ async def post_request_test_with_form_type_request_body(
         request_form_string_list: List[str],
         request_form_string_list_nullable: Optional[List[str]]
 ):
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.PostRequestTestWithFormTypeRequestBodyOutputVo(
-            request_form_string=request_form_string,
-            request_form_string_nullable=request_form_string_nullable,
-            request_form_int=request_form_int,
-            request_form_int_nullable=request_form_int_nullable,
-            request_form_double=request_form_double,
-            request_form_double_nullable=request_form_double_nullable,
-            request_form_boolean=request_form_boolean,
-            request_form_boolean_nullable=request_form_boolean_nullable,
-            request_form_string_list=request_form_string_list,
-            request_form_string_list_nullable=request_form_string_list_nullable
-        ).model_dump()
+    return model.PostRequestTestWithFormTypeRequestBodyOutputVo(
+        request_form_string=request_form_string,
+        request_form_string_nullable=request_form_string_nullable,
+        request_form_int=request_form_int,
+        request_form_int_nullable=request_form_int_nullable,
+        request_form_double=request_form_double,
+        request_form_double_nullable=request_form_double_nullable,
+        request_form_boolean=request_form_boolean,
+        request_form_boolean_nullable=request_form_boolean_nullable,
+        request_form_string_list=request_form_string_list,
+        request_form_string_list_nullable=request_form_string_list_nullable
     )
 
 
 # ----
 # (Post 요청 테스트 (multipart/form-data))
 async def post_request_test_with_multipart_form_type_request_body(
+        request: Request,
+        response: Response,
         request_form_string: str,
         request_form_string_nullable: Optional[str],
         request_form_int: int,
@@ -208,26 +211,25 @@ async def post_request_test_with_multipart_form_type_request_body(
     if multipart_file_nullable is not None:
         custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
 
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(
-            request_form_string=request_form_string,
-            request_form_string_nullable=request_form_string_nullable,
-            request_form_int=request_form_int,
-            request_form_int_nullable=request_form_int_nullable,
-            request_form_double=request_form_double,
-            request_form_double_nullable=request_form_double_nullable,
-            request_form_boolean=request_form_boolean,
-            request_form_boolean_nullable=request_form_boolean_nullable,
-            request_form_string_list=request_form_string_list,
-            request_form_string_list_nullable=request_form_string_list_nullable
-        ).model_dump()
+    return model.PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(
+        request_form_string=request_form_string,
+        request_form_string_nullable=request_form_string_nullable,
+        request_form_int=request_form_int,
+        request_form_int_nullable=request_form_int_nullable,
+        request_form_double=request_form_double,
+        request_form_double_nullable=request_form_double_nullable,
+        request_form_boolean=request_form_boolean,
+        request_form_boolean_nullable=request_form_boolean_nullable,
+        request_form_string_list=request_form_string_list,
+        request_form_string_list_nullable=request_form_string_list_nullable
     )
 
 
 # ----
 # (Post 요청 테스트2 (multipart/form-data))
 async def post_request_test_with_multipart_form_type_request_body2(
+        request: Request,
+        response: Response,
         request_form_string: str,
         request_form_string_nullable: Optional[str],
         request_form_int: int,
@@ -253,26 +255,25 @@ async def post_request_test_with_multipart_form_type_request_body2(
         for multipart_file_nullable in multipart_file_list_nullable:
             custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
 
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo(
-            request_form_string=request_form_string,
-            request_form_string_nullable=request_form_string_nullable,
-            request_form_int=request_form_int,
-            request_form_int_nullable=request_form_int_nullable,
-            request_form_double=request_form_double,
-            request_form_double_nullable=request_form_double_nullable,
-            request_form_boolean=request_form_boolean,
-            request_form_boolean_nullable=request_form_boolean_nullable,
-            request_form_string_list=request_form_string_list,
-            request_form_string_list_nullable=request_form_string_list_nullable
-        ).model_dump()
+    return model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo(
+        request_form_string=request_form_string,
+        request_form_string_nullable=request_form_string_nullable,
+        request_form_int=request_form_int,
+        request_form_int_nullable=request_form_int_nullable,
+        request_form_double=request_form_double,
+        request_form_double_nullable=request_form_double_nullable,
+        request_form_boolean=request_form_boolean,
+        request_form_boolean_nullable=request_form_boolean_nullable,
+        request_form_string_list=request_form_string_list,
+        request_form_string_list_nullable=request_form_string_list_nullable
     )
 
 
 # ----
 # (Post 요청 테스트3 (multipart/form-data))
 async def post_request_test_with_multipart_form_type_request_body3(
+        request: Request,
+        response: Response,
         json_string: str,
         multipart_file: UploadFile,
         multipart_file_nullable: Optional[UploadFile]
@@ -290,32 +291,36 @@ async def post_request_test_with_multipart_form_type_request_body3(
     if multipart_file_nullable is not None:
         custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
 
-    return responses.JSONResponse(
-        status_code=200,
-        content=model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo(
-            request_form_string=input_json_object.request_form_string,
-            request_form_string_nullable=input_json_object.request_form_string_nullable,
-            request_form_int=input_json_object.request_form_int,
-            request_form_int_nullable=input_json_object.request_form_int_nullable,
-            request_form_double=input_json_object.request_form_double,
-            request_form_double_nullable=input_json_object.request_form_double_nullable,
-            request_form_boolean=input_json_object.request_form_boolean,
-            request_form_boolean_nullable=input_json_object.request_form_boolean_nullable,
-            request_form_string_list=input_json_object.request_form_string_list,
-            request_form_string_list_nullable=input_json_object.request_form_string_list_nullable
-        ).model_dump()
+    return model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo(
+        request_form_string=input_json_object.request_form_string,
+        request_form_string_nullable=input_json_object.request_form_string_nullable,
+        request_form_int=input_json_object.request_form_int,
+        request_form_int_nullable=input_json_object.request_form_int_nullable,
+        request_form_double=input_json_object.request_form_double,
+        request_form_double_nullable=input_json_object.request_form_double_nullable,
+        request_form_boolean=input_json_object.request_form_boolean,
+        request_form_boolean_nullable=input_json_object.request_form_boolean_nullable,
+        request_form_string_list=input_json_object.request_form_string_list,
+        request_form_string_list_nullable=input_json_object.request_form_string_list_nullable
     )
 
 
 # ----
 # (인위적 에러 발생 테스트)
-async def generate_error_test():
+async def generate_error_test(
+        request: Request,
+        response: Response
+):
     raise Exception("Test Error")
 
 
 # ----
 # (결과 코드 발생 테스트)
-async def return_result_code_through_headers(response, error_type):
+async def return_result_code_through_headers(
+        request: Request,
+        response: Response,
+        error_type: model.ReturnResultCodeThroughHeadersErrorTypeEnum
+):
     if error_type is None:
         response.status_code = status.HTTP_200_OK
     else:
