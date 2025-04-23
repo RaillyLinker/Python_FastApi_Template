@@ -1,5 +1,6 @@
 from typing import Optional, List
 from pydantic import BaseModel, Field
+from enum import Enum
 
 
 # [그룹 모델]
@@ -871,3 +872,11 @@ class PostRequestTestWithMultipartFormTypeRequestBody3OutputVo(BaseModel):
             examples=[["testString1", "testString2"]]
         )
     )
+
+
+# ----
+# (결과 코드 발생 테스트)
+class ReturnResultCodeThroughHeadersErrorTypeEnum(str, Enum):
+    A = "A"
+    B = "B"
+    C = "C"

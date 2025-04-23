@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses
+from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
 import module_sample_api.models.api_test_model as model
@@ -670,3 +670,38 @@ async def post_request_test_with_multipart_form_type_request_body3(
 )
 async def generate_error_test():
     return await service.generate_error_test()
+
+
+# ----
+@router.post(
+    "/api-result-code-test",
+    summary="결과 코드 발생 테스트",
+    description="Response Header 에 api-result-code 를 반환하는 테스트 API",
+    responses={
+        204: {
+            "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>"
+                                   "1 : errorType 을 A 로 보냈습니다.<br>"
+                                   "2 : errorType 을 B 로 보냈습니다.<br>"
+                                   "3 : errorType 을 C 로 보냈습니다.",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+)
+async def return_result_code_through_headers(
+        response: Response,
+        error_type: model.ReturnResultCodeThroughHeadersErrorTypeEnum =
+        Query(
+            default=None,
+            alias="errorType",
+            description="정상적이지 않은 상황을 만들도록 가정된 변수입니다.",
+            example="A"
+        )
+):
+    return await service.return_result_code_through_headers(response, error_type)

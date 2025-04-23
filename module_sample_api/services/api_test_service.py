@@ -1,5 +1,5 @@
 import os
-from fastapi import responses, UploadFile
+from fastapi import responses, UploadFile, status
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
 from module_sample_api.configurations.app_conf import AppConf
@@ -311,3 +311,19 @@ async def post_request_test_with_multipart_form_type_request_body3(
 # (인위적 에러 발생 테스트)
 async def generate_error_test():
     raise Exception("Test Error")
+
+
+# ----
+# (결과 코드 발생 테스트)
+async def return_result_code_through_headers(response, error_type):
+    if error_type is None:
+        response.status_code = status.HTTP_200_OK
+    else:
+        response.status_code = status.HTTP_204_NO_CONTENT
+        if error_type == model.ReturnResultCodeThroughHeadersErrorTypeEnum.A:
+            response.headers["api-result-code"] = "1"
+        elif error_type == model.ReturnResultCodeThroughHeadersErrorTypeEnum.B:
+            response.headers["api-result-code"] = "2"
+        elif error_type == model.ReturnResultCodeThroughHeadersErrorTypeEnum.C:
+            response.headers["api-result-code"] = "3"
+        return
