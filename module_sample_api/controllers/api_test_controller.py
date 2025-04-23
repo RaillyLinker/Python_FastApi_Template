@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request, Header
+from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request, Header, Body
 from fastapi.responses import PlainTextResponse, HTMLResponse, StreamingResponse
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
@@ -182,7 +182,11 @@ async def get_request_test_with_path_param(
 async def post_request_test_with_application_json_type_request_body(
         request: Request,
         response: Response,
-        request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
+        request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
 ):
     return await service.post_request_test_with_application_json_type_request_body(request, response, request_body)
 
@@ -200,7 +204,11 @@ async def post_request_test_with_application_json_type_request_body(
 async def post_request_test_with_application_json_type_request_body2(
         request: Request,
         response: Response,
-        request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo
+        request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
 ):
     return await service.post_request_test_with_application_json_type_request_body2(request, response, request_body)
 
