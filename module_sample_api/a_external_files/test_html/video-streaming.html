@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+>
+
+<head>
+    <title>ProwdTemplate</title>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"/>
+    <style>
+        /* [Tag] */
+        body {
+            padding: 10px 20px;
+            box-sizing: border-box;
+            height: 100%;
+            min-height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.5;
+            margin: 0;
+            flex-direction: column;
+        }
+
+
+        /* [Class] */
+
+        /* [Id] */
+        #h240,
+        #h360,
+        #h480,
+        #h720{
+            padding:5px 10px;
+            width: 100px;
+            height: 30px;
+            background-color: #277cea;
+            color: #eee;
+            border-radius: 0.25rem;
+        }
+
+        /* [Name] */
+
+
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#h240").on("click", function () {
+                var ct = $("#video")[0].currentTime;
+                var paused = $("#video")[0].paused;
+                $("#movie_src").attr("src", 'http://127.0.0.1:12006/api-test/video-streaming?videoHeight=H240');
+                $("#video")[0].load();
+                $("#video")[0].currentTime = ct;
+                if (!paused) {
+                    $("#video")[0].play();
+                }
+                $("#resolution_txt").text("(240p)");
+            });
+
+            $("#h360").on("click", function () {
+                var ct = $("#video")[0].currentTime;
+                var paused = $("#video")[0].paused;
+                $("#movie_src").attr("src", 'http://127.0.0.1:12006/api-test/video-streaming?videoHeight=H360');
+                $("#video")[0].load();
+                $("#video")[0].currentTime = ct;
+                if (!paused) {
+                    $("#video")[0].play();
+                }
+                $("#resolution_txt").text("(320p)");
+            });
+
+            $("#h480").on("click", function () {
+                var ct = $("#video")[0].currentTime;
+                var paused = $("#video")[0].paused;
+                $("#movie_src").attr("src", 'http://127.0.0.1:12006/api-test/video-streaming?videoHeight=H480');
+                $("#video")[0].load();
+                $("#video")[0].currentTime = ct;
+                if (!paused) {
+                    $("#video")[0].play();
+                }
+                $("#resolution_txt").text("(480p)");
+            });
+
+            $("#h720").on("click", function () {
+                var ct = $("#video")[0].currentTime;
+                var paused = $("#video")[0].paused;
+                $("#movie_src").attr("src", 'http://127.0.0.1:12006/api-test/video-streaming?videoHeight=H720');
+                $("#video")[0].load();
+                $("#video")[0].currentTime = ct;
+                if (!paused) {
+                    $("#video")[0].play();
+                }
+                $("#resolution_txt").text("(720p)");
+            });
+        });
+
+
+    </script>
+</head>
+
+<body>
+
+<h2>해상도 선택</h2>
+<button id="h240" type="button">240p</button>
+<button id="h360" type="button">360p</button>
+<button id="h480" type="button">480p</button>
+<button id="h720" type="button">720p</button>
+
+<h2>비디오 <span id="resolution_txt">(720p)</span></h2>
+
+<video width="60%" height="auto" id="video" preload="auto" controls>
+    <source id="movie_src" type="video/mp4"
+            src="http://127.0.0.1:12006/api-test/video-streaming?videoHeight=H720"/>
+</video>
+
+</body>
+</html>

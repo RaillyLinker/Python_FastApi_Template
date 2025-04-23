@@ -1,5 +1,5 @@
 import os
-from fastapi import UploadFile, status, Response, Request
+from fastapi import UploadFile, status, Response, Request, HTTPException
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
@@ -398,3 +398,32 @@ async def return_byte_data_test(
     response.headers["Content-Type"] = "text/plain; charset=utf-8"
 
     return StreamingResponse(BytesIO(partial_data), media_type="text/plain")
+
+
+# ----
+# (비디오 스트리밍 샘플)
+async def video_streaming_test(
+        request: Request,
+        response: Response,
+        video_height: model.VideoStreamingTestVideoHeight
+):
+    # 모듈 루트 경로
+    module_root_path = AppConf.module_folder_path
+
+    # 비디오 파일 경로 구성
+    base_path = os.path.join(module_root_path, "z_resources/static/video_streaming_test")
+
+    file_name_map = {
+        model.VideoStreamingTestVideoHeight.H240: "test_240p.mp4",
+        model.VideoStreamingTestVideoHeight.H360: "test_360p.mp4",
+        model.VideoStreamingTestVideoHeight.H480: "test_480p.mp4",
+        model.VideoStreamingTestVideoHeight.H720: "test_720p.mp4",
+    }
+
+    file_name = file_name_map.get(video_height)
+    full_path = os.path.join(base_path, file_name)
+
+    # 비디오 응답 생성기 객체
+    builder = custom_util.VideoStreamResponseBuilder(full_path)
+
+    return await builder.build_response(request)

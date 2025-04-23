@@ -880,3 +880,12 @@ class ReturnResultCodeThroughHeadersErrorTypeEnum(str, Enum):
     A = "A"
     B = "B"
     C = "C"
+
+
+# ----
+# (비디오 스트리밍 샘플)
+class VideoStreamingTestVideoHeight(str, Enum):
+    H240 = "H240"
+    H360 = "H360"
+    H480 = "H480"
+    H720 = "H720"

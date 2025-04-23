@@ -1,8 +1,11 @@
 import os
 from shutil import copyfileobj
-from fastapi import UploadFile
-from typing import Optional, Tuple
+from fastapi import UploadFile, Request, HTTPException
+from typing import Optional, Tuple, Generator
 from datetime import datetime
+from fastapi.responses import StreamingResponse
+import mimetypes
+import asyncio
 
 
 # (파일명, 경로, 확장자 분리 함수)
@@ -48,3 +51,95 @@ def multipart_file_local_save(
         copyfileobj(multipart_file.file, f)
 
     return saved_file_name
+
+
+# (비디오 스트리밍 처리)
+CHUNK_SIZE = 1024 * 1024  # 1MB
+
+
+# 비동기 파일 청크 제너레이터
+async def file_chunk_generator(file_path: str, start: int = 0, end: int = None) -> Generator[bytes, None, None]:
+    loop = asyncio.get_event_loop()
+    with open(file_path, "rb") as f:
+        f.seek(start)
+        remaining = (end - start + 1) if end else None
+
+        while True:
+            chunk_size = CHUNK_SIZE if not remaining else min(CHUNK_SIZE, remaining)
+            data = await loop.run_in_executor(None, f.read, chunk_size)
+            if not data:
+                break
+            yield data
+            if remaining:
+                remaining -= len(data)
+                if remaining <= 0:
+                    break
+
+
+# 비동기 비디오 스트리밍 응답 생성기
+class VideoStreamResponseBuilder:
+    def __init__(self, file_path: str, chunk_size: int = 1024 * 1024):
+        self.file_path = file_path
+        self.chunk_size = chunk_size
+
+        if not os.path.isfile(self.file_path):
+            raise HTTPException(status_code=404, detail="Video file not found")
+
+        self.file_size = os.path.getsize(self.file_path)
+        self.content_type = mimetypes.guess_type(self.file_path)[0] or "application/octet-stream"
+
+    async def file_chunk_generator(self, start: int = 0, end: Optional[int] = None) -> Generator[bytes, None, None]:
+        loop = asyncio.get_event_loop()
+        with open(self.file_path, "rb") as f:
+            f.seek(start)
+            remaining = (end - start + 1) if end else None
+
+            while True:
+                chunk_size = self.chunk_size if not remaining else min(self.chunk_size, remaining)
+                data = await loop.run_in_executor(None, f.read, chunk_size)
+                if not data:
+                    break
+                yield data
+                if remaining:
+                    remaining -= len(data)
+                    if remaining <= 0:
+                        break
+
+    async def build_response(self, request: Request) -> StreamingResponse:
+        range_header = request.headers.get("range")
+
+        if range_header:
+            range_value = range_header.strip().lower().replace("bytes=", "")
+            range_start_str, range_end_str = range_value.split("-")
+            range_start = int(range_start_str)
+            range_end = int(range_end_str) if range_end_str.strip() else self.file_size - 1
+
+            if range_start > range_end or range_end >= self.file_size:
+                raise HTTPException(status_code=416, detail="Requested Range Not Satisfiable")
+
+            content_length = range_end - range_start + 1
+
+            headers = {
+                "Content-Range": f"bytes {range_start}-{range_end}/{self.file_size}",
+                "Accept-Ranges": "bytes",
+                "Content-Length": str(content_length),
+                "Content-Type": self.content_type,
+            }
+
+            return StreamingResponse(
+                content=self.file_chunk_generator(range_start, range_end),
+                status_code=206,
+                headers=headers,
+            )
+
+        # Full file streaming
+        headers = {
+            "Accept-Ranges": "bytes",
+            "Content-Length": str(self.file_size),
+            "Content-Type": self.content_type,
+        }
+
+        return StreamingResponse(
+            content=self.file_chunk_generator(),
+            headers=headers,
+        )

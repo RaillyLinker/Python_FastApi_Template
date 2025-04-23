@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request, Header
-from fastapi.responses import PlainTextResponse, HTMLResponse
+from fastapi.responses import PlainTextResponse, HTMLResponse, StreamingResponse
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
 import module_sample_api.models.api_test_model as model
@@ -859,10 +859,38 @@ async def return_byte_data_test(
         response: Response,
         byte_range: str =
         Header(
-            None,
+            ...,
             alias="byteRange",
             description="byte array('a', 'b', 'c', 'd', 'e', 'f') 중 가져올 범위(0 부터 시작되는 인덱스)",
             example="bytes=2-4"
         )
 ):
     return await service.return_byte_data_test(request, response, byte_range)
+
+
+# ----
+@router.get(
+    "/video-streaming",
+    summary="비디오 스트리밍 샘플",
+    response_class=StreamingResponse,
+    description=(
+            "비디오 스트리밍 샘플<br>"
+            "테스트는 프로젝트 파일 경로의 `external_files/files_for_api_test/html_file_sample` 안의 "
+            "`video-streaming.html` 파일을 사용하세요."
+    ),
+    responses={
+        200: {"description": "OK"}
+    }
+)
+async def video_streaming_test(
+        request: Request,
+        response: Response,
+        video_height: model.VideoStreamingTestVideoHeight =
+        Query(
+            ...,
+            alias="videoHeight",
+            description="비디오 해상도 높이",
+            example="H240"
+        )
+):
+    return await service.video_streaming_test(request, response, video_height)
