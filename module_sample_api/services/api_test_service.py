@@ -5,6 +5,7 @@ from fastapi.responses import RedirectResponse
 from module_sample_api.configurations.app_conf import AppConf
 import module_sample_api.utils.custom_util as custom_util
 import module_sample_api.models.api_test_model as model
+import json
 
 
 # [그룹 서비스]
@@ -182,7 +183,7 @@ async def post_request_test_with_form_type_request_body(
 
 
 # ----
-# (Post 요청 테스트 (x-www-form-urlencoded))
+# (Post 요청 테스트 (multipart/form-data))
 async def post_request_test_with_multipart_form_type_request_body(
         request_form_string: str,
         request_form_string_nullable: Optional[str],
@@ -225,7 +226,7 @@ async def post_request_test_with_multipart_form_type_request_body(
 
 
 # ----
-# (Post 요청 테스트 (x-www-form-urlencoded))
+# (Post 요청 테스트2 (multipart/form-data))
 async def post_request_test_with_multipart_form_type_request_body2(
         request_form_string: str,
         request_form_string_nullable: Optional[str],
@@ -265,5 +266,42 @@ async def post_request_test_with_multipart_form_type_request_body2(
             request_form_boolean_nullable=request_form_boolean_nullable,
             request_form_string_list=request_form_string_list,
             request_form_string_list_nullable=request_form_string_list_nullable
+        ).model_dump()
+    )
+
+
+# ----
+# (Post 요청 테스트3 (multipart/form-data))
+async def post_request_test_with_multipart_form_type_request_body3(
+        json_string: str,
+        multipart_file: UploadFile,
+        multipart_file_nullable: Optional[UploadFile]
+):
+    # json_string 파싱
+    input_json_object = model.PostRequestTestWithMultipartFormTypeRequestBody3InputVo(**json.loads(json_string))
+
+    # 저장 경로 설정
+    save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
+
+    # 파일 저장 (필수)
+    custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+
+    # 파일 저장 (nullable)
+    if multipart_file_nullable is not None:
+        custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
+
+    return responses.JSONResponse(
+        status_code=200,
+        content=model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo(
+            request_form_string=input_json_object.request_form_string,
+            request_form_string_nullable=input_json_object.request_form_string_nullable,
+            request_form_int=input_json_object.request_form_int,
+            request_form_int_nullable=input_json_object.request_form_int_nullable,
+            request_form_double=input_json_object.request_form_double,
+            request_form_double_nullable=input_json_object.request_form_double_nullable,
+            request_form_boolean=input_json_object.request_form_boolean,
+            request_form_boolean_nullable=input_json_object.request_form_boolean_nullable,
+            request_form_string_list=input_json_object.request_form_string_list,
+            request_form_string_list_nullable=input_json_object.request_form_string_list_nullable
         ).model_dump()
     )

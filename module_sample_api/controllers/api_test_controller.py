@@ -521,3 +521,144 @@ async def post_request_test_with_multipart_form_type_request_body2(
         multipart_file_list,
         multipart_file_list_nullable
     )
+
+
+# ----
+@router.post(
+    "/post-request-multipart-form-data-json",
+    response_model=model.PostRequestTestWithMultipartFormTypeRequestBody3OutputVo,
+    summary="Post 요청 테스트3 (multipart/form-data - JsonString)",
+    description="multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트<br>"
+                "Form Data 의 Input Body 에는 Object 리스트 타입은 사용 불가능입니다.<br>"
+                "Object 리스트 타입을 사용한다면, Json String 타입으로 객체를 받아서 파싱하여 사용하는 방식을 사용합니다.<br>"
+                "아래 예시에서는 모두 JsonString 형식으로 만들었지만, ObjectList 타입만 이런식으로 처리하세요."
+)
+async def post_request_test_with_multipart_form_type_request_body3(
+        json_string: str =
+        Form(
+            ...,
+            alias="jsonString",
+            validation_alias="jsonString",
+
+            # todo
+            description="""
+                class PostRequestTestWithMultipartFormTypeRequestBody3InputVo():
+                    request_form_string: str = (
+                        Field(
+                            ...,
+                            alias="requestFormString",
+                            description="입력한 String Form 파라미터",
+                            examples=["testString"]
+                        )
+                    )
+                    request_form_string_nullable: Optional[str] = (
+                        Field(
+                            None,
+                            alias="requestFormStringNullable",
+                            description="입력한 String Nullable Form 파라미터",
+                            examples=["testString"]
+                        )
+                    )
+                    request_form_int: int = (
+                        Field(
+                            ...,
+                            alias="requestFormInt",
+                            description="입력한 Int Form 파라미터",
+                            examples=[1]
+                        )
+                    )
+                    request_form_int_nullable: Optional[int] = (
+                        Field(
+                            None,
+                            alias="requestFormIntNullable",
+                            description="입력한 Int Nullable Form 파라미터",
+                            examples=[1]
+                        )
+                    )
+                    request_form_double: float = (
+                        Field(
+                            ...,
+                            alias="requestFormDouble",
+                            description="입력한 Double Form 파라미터",
+                            examples=[1.1]
+                        )
+                    )
+                    request_form_double_nullable: Optional[float] = (
+                        Field(
+                            None,
+                            alias="requestFormDoubleNullable",
+                            description="입력한 Double Nullable Form 파라미터",
+                            examples=[1.1]
+                        )
+                    )
+                    request_form_boolean: bool = (
+                        Field(
+                            ...,
+                            alias="requestFormBoolean",
+                            description="입력한 Boolean Form 파라미터",
+                            examples=[True]
+                        )
+                    )
+                    request_form_boolean_nullable: Optional[bool] = (
+                        Field(
+                            None,
+                            alias="requestFormBooleanNullable",
+                            description="입력한 Boolean Nullable Form 파라미터",
+                            examples=[True]
+                        )
+                    )
+                    request_form_string_list: List[str] = (
+                        Field(
+                            ...,
+                            alias="requestFormStringList",
+                            description="입력한 StringList Form 파라미터",
+                            examples=[["testString1", "testString2"]]
+                        )
+                    )
+                    request_form_string_list_nullable: Optional[List[str]] = (
+                        Field(
+                            None,
+                            alias="requestFormStringListNullable",
+                            description="입력한 StringList Nullable Form 파라미터",
+                            examples=[["testString1", "testString2"]]
+                        )
+                    )
+                    """,
+            examples=["""
+            {
+                "requestFormString": "testString",
+                "requestFormStringNullable": null,
+                "requestFormInt": 1,
+                "requestFormIntNullable": null,
+                "requestFormDouble": 1.1,
+                "requestFormDoubleNullable": null,
+                "requestFormBoolean": true,
+                "requestFormBooleanNullable": null,
+                "requestFormStringList": [
+                    "testString1",
+                    "testString2"
+                ],
+                "requestFormStringListNullable": null
+            }
+            """]
+        ),
+        multipart_file: UploadFile =
+        File(
+            ...,
+            alias="multipartFile",
+            validation_alias="multipartFile",
+            description="멀티 파트 파일"
+        ),
+        multipart_file_nullable: Optional[UploadFile] =
+        File(
+            None,
+            alias="multipartFileNullable",
+            validation_alias="multipartFileNullable",
+            description="멀티 파트 파일 Nullable"
+        ),
+):
+    return await service.post_request_test_with_multipart_form_type_request_body3(
+        json_string,
+        multipart_file,
+        multipart_file_nullable
+    )
