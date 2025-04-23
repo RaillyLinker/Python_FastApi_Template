@@ -445,3 +445,17 @@ async def audio_streaming_test(request, response):
     builder = custom_util.MediaStreamResponseBuilder(full_path)
 
     return await builder.build_response(request)
+
+
+# ----
+# (빈 리스트 받기 테스트)
+async def post_empty_list_request_test(
+        request: Request,
+        response: Response,
+        string_list: List[str],
+        request_body: model.PostEmptyListRequestTestInputVo
+):
+    return model.PostEmptyListRequestTestOutputVo(
+        requestQueryStringList=string_list,
+        requestBodyStringList=request_body.request_body_string_list
+    )

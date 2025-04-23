@@ -889,3 +889,41 @@ class VideoStreamingTestVideoHeight(str, Enum):
     H360 = "H360"
     H480 = "H480"
     H720 = "H720"
+
+
+# ----
+# (빈 리스트 받기 테스트)
+class PostEmptyListRequestTestInputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    request_body_string_list: List[str] = (
+        Field(
+            ...,
+            alias="requestBodyStringList",
+            description="StringList Body 파라미터",
+            examples=[["testString1", "testString2"]]
+        )
+    )
+
+
+class PostEmptyListRequestTestOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    request_query_string_list: List[str] = (
+        Field(
+            ...,
+            alias="requestQueryStringList",
+            description="입력한 StringList Query 파라미터",
+            examples=[["testString1", "testString2"]]
+        )
+    )
+    request_body_string_list: List[str] = (
+        Field(
+            ...,
+            alias="requestBodyStringList",
+            description="입력한 StringList Body 파라미터",
+            examples=[["testString1", "testString2"]]
+        )
+    )
