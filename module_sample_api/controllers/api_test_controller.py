@@ -19,6 +19,9 @@ router = APIRouter(
     response_class=responses.PlainTextResponse,
     summary="기본 요청 테스트 API",
     description="이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def basic_request_test(
         request: Request,
@@ -32,6 +35,9 @@ async def basic_request_test(
     "/redirect-to-blank",
     summary="요청 Redirect 테스트 API",
     description="이 API 를 요청하면 /api-test 로 Redirect 됩니다.",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def redirect_test(
         request: Request,
@@ -45,7 +51,10 @@ async def redirect_test(
     "/get-request",
     response_model=model.GetRequestTestOutputVo,
     summary="Get 요청 테스트 (Query Parameter)",
-    description="Query Parameter 를 받는 Get 메소드 요청 테스트"
+    description="Query Parameter 를 받는 Get 메소드 요청 테스트",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def get_request_test(
         request: Request,
@@ -143,6 +152,9 @@ async def get_request_test(
     response_model=model.GetRequestTestWithPathParamOutputVo,
     summary="Get 요청 테스트 (Path Parameter)",
     description="Path Parameter 를 받는 Get 메소드 요청 테스트",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def get_request_test_with_path_param(
         request: Request,
@@ -162,7 +174,10 @@ async def get_request_test_with_path_param(
     "/post-request-application-json",
     response_model=model.PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo,
     summary="Post 요청 테스트 (application-json)",
-    description="application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트"
+    description="application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def post_request_test_with_application_json_type_request_body(
         request: Request,
@@ -177,7 +192,10 @@ async def post_request_test_with_application_json_type_request_body(
     "/post-request-application-json-with-object-param",
     response_model=model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo,
     summary="Post 요청 테스트 (application-json, 객체 파라미터 포함)",
-    description="application-json 형태의 Request Body(객체 파라미터 포함) 를 받는 Post 메소드 요청 테스트"
+    description="application-json 형태의 Request Body(객체 파라미터 포함) 를 받는 Post 메소드 요청 테스트",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def post_request_test_with_application_json_type_request_body2(
         request: Request,
@@ -191,7 +209,10 @@ async def post_request_test_with_application_json_type_request_body2(
 @router.post(
     "/post-request-application-json-with-no-param",
     summary="Post 요청 테스트 (입출력값 없음)",
-    description="입출력값이 없는 Post 메소드 요청 테스트"
+    description="입출력값이 없는 Post 메소드 요청 테스트",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def post_request_test_with_no_input_and_output(
         request: Request,
@@ -205,7 +226,10 @@ async def post_request_test_with_no_input_and_output(
     "/post-request-x-www-form-urlencoded",
     response_model=model.PostRequestTestWithFormTypeRequestBodyOutputVo,
     summary="Post 요청 테스트 (x-www-form-urlencoded)",
-    description="x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트"
+    description="x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def post_request_test_with_form_type_request_body(
         request: Request,
@@ -313,7 +337,10 @@ async def post_request_test_with_form_type_request_body(
     response_model=model.PostRequestTestWithMultipartFormTypeRequestBodyOutputVo,
     summary="Post 요청 테스트 (multipart/form-data)",
     description="multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트<br>"
-                "MultipartFile 파라미터가 null 이 아니라면 저장"
+                "MultipartFile 파라미터가 null 이 아니라면 저장",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def post_request_test_with_multipart_form_type_request_body(
         request: Request,
@@ -437,7 +464,10 @@ async def post_request_test_with_multipart_form_type_request_body(
     response_model=model.PostRequestTestWithMultipartFormTypeRequestBody2OutputVo,
     summary="Post 요청 테스트2 (multipart/form-data)",
     description="multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)<br>"
-                "파일 리스트가 null 이 아니라면 저장"
+                "파일 리스트가 null 이 아니라면 저장",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def post_request_test_with_multipart_form_type_request_body2(
         request: Request,
@@ -563,7 +593,10 @@ async def post_request_test_with_multipart_form_type_request_body2(
     description="multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트<br>"
                 "Form Data 의 Input Body 에는 Object 리스트 타입은 사용 불가능입니다.<br>"
                 "Object 리스트 타입을 사용한다면, Json String 타입으로 객체를 받아서 파싱하여 사용하는 방식을 사용합니다.<br>"
-                "아래 예시에서는 모두 JsonString 형식으로 만들었지만, ObjectList 타입만 이런식으로 처리하세요."
+                "아래 예시에서는 모두 JsonString 형식으로 만들었지만, ObjectList 타입만 이런식으로 처리하세요.",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def post_request_test_with_multipart_form_type_request_body3(
         request: Request,
@@ -702,7 +735,10 @@ async def post_request_test_with_multipart_form_type_request_body3(
 @router.post(
     "/generate-error",
     summary="인위적 에러 발생 테스트",
-    description="요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)"
+    description="요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def generate_error_test(
         request: Request,
@@ -717,6 +753,7 @@ async def generate_error_test(
     summary="결과 코드 발생 테스트",
     description="Response Header 에 api-result-code 를 반환하는 테스트 API",
     responses={
+        200: {"description": "OK"},
         204: {
             "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
             "headers": {
@@ -751,7 +788,10 @@ async def return_result_code_through_headers(
 @router.post(
     "/time-delay-test",
     summary="인위적 응답 지연 테스트",
-    description="임의로 응답 시간을 지연시킵니다."
+    description="임의로 응답 시간을 지연시킵니다.",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def response_delay_test(
         request: Request,
@@ -772,7 +812,10 @@ async def response_delay_test(
     "/return-text-string",
     response_class=PlainTextResponse,
     summary="text/string 반환 샘플",
-    description="text/string 형식의 Response Body 를 반환합니다."
+    description="text/string 형식의 Response Body 를 반환합니다.",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def return_text_string_test(
         request: Request,
@@ -786,7 +829,10 @@ async def return_text_string_test(
     "/return-text-html",
     response_class=HTMLResponse,
     summary="text/html 반환 샘플",
-    description="text/html 형식의 Response Body 를 반환합니다."
+    description="text/html 형식의 Response Body 를 반환합니다.",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def return_html_string_test(
         request: Request,

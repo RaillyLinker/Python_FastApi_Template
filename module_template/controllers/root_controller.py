@@ -16,7 +16,10 @@ router = APIRouter(
     "/",
     response_class=HTMLResponse,
     summary="루트 경로",
-    description="루트 경로 정보를 반환합니다."
+    description="루트 경로 정보를 반환합니다.",
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def get_root(
         request: Request,
@@ -28,7 +31,10 @@ async def get_root(
 # ----
 @router.get(
     "/favicon.ico",
-    include_in_schema=False
+    include_in_schema=False,
+    responses={
+        200: {"description": "OK"}
+    }
 )
 async def get_favicon(
         request: Request,
