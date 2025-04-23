@@ -23,7 +23,7 @@ class AppConf:
     uvicorn_host = "0.0.0.0"
 
     # 서버 점유 포트
-    uvicorn_port = 8080
+    uvicorn_port = 12006
 
     # 파일 업로드 제한 사이즈
     max_upload_size = 10 * 1024 * 1024  # 10MB

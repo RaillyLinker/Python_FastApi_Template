@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{{ url_for('static', path='/for_global/font.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/home_page/home_page.css') }}">
+
+    <script src="{{ url_for('static', path='/home_page/home_page.js') }}"></script>
+
+    <title>{{ viewModel.homeTitle }}</title>
+</head>
+<body>
+
+<div>
+    <img id="title_icon"
+         src="{{ url_for('static', path='/for_global/title_icon.png') }}"
+         onclick="location.href='/'"
+         alt="타이틀 아이콘 이미지"/>
+    <h1 id="title_txt">홈</h1>
+</div>
+
+<hr/>
+
+<h2>{{ viewModel.homeTitle }}</h2>
+
+<h2>시스템 정보</h2>
+
+<span>
+    구동 환경 프로필 : <span>{{ viewModel.env }}</span>
+</span>
+
+{% if viewModel.showApiDocumentBtn %}
+<h2>API 문서</h2>
+<button id="go_to_swagger_btn"
+        type="button"
+        class="sample_btn"
+        onclick="location.href='/docs'">
+    API 문서로 이동
+</button>
+{% endif %}
+
+</body>
+</html>

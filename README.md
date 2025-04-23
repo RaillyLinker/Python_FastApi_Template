@@ -11,12 +11,17 @@
 - 각 모듈별 가상 환경은 다르게 설정하고,<br>
   environment.yaml 로 관리하기<br>
 
-> 출력<br>
-> conda env export > conda_environment.yaml<br>
-> 입력 <br>
-> conda env create --file conda_environment.yaml
+  > 출력<br>
+  > conda env export > conda_environment.yaml<br>
+  > 입력 <br>
+  > conda env create --file conda_environment.yaml
 
 - 배포시 모듈 실행은, 프로젝트 루트 경로에서,
-> python module_sample_api/main.py --profile dev
 
-이런식으로
+  > python module_sample_api/main.py --profile dev
+
+  이런식으로
+
+- 모듈 정보
+  1. 모듈 템플릿 (8080)
+  2. API 테스트 샘플 (12006)
