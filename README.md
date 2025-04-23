@@ -12,9 +12,9 @@
   environment.yaml 로 관리하기<br>
 
 > 출력<br>
-> conda env export > environment.yaml<br>
+> conda env export > conda_environment.yaml<br>
 > 입력 <br>
-> conda env create --file environment.yaml
+> conda env create --file conda_environment.yaml
 
 - 배포시 모듈 실행은, 프로젝트 루트 경로에서,
 > python module_sample_api/main.py --profile dev

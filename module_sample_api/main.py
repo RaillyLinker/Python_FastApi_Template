@@ -15,16 +15,16 @@ import module_sample_api.middlewares.limit_upload_size_middleware as limit_uploa
 import module_sample_api.configurations.logging_config as logging_config
 
 # [FastAPI 실행 Main]
+# FastAPI 객체 생성
+app = fastapi.FastAPI()
+
 # python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
 parser = argparse.ArgumentParser(description="Run FastAPI application")
 parser.add_argument('--profile', type=str, default='local', help="Specify the profile (default: 'local')")
 args = parser.parse_args()
 app_conf.AppConf.server_profile = args.profile.lower()
 
-# FastAPI 객체 생성
-app = fastapi.FastAPI()
-
-# 로깅 설정
+# 로깅 설정 적용
 logging_config.setup_logging()
 
 # Swagger 설정 적용
