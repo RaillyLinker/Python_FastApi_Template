@@ -53,9 +53,8 @@ def multipart_file_local_save(
     return saved_file_name
 
 
-# (비디오 스트리밍 처리)
-# 비동기 비디오 스트리밍 응답 생성기
-class VideoStreamResponseBuilder:
+# (미디어 스트리밍 응답 생성기)
+class MediaStreamResponseBuilder:
     def __init__(self, file_path: str, chunk_size: int = 1024 * 1024):
         self.file_path = file_path
         self.chunk_size = chunk_size

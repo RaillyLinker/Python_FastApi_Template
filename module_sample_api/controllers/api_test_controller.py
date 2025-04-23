@@ -894,3 +894,24 @@ async def video_streaming_test(
         )
 ):
     return await service.video_streaming_test(request, response, video_height)
+
+
+# ----
+@router.get(
+    "/audio-streaming",
+    summary="오디오 스트리밍 샘플",
+    response_class=StreamingResponse,
+    description=(
+            "오디오 스트리밍 샘플<br>"
+            "테스트는 프로젝트 파일 경로의 `external_files/files_for_api_test/html_file_sample` 안의 "
+            "`audio-streaming.html` 파일을 사용하세요."
+    ),
+    responses={
+        200: {"description": "OK"}
+    }
+)
+async def audio_streaming_test(
+        request: Request,
+        response: Response
+):
+    return await service.audio_streaming_test(request, response)

@@ -423,7 +423,25 @@ async def video_streaming_test(
     file_name = file_name_map.get(video_height)
     full_path = os.path.join(base_path, file_name)
 
-    # 비디오 응답 생성기 객체
-    builder = custom_util.VideoStreamResponseBuilder(full_path)
+    # 미디어 응답 생성기 객체
+    builder = custom_util.MediaStreamResponseBuilder(full_path)
+
+    return await builder.build_response(request)
+
+
+# ----
+# (오디오 스트리밍 샘플)
+async def audio_streaming_test(request, response):
+    # 모듈 루트 경로
+    module_root_path = AppConf.module_folder_path
+
+    # 비디오 파일 경로 구성
+    base_path = os.path.join(module_root_path, "z_resources/static/audio_streaming_test")
+
+    file_name = "test.mp3"
+    full_path = os.path.join(base_path, file_name)
+
+    # 미디어 응답 생성기 객체
+    builder = custom_util.MediaStreamResponseBuilder(full_path)
 
     return await builder.build_response(request)
