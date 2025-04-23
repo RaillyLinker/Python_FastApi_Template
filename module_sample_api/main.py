@@ -7,6 +7,7 @@ import importlib
 from pkgutil import iter_modules
 from fastapi.middleware.cors import CORSMiddleware
 from argparse import ArgumentParser
+from fastapi.templating import Jinja2Templates
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from module_sample_api.configurations.app_conf import AppConf
@@ -41,6 +42,9 @@ for _, module_name, _ in iter_modules([AppConf.module_folder_path + "/" + contro
     module = importlib.import_module(f"{folder_name}.{controllers_package_name}.{module_name}")
     if hasattr(module, "router") and isinstance(module.router, APIRouter):
         app.include_router(module.router)
+
+# Jinja2Templates HTML 템플릿 위치 설정
+AppConf.jinja2Templates = Jinja2Templates(directory=f"{folder_name}/z_resources/templates")
 
 # 파일 업로드 사이즈 제한 미들웨어 등록
 app.add_middleware(LimitUploadSizeMiddleware)

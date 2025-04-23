@@ -1,5 +1,6 @@
 from uuid import uuid4
 from time import time
+from fastapi.templating import Jinja2Templates
 
 
 # [API 설정 상수]
@@ -64,3 +65,6 @@ class AppConf:
     # main.py 파일의 부모 폴더 경로
     # ex : C:\dev\python\Python_Fastapi_Template\module_sample_api
     module_folder_path = ""
+
+    # jinja2 HTML Templates 객체
+    jinja2Templates: Jinja2Templates
