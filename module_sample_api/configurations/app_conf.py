@@ -28,6 +28,9 @@ class AppConf:
     # 파일 업로드 제한 사이즈
     max_upload_size = 10 * 1024 * 1024  # 10MB
 
+    # 스웨거 문서 오픈 여부
+    swagger_docs_enable = True
+
     # CORS Origins
     # 허용 origin 전체 ["*"], 또는 특정 ["https://example.com"]
     cors_allow_origins = ["*"]

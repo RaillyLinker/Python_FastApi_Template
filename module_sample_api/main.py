@@ -8,6 +8,7 @@ from pkgutil import iter_modules
 from fastapi.middleware.cors import CORSMiddleware
 from argparse import ArgumentParser
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from module_sample_api.configurations.app_conf import AppConf
@@ -45,6 +46,16 @@ for _, module_name, _ in iter_modules([AppConf.module_folder_path + "/" + contro
 
 # Jinja2Templates HTML 템플릿 위치 설정
 AppConf.jinja2Templates = Jinja2Templates(directory=f"{folder_name}/z_resources/templates")
+
+# static 위치 설정
+app.mount(
+    # 클라이언트가 접근할 경로입니다. 예: http://localhost:8000/static/for_global/font.css
+    "/static",
+    # 실제 서버 파일 시스템 상의 디렉토리입니다. 이 경로의 파일을 클라이언트에게 서빙합니다.
+    StaticFiles(directory=f"{folder_name}/z_resources/static"),
+    # 템플릿에서 url_for("static", path="...") 호출 시 사용할 이름입니다.
+    name="static"
+)
 
 # 파일 업로드 사이즈 제한 미들웨어 등록
 app.add_middleware(LimitUploadSizeMiddleware)

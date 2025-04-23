@@ -1,0 +1,81 @@
+/* [Tag] */
+body {
+    padding: 10px 20px;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 100vh;
+    font-family: SeoulNamsan;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+hr{
+    width: 100%;
+}
+
+/* [Class] */
+.sample_btn{
+    width: 200px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #277cea;
+    color: #eee;
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
+    border: 0px;
+}
+
+.top-button {
+    float: right;
+    margin: 0px;
+}
+
+.member-info-button {
+    margin-right: 10px;
+}
+
+
+/* [Id] */
+#title_icon{
+    width : 30px;
+    height : 30px;
+    vertical-align:middle;
+    cursor: pointer;
+}
+
+#title_txt{
+    font-size:20px;
+    margin-left: 30px;
+    vertical-align:middle;
+    display: inline;
+}
+
+#login_btn{
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #277cea;
+    color: #eee;
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
+    border: 0px;
+    float: right;
+}
+
+#logout_btn{
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #277cea;
+    color: #eee;
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
+    border: 0px;
+    float: right;
+}
+
+/* [Name] */
