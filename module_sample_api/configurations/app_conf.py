@@ -60,3 +60,7 @@ class AppConf:
     # ---- (자동 할당 상수) ----
     # 서버 고유값 (런타임 시에 고정되도록 생성)
     server_uuid = f"{int(time() * 1000)}/{uuid4()}"
+
+    # main.py 파일의 부모 폴더 경로
+    # ex : C:\dev\python\Python_Fastapi_Template\module_sample_api
+    module_folder_path = ""
