@@ -23,3 +23,12 @@ async def get_root(
         request: Request
 ):
     return await service.get_root(request)
+
+
+# ----
+@router.get(
+    "/favicon.ico",
+    include_in_schema=False
+)
+async def get_favicon():
+    return await service.get_favicon()

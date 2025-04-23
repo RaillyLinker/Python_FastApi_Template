@@ -1,4 +1,5 @@
 from module_template.configurations.app_conf import AppConf
+from fastapi.responses import FileResponse
 
 
 # [그룹 서비스]
@@ -15,3 +16,9 @@ async def get_root(request):
             }
         }
     )
+
+
+# ----
+# (/favicon.ico)
+async def get_favicon():
+    return FileResponse(f"{AppConf.module_folder_path}/z_resources/static/favicon.ico")
