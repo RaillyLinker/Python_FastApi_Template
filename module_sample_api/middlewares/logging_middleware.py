@@ -7,6 +7,7 @@ import json
 import time
 from typing import Callable
 
+# [요청/응답 자동 로깅]
 logger = logging.getLogger("request_logger")
 
 VISIBLE_CONTENT_TYPES = [
