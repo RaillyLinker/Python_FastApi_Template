@@ -1,6 +1,7 @@
 from uuid import uuid4
 from time import time
 from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 
 
 # [API 설정 상수]
@@ -62,6 +63,9 @@ class AppConf:
     }
 
     # ---- (자동 할당 상수) ----
+    # FastApi app
+    app: FastAPI
+
     # 서버 고유값 (런타임 시에 고정되도록 생성)
     server_uuid = f"{int(time() * 1000)}/{uuid4()}"
 

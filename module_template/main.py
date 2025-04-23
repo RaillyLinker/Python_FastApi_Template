@@ -25,6 +25,7 @@ app = FastAPI(
     redoc_url="/redoc" if AppConf.swagger_docs_enable else None,
     openapi_url="/openapi.json" if AppConf.swagger_docs_enable else None
 )
+AppConf.app = app
 
 # python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
 parser = ArgumentParser(description="Run FastAPI application")
@@ -37,7 +38,7 @@ AppConf.server_profile = args.profile.lower()
 setup_logging()
 
 # Swagger 설정 적용
-app.openapi = lambda: SwaggerConf.custom_openapi(app)
+AppConf.app.openapi = lambda: SwaggerConf.custom_openapi(AppConf.app)
 
 # 현재 파일이 속한 디렉토리 경로
 AppConf.module_folder_path = os.path.dirname(os.path.abspath(__file__))
@@ -48,13 +49,13 @@ controllers_package_name = "controllers"
 for _, module_name, _ in iter_modules([AppConf.module_folder_path + "/" + controllers_package_name]):
     module = importlib.import_module(f"{folder_name}.{controllers_package_name}.{module_name}")
     if hasattr(module, "router") and isinstance(module.router, APIRouter):
-        app.include_router(module.router)
+        AppConf.app.include_router(module.router)
 
 # Jinja2Templates HTML 템플릿 위치 설정
 AppConf.jinja2Templates = Jinja2Templates(directory=f"{folder_name}/z_resources/templates")
 
 # static 위치 설정
-app.mount(
+AppConf.app.mount(
     # 클라이언트가 접근할 경로입니다. 예: http://localhost:8000/static/for_global/font.css
     "/static",
     # 실제 서버 파일 시스템 상의 디렉토리입니다. 이 경로의 파일을 클라이언트에게 서빙합니다.
@@ -64,15 +65,15 @@ app.mount(
 )
 
 # 파일 업로드 사이즈 제한 미들웨어 등록
-app.add_middleware(LimitUploadSizeMiddleware)
-app.add_middleware(
+AppConf.app.add_middleware(LimitUploadSizeMiddleware)
+AppConf.app.add_middleware(
     CORSMiddleware,
     allow_origins=AppConf.cors_allow_origins,  # 모든 origin 허용 (또는 ["https://example.com"] 등 명시적으로 설정)
     allow_credentials=AppConf.cors_allow_credentials,
     allow_methods=AppConf.cors_allow_methods,  # GET, POST, PUT, DELETE 등
     allow_headers=AppConf.cors_allow_headers
 )
-app.add_middleware(LoggingMiddleware)
+AppConf.app.add_middleware(LoggingMiddleware)
 
 # FastAPI 서버 실행
 # main.py 위쪽 코드 부터 순차 실행 후 __main__ 코드 실행. 그리고 다시 위 코드가 __main__ 앞까지 실행 됩니다.
