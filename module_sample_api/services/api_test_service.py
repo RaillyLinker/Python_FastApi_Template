@@ -1,25 +1,25 @@
-import module_sample_api.models.api_test_model as model
-import fastapi
-import typing
-import module_sample_api.utils.custom_util as custom_util
 import os
+from fastapi import responses, UploadFile
+from typing import Optional, List
+import module_sample_api.utils.custom_util as custom_util
+import module_sample_api.models.api_test_model as model
 
 
 # [그룹 서비스]
 # (Get 요청 테스트 (Query Parameter))
 async def get_request_test(
         query_param_string: str,
-        query_param_string_nullable: typing.Optional[str],
+        query_param_string_nullable: Optional[str],
         query_param_int: int,
-        query_param_int_nullable: typing.Optional[int],
+        query_param_int_nullable: Optional[int],
         query_param_double: float,
-        query_param_double_nullable: typing.Optional[float],
+        query_param_double_nullable: Optional[float],
         query_param_boolean: bool,
-        query_param_boolean_nullable: typing.Optional[bool],
-        query_param_string_list: typing.List[str],
-        query_param_string_list_nullable: typing.Optional[typing.List[str]]
+        query_param_boolean_nullable: Optional[bool],
+        query_param_string_list: List[str],
+        query_param_string_list_nullable: Optional[List[str]]
 ):
-    return fastapi.responses.JSONResponse(
+    return responses.JSONResponse(
         status_code=200,
         content=model.GetRequestTestOutputVo(
             query_param_string=query_param_string,
@@ -41,7 +41,7 @@ async def get_request_test(
 async def get_request_test_with_path_param(
         path_param_int: int
 ):
-    return fastapi.responses.JSONResponse(
+    return responses.JSONResponse(
         status_code=200,
         content=model.GetRequestTestWithPathParamOutputVo(
             path_param_int=path_param_int
@@ -54,7 +54,7 @@ async def get_request_test_with_path_param(
 async def post_request_test_with_application_json_type_request_body(
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBodyInputVo
 ):
-    return fastapi.responses.JSONResponse(
+    return responses.JSONResponse(
         status_code=200,
         content=model.PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(
             request_body_string=request_body.request_body_string,
@@ -77,9 +77,9 @@ async def post_request_test_with_application_json_type_request_body2(
         request_body: model.PostRequestTestWithApplicationJsonTypeRequestBody2InputVo
 ):
     # objectVoList 변환
-    object_vo_list: typing.List[model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput] = []
+    object_vo_list: List[model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput] = []
     for object_vo in request_body.object_vo_list:
-        sub_object_vo_list: typing.List[
+        sub_object_vo_list: List[
             model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput] = [
             model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput(
                 request_body_string=sub.request_body_string,
@@ -100,7 +100,7 @@ async def post_request_test_with_application_json_type_request_body2(
         object_vo_list.append(object_vo_output)
 
     # objectVo 단일 항목 변환
-    sub_object_vo_list_single: typing.List[
+    sub_object_vo_list_single: List[
         model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput] = [
         model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo.ObjectVoOutput.SubObjectVoOutput(
             request_body_string=sub.request_body_string,
@@ -118,7 +118,7 @@ async def post_request_test_with_application_json_type_request_body2(
         sub_object_vo_list=sub_object_vo_list_single
     )
 
-    return fastapi.responses.JSONResponse(
+    return responses.JSONResponse(
         status_code=200,
         content=model.PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(
             object_vo=object_vo_single,
@@ -130,7 +130,7 @@ async def post_request_test_with_application_json_type_request_body2(
 # ----
 # (Post 요청 테스트 (입출력값 없음))
 async def post_request_test_with_no_input_and_output():
-    return fastapi.responses.JSONResponse(
+    return responses.JSONResponse(
         status_code=200,
         content=None
     )
@@ -140,17 +140,17 @@ async def post_request_test_with_no_input_and_output():
 # (Post 요청 테스트 (x-www-form-urlencoded))
 async def post_request_test_with_form_type_request_body(
         request_form_string: str,
-        request_form_string_nullable: typing.Optional[str],
+        request_form_string_nullable: Optional[str],
         request_form_int: int,
-        request_form_int_nullable: typing.Optional[int],
+        request_form_int_nullable: Optional[int],
         request_form_double: float,
-        request_form_double_nullable: typing.Optional[float],
+        request_form_double_nullable: Optional[float],
         request_form_boolean: bool,
-        request_form_boolean_nullable: typing.Optional[bool],
-        request_form_string_list: typing.List[str],
-        request_form_string_list_nullable: typing.Optional[typing.List[str]]
+        request_form_boolean_nullable: Optional[bool],
+        request_form_string_list: List[str],
+        request_form_string_list_nullable: Optional[List[str]]
 ):
-    return fastapi.responses.JSONResponse(
+    return responses.JSONResponse(
         status_code=200,
         content=model.PostRequestTestWithFormTypeRequestBodyOutputVo(
             request_form_string=request_form_string,
@@ -171,17 +171,17 @@ async def post_request_test_with_form_type_request_body(
 # (Post 요청 테스트 (x-www-form-urlencoded))
 async def post_request_test_with_multipart_form_type_request_body(
         request_form_string: str,
-        request_form_string_nullable: typing.Optional[str],
+        request_form_string_nullable: Optional[str],
         request_form_int: int,
-        request_form_int_nullable: typing.Optional[int],
+        request_form_int_nullable: Optional[int],
         request_form_double: float,
-        request_form_double_nullable: typing.Optional[float],
+        request_form_double_nullable: Optional[float],
         request_form_boolean: bool,
-        request_form_boolean_nullable: typing.Optional[bool],
-        request_form_string_list: typing.List[str],
-        request_form_string_list_nullable: typing.Optional[typing.List[str]],
-        multipart_file: fastapi.UploadFile,
-        multipart_file_nullable: typing.Optional[fastapi.UploadFile]
+        request_form_boolean_nullable: Optional[bool],
+        request_form_string_list: List[str],
+        request_form_string_list_nullable: Optional[List[str]],
+        multipart_file: UploadFile,
+        multipart_file_nullable: Optional[UploadFile]
 ):
     # 저장 경로 설정
     save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
@@ -193,7 +193,7 @@ async def post_request_test_with_multipart_form_type_request_body(
     if multipart_file_nullable is not None:
         custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
 
-    return fastapi.responses.JSONResponse(
+    return responses.JSONResponse(
         status_code=200,
         content=model.PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(
             request_form_string=request_form_string,

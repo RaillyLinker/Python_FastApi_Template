@@ -1,6 +1,6 @@
 import os
-import shutil
-import fastapi
+from shutil import copyfileobj
+from fastapi import UploadFile
 from typing import Optional, Tuple
 from datetime import datetime
 
@@ -22,7 +22,7 @@ def multipart_file_local_save(
         # null 이라면 multipartFile 의 originalFilename 을 사용합니다.
         file_name: Optional[str],
         # 저장할 MultipartFile
-        multipart_file: fastapi.UploadFile
+        multipart_file: UploadFile
 ) -> str:
     # 파일 저장 기본 디렉토리 생성
     os.makedirs(save_directory_path, exist_ok=True)
@@ -45,6 +45,6 @@ def multipart_file_local_save(
     # multipartFile을 targetPath에 저장
     target_path = os.path.join(save_directory_path, saved_file_name)
     with open(target_path, 'wb') as f:
-        shutil.copyfileobj(multipart_file.file, f)
+        copyfileobj(multipart_file.file, f)
 
     return saved_file_name

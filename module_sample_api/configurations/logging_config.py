@@ -1,9 +1,9 @@
 import logging
-import logging.handlers as logging_handler
 import os
 import pytz
 import datetime
 import module_sample_api.configurations.app_conf as app_conf
+import concurrent_log_handler
 
 
 # [로깅 포메터]
@@ -32,8 +32,13 @@ def setup_logging():
 
     log_file = os.path.join(log_dir, f"{app_conf.AppConf.server_profile}_current_log.log")
 
-    file_handler = logging_handler.TimedRotatingFileHandler(
-        log_file, when="midnight", interval=1, backupCount=30, encoding='utf-8'
+    # 로그 파일 생성 핸들러
+    # 파일 크기가 설정 크기를 넘어서면 로그 파일 분할(오래된 파일일수록 뒤에 붙은 숫자가 커짐)
+    file_handler = concurrent_log_handler.ConcurrentRotatingFileHandler(
+        log_file,
+        maxBytes=10 * 1024 * 1024,  # 파일 크기 10MB
+        backupCount=30,  # 파일 최대 보관 개수
+        encoding='utf-8'
     )
     file_handler.setFormatter(formatter)
 

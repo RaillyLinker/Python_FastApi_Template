@@ -1,23 +1,23 @@
-import typing
-import pydantic
+from typing import Optional, List
+from pydantic import BaseModel, Field
 
 
 # [그룹 모델]
 # (Get 요청 테스트 (Query Parameter))
-class GetRequestTestOutputVo(pydantic.BaseModel):
+class GetRequestTestOutputVo(BaseModel):
     class Config:
         validate_by_name = True
 
     query_param_string: str = (
-        pydantic.Field(
+        Field(
             ...,
             alias="queryParamString",
             description="입력한 String Query 파라미터",
             examples=["testString"]
         )
     )
-    query_param_string_nullable: typing.Optional[str] = (
-        pydantic.Field(
+    query_param_string_nullable: Optional[str] = (
+        Field(
             None,
             alias="queryParamStringNullable",
             description="입력한 String Nullable Query 파라미터",
@@ -25,15 +25,15 @@ class GetRequestTestOutputVo(pydantic.BaseModel):
         )
     )
     query_param_int: int = (
-        pydantic.Field(
+        Field(
             ...,
             alias="queryParamInt",
             description="입력한 Int Query 파라미터",
             examples=[1]
         )
     )
-    query_param_int_nullable: typing.Optional[int] = (
-        pydantic.Field(
+    query_param_int_nullable: Optional[int] = (
+        Field(
             None,
             alias="queryParamIntNullable",
             description="입력한 Int Nullable Query 파라미터",
@@ -41,15 +41,15 @@ class GetRequestTestOutputVo(pydantic.BaseModel):
         )
     )
     query_param_double: float = (
-        pydantic.Field(
+        Field(
             ...,
             alias="queryParamDouble",
             description="입력한 Double Query 파라미터",
             examples=[1.1]
         )
     )
-    query_param_double_nullable: typing.Optional[float] = (
-        pydantic.Field(
+    query_param_double_nullable: Optional[float] = (
+        Field(
             None,
             alias="queryParamDoubleNullable",
             description="입력한 Double Nullable Query 파라미터",
@@ -57,31 +57,31 @@ class GetRequestTestOutputVo(pydantic.BaseModel):
         )
     )
     query_param_boolean: bool = (
-        pydantic.Field(
+        Field(
             ...,
             alias="queryParamBoolean",
             description="입력한 Boolean Query 파라미터",
             examples=[True]
         )
     )
-    query_param_boolean_nullable: typing.Optional[bool] = (
-        pydantic.Field(
+    query_param_boolean_nullable: Optional[bool] = (
+        Field(
             None,
             alias="queryParamBooleanNullable",
             description="입력한 Boolean Nullable Query 파라미터",
             examples=[True]
         )
     )
-    query_param_string_list: typing.List[str] = (
-        pydantic.Field(
+    query_param_string_list: List[str] = (
+        Field(
             ...,
             alias="queryParamStringList",
             description="입력한 StringList Query 파라미터",
             examples=[["testString1", "testString2"]]
         )
     )
-    query_param_string_list_nullable: typing.Optional[typing.List[str]] = (
-        pydantic.Field(
+    query_param_string_list_nullable: Optional[List[str]] = (
+        Field(
             None,
             alias="queryParamStringListNullable",
             description="입력한 StringList Nullable Query 파라미터",
@@ -92,11 +92,11 @@ class GetRequestTestOutputVo(pydantic.BaseModel):
 
 # ----
 # (Get 요청 테스트 (Path Parameter))
-class GetRequestTestWithPathParamOutputVo(pydantic.BaseModel):
+class GetRequestTestWithPathParamOutputVo(BaseModel):
     class Config:
         validate_by_name = True
 
-    path_param_int: int = pydantic.Field(
+    path_param_int: int = Field(
         ...,
         alias="pathParamInt",
         description="입력한 Int Path 파라미터",
@@ -106,20 +106,20 @@ class GetRequestTestWithPathParamOutputVo(pydantic.BaseModel):
 
 # ----
 # (Post 요청 테스트 (application-json))
-class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(pydantic.BaseModel):
+class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(BaseModel):
     class Config:
         validate_by_name = True
 
     request_body_string: str = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyString",
             description="String Body 파라미터",
             examples=["testString"]
         )
     )
-    request_body_string_nullable: typing.Optional[str] = (
-        pydantic.Field(
+    request_body_string_nullable: Optional[str] = (
+        Field(
             None,
             alias="requestBodyStringNullable",
             description="String Nullable Body 파라미터",
@@ -127,15 +127,15 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(pydantic.BaseMode
         )
     )
     request_body_int: int = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyInt",
             description="Int Body 파라미터",
             examples=[1]
         )
     )
-    request_body_int_nullable: typing.Optional[int] = (
-        pydantic.Field(
+    request_body_int_nullable: Optional[int] = (
+        Field(
             None,
             alias="requestBodyIntNullable",
             description="Int Nullable Body 파라미터",
@@ -143,15 +143,15 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(pydantic.BaseMode
         )
     )
     request_body_double: float = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyDouble",
             description="Double Body 파라미터",
             examples=[1.1]
         )
     )
-    request_body_double_nullable: typing.Optional[float] = (
-        pydantic.Field(
+    request_body_double_nullable: Optional[float] = (
+        Field(
             None,
             alias="requestBodyDoubleNullable",
             description="Double Nullable Body 파라미터",
@@ -159,31 +159,31 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(pydantic.BaseMode
         )
     )
     request_body_boolean: bool = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyBoolean",
             description="Boolean Body 파라미터",
             examples=[True]
         )
     )
-    request_body_boolean_nullable: typing.Optional[bool] = (
-        pydantic.Field(
+    request_body_boolean_nullable: Optional[bool] = (
+        Field(
             None,
             alias="requestBodyBooleanNullable",
             description="Boolean Nullable Body 파라미터",
             examples=[True]
         )
     )
-    request_body_string_list: typing.List[str] = (
-        pydantic.Field(
+    request_body_string_list: List[str] = (
+        Field(
             ...,
             alias="requestBodyStringList",
             description="StringList Body 파라미터",
             examples=[["testString1", "testString2"]]
         )
     )
-    request_body_string_list_nullable: typing.Optional[typing.List[str]] = (
-        pydantic.Field(
+    request_body_string_list_nullable: Optional[List[str]] = (
+        Field(
             None,
             alias="requestBodyStringListNullable",
             description="StringList Nullable Body 파라미터",
@@ -192,20 +192,20 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyInputVo(pydantic.BaseMode
     )
 
 
-class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseModel):
+class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(BaseModel):
     class Config:
         validate_by_name = True
 
     request_body_string: str = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyString",
             description="입력한 String Body 파라미터",
             examples=["testString"]
         )
     )
-    request_body_string_nullable: typing.Optional[str] = (
-        pydantic.Field(
+    request_body_string_nullable: Optional[str] = (
+        Field(
             None,
             alias="requestBodyStringNullable",
             description="입력한 String Nullable Body 파라미터",
@@ -213,15 +213,15 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseMod
         )
     )
     request_body_int: int = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyInt",
             description="입력한 Int Body 파라미터",
             examples=[1]
         )
     )
-    request_body_int_nullable: typing.Optional[int] = (
-        pydantic.Field(
+    request_body_int_nullable: Optional[int] = (
+        Field(
             None,
             alias="requestBodyIntNullable",
             description="입력한 Int Nullable Body 파라미터",
@@ -229,15 +229,15 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseMod
         )
     )
     request_body_double: float = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyDouble",
             description="입력한 Double Body 파라미터",
             examples=[1.1]
         )
     )
-    request_body_double_nullable: typing.Optional[float] = (
-        pydantic.Field(
+    request_body_double_nullable: Optional[float] = (
+        Field(
             None,
             alias="requestBodyDoubleNullable",
             description="입력한 Double Nullable Body 파라미터",
@@ -245,31 +245,31 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseMod
         )
     )
     request_body_boolean: bool = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestBodyBoolean",
             description="입력한 Boolean Body 파라미터",
             examples=[True]
         )
     )
-    request_body_boolean_nullable: typing.Optional[bool] = (
-        pydantic.Field(
+    request_body_boolean_nullable: Optional[bool] = (
+        Field(
             None,
             alias="requestBodyBooleanNullable",
             description="입력한 Boolean Nullable Body 파라미터",
             examples=[True]
         )
     )
-    request_body_string_list: typing.List[str] = (
-        pydantic.Field(
+    request_body_string_list: List[str] = (
+        Field(
             ...,
             alias="requestBodyStringList",
             description="입력한 StringList Body 파라미터",
             examples=[["testString1", "testString2"]]
         )
     )
-    request_body_string_list_nullable: typing.Optional[typing.List[str]] = (
-        pydantic.Field(
+    request_body_string_list_nullable: Optional[List[str]] = (
+        Field(
             None,
             alias="requestBodyStringListNullable",
             description="입력한 StringList Nullable Body 파라미터",
@@ -280,28 +280,28 @@ class PostRequestTestWithApplicationJsonTypeRequestBodyOutputVo(pydantic.BaseMod
 
 # ----
 # (Post 요청 테스트 (application-json, 객체 파라미터 포함))
-class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(pydantic.BaseModel):
+class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(BaseModel):
     class Config:
         validate_by_name = True
 
-    class ObjectVoInput(pydantic.BaseModel):
+    class ObjectVoInput(BaseModel):
         class Config:
             validate_by_name = True
 
-        class SubObjectVoInput(pydantic.BaseModel):
+        class SubObjectVoInput(BaseModel):
             class Config:
                 validate_by_name = True
 
             request_body_string: str = (
-                pydantic.Field(
+                Field(
                     ...,
                     alias="requestBodyString",
                     description="String Body 파라미터",
                     examples=["testString"]
                 )
             )
-            request_body_string_list: typing.List[str] = (
-                pydantic.Field(
+            request_body_string_list: List[str] = (
+                Field(
                     ...,
                     alias="requestBodyStringList",
                     description="StringList Body 파라미터",
@@ -310,7 +310,7 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(pydantic.BaseMod
             )
 
         request_body_string: str = (
-            pydantic.Field(
+            Field(
                 ...,
                 alias="requestBodyString",
                 description="String Body 파라미터",
@@ -318,8 +318,8 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(pydantic.BaseMod
             )
         )
 
-        request_body_string_list: typing.List[str] = (
-            pydantic.Field(
+        request_body_string_list: List[str] = (
+            Field(
                 ...,
                 alias="requestBodyStringList",
                 description="StringList Body 파라미터",
@@ -328,14 +328,14 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(pydantic.BaseMod
         )
 
         sub_object_vo: SubObjectVoInput = (
-            pydantic.Field(
+            Field(
                 ...,
                 alias="subObjectVo",
                 description="서브 객체 타입 파라미터"
             )
         )
-        sub_object_vo_list: typing.List[SubObjectVoInput] = (
-            pydantic.Field(
+        sub_object_vo_list: List[SubObjectVoInput] = (
+            Field(
                 ...,
                 alias="subObjectVoList",
                 description="서브 객체 타입 리스트 파라미터"
@@ -343,14 +343,14 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(pydantic.BaseMod
         )
 
     object_vo: ObjectVoInput = (
-        pydantic.Field(
+        Field(
             ...,
             alias="objectVo",
             description="객체 타입 파라미터"
         )
     )
-    object_vo_list: typing.List[ObjectVoInput] = (
-        pydantic.Field(
+    object_vo_list: List[ObjectVoInput] = (
+        Field(
             ...,
             alias="objectVoList",
             description="객체 타입 리스트 파라미터"
@@ -358,28 +358,28 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2InputVo(pydantic.BaseMod
     )
 
 
-class PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(pydantic.BaseModel):
+class PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(BaseModel):
     class Config:
         validate_by_name = True
 
-    class ObjectVoOutput(pydantic.BaseModel):
+    class ObjectVoOutput(BaseModel):
         class Config:
             validate_by_name = True
 
-        class SubObjectVoOutput(pydantic.BaseModel):
+        class SubObjectVoOutput(BaseModel):
             class Config:
                 validate_by_name = True
 
             request_body_string: str = (
-                pydantic.Field(
+                Field(
                     ...,
                     alias="requestBodyString",
                     description="String Body 파라미터",
                     examples=["testString"]
                 )
             )
-            request_body_string_list: typing.List[str] = (
-                pydantic.Field(
+            request_body_string_list: List[str] = (
+                Field(
                     ...,
                     alias="requestBodyStringList",
                     description="StringList Body 파라미터",
@@ -388,15 +388,15 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(pydantic.BaseMo
             )
 
         request_body_string: str = (
-            pydantic.Field(
+            Field(
                 ...,
                 alias="requestBodyString",
                 description="String Body 파라미터",
                 examples=["testString"]
             )
         )
-        request_body_string_list: typing.List[str] = (
-            pydantic.Field(
+        request_body_string_list: List[str] = (
+            Field(
                 ...,
                 alias="requestBodyStringList",
                 description="StringList Body 파라미터",
@@ -405,14 +405,14 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(pydantic.BaseMo
         )
 
         sub_object_vo: SubObjectVoOutput = (
-            pydantic.Field(
+            Field(
                 ...,
                 alias="subObjectVo",
                 description="서브 객체 타입 파라미터"
             )
         )
-        sub_object_vo_list: typing.List[SubObjectVoOutput] = (
-            pydantic.Field(
+        sub_object_vo_list: List[SubObjectVoOutput] = (
+            Field(
                 ...,
                 alias="subObjectVoList",
                 description="서브 객체 타입 리스트 파라미터"
@@ -420,14 +420,14 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(pydantic.BaseMo
         )
 
     object_vo: ObjectVoOutput = (
-        pydantic.Field(
+        Field(
             ...,
             alias="objectVo",
             description="객체 타입 파라미터"
         )
     )
-    object_vo_list: typing.List[ObjectVoOutput] = (
-        pydantic.Field(
+    object_vo_list: List[ObjectVoOutput] = (
+        Field(
             ...,
             alias="objectVoList",
             description="객체 타입 리스트 파라미터"
@@ -437,20 +437,20 @@ class PostRequestTestWithApplicationJsonTypeRequestBody2OutputVo(pydantic.BaseMo
 
 # ----
 # (Post 요청 테스트 (x-www-form-urlencoded))
-class PostRequestTestWithFormTypeRequestBodyOutputVo(pydantic.BaseModel):
+class PostRequestTestWithFormTypeRequestBodyOutputVo(BaseModel):
     class Config:
         validate_by_name = True
 
     request_form_string: str = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormString",
             description="입력한 String Form 파라미터",
             examples=["testString"]
         )
     )
-    request_form_string_nullable: typing.Optional[str] = (
-        pydantic.Field(
+    request_form_string_nullable: Optional[str] = (
+        Field(
             None,
             alias="requestFormStringNullable",
             description="입력한 String Nullable Form 파라미터",
@@ -458,15 +458,15 @@ class PostRequestTestWithFormTypeRequestBodyOutputVo(pydantic.BaseModel):
         )
     )
     request_form_int: int = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormInt",
             description="입력한 Int Form 파라미터",
             examples=[1]
         )
     )
-    request_form_int_nullable: typing.Optional[int] = (
-        pydantic.Field(
+    request_form_int_nullable: Optional[int] = (
+        Field(
             None,
             alias="requestFormIntNullable",
             description="입력한 Int Nullable Form 파라미터",
@@ -474,15 +474,15 @@ class PostRequestTestWithFormTypeRequestBodyOutputVo(pydantic.BaseModel):
         )
     )
     request_form_double: float = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormDouble",
             description="입력한 Double Form 파라미터",
             examples=[1.1]
         )
     )
-    request_form_double_nullable: typing.Optional[float] = (
-        pydantic.Field(
+    request_form_double_nullable: Optional[float] = (
+        Field(
             None,
             alias="requestFormDoubleNullable",
             description="입력한 Double Nullable Form 파라미터",
@@ -490,31 +490,31 @@ class PostRequestTestWithFormTypeRequestBodyOutputVo(pydantic.BaseModel):
         )
     )
     request_form_boolean: bool = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormBoolean",
             description="입력한 Boolean Form 파라미터",
             examples=[True]
         )
     )
-    request_form_boolean_nullable: typing.Optional[bool] = (
-        pydantic.Field(
+    request_form_boolean_nullable: Optional[bool] = (
+        Field(
             None,
             alias="requestFormBooleanNullable",
             description="입력한 Boolean Nullable Form 파라미터",
             examples=[True]
         )
     )
-    request_form_string_list: typing.List[str] = (
-        pydantic.Field(
+    request_form_string_list: List[str] = (
+        Field(
             ...,
             alias="requestFormStringList",
             description="입력한 StringList Form 파라미터",
             examples=[["testString1", "testString2"]]
         )
     )
-    request_form_string_list_nullable: typing.Optional[typing.List[str]] = (
-        pydantic.Field(
+    request_form_string_list_nullable: Optional[List[str]] = (
+        Field(
             None,
             alias="requestFormStringListNullable",
             description="입력한 StringList Nullable Form 파라미터",
@@ -525,20 +525,20 @@ class PostRequestTestWithFormTypeRequestBodyOutputVo(pydantic.BaseModel):
 
 # ----
 # (Post 요청 테스트 (multipart/form-data))
-class PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(pydantic.BaseModel):
+class PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(BaseModel):
     class Config:
         validate_by_name = True
 
     request_form_string: str = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormString",
             description="입력한 String Form 파라미터",
             examples=["testString"]
         )
     )
-    request_form_string_nullable: typing.Optional[str] = (
-        pydantic.Field(
+    request_form_string_nullable: Optional[str] = (
+        Field(
             None,
             alias="requestFormStringNullable",
             description="입력한 String Nullable Form 파라미터",
@@ -546,15 +546,15 @@ class PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(pydantic.BaseModel
         )
     )
     request_form_int: int = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormInt",
             description="입력한 Int Form 파라미터",
             examples=[1]
         )
     )
-    request_form_int_nullable: typing.Optional[int] = (
-        pydantic.Field(
+    request_form_int_nullable: Optional[int] = (
+        Field(
             None,
             alias="requestFormIntNullable",
             description="입력한 Int Nullable Form 파라미터",
@@ -562,15 +562,15 @@ class PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(pydantic.BaseModel
         )
     )
     request_form_double: float = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormDouble",
             description="입력한 Double Form 파라미터",
             examples=[1.1]
         )
     )
-    request_form_double_nullable: typing.Optional[float] = (
-        pydantic.Field(
+    request_form_double_nullable: Optional[float] = (
+        Field(
             None,
             alias="requestFormDoubleNullable",
             description="입력한 Double Nullable Form 파라미터",
@@ -578,31 +578,31 @@ class PostRequestTestWithMultipartFormTypeRequestBodyOutputVo(pydantic.BaseModel
         )
     )
     request_form_boolean: bool = (
-        pydantic.Field(
+        Field(
             ...,
             alias="requestFormBoolean",
             description="입력한 Boolean Form 파라미터",
             examples=[True]
         )
     )
-    request_form_boolean_nullable: typing.Optional[bool] = (
-        pydantic.Field(
+    request_form_boolean_nullable: Optional[bool] = (
+        Field(
             None,
             alias="requestFormBooleanNullable",
             description="입력한 Boolean Nullable Form 파라미터",
             examples=[True]
         )
     )
-    request_form_string_list: typing.List[str] = (
-        pydantic.Field(
+    request_form_string_list: List[str] = (
+        Field(
             ...,
             alias="requestFormStringList",
             description="입력한 StringList Form 파라미터",
             examples=[["testString1", "testString2"]]
         )
     )
-    request_form_string_list_nullable: typing.Optional[typing.List[str]] = (
-        pydantic.Field(
+    request_form_string_list_nullable: Optional[List[str]] = (
+        Field(
             None,
             alias="requestFormStringListNullable",
             description="입력한 StringList Nullable Form 파라미터",

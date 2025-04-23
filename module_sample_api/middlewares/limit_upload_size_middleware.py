@@ -1,7 +1,7 @@
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
-import module_sample_api.configurations.app_conf as app_conf
+from fastapi.responses import JSONResponse
+from module_sample_api.configurations.app_conf import AppConf
 
 
 # [파일 업로드 사이즈 제한 미들웨어]
@@ -10,6 +10,12 @@ import module_sample_api.configurations.app_conf as app_conf
 class LimitUploadSizeMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         content_length = request.headers.get("Content-Length")
-        if content_length and int(content_length) > app_conf.AppConf.max_upload_size:
-            return Response("파일이 너무 큽니다.", status_code=413)  # Payload Too Large
+        if content_length and int(content_length) > AppConf.max_upload_size:
+            max_size_mb = AppConf.max_upload_size / (1024 * 1024)
+            return JSONResponse(
+                status_code=413,
+                content={
+                    "detail": f"File too large. You cannot upload files larger than {max_size_mb:.2f} MB."
+                }
+            )
         return await call_next(request)
