@@ -660,3 +660,13 @@ async def post_request_test_with_multipart_form_type_request_body3(
         multipart_file,
         multipart_file_nullable
     )
+
+
+# ----
+@router.post(
+    "/generate-error",
+    summary="인위적 에러 발생 테스트",
+    description="요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)"
+)
+async def generate_error_test():
+    return await service.generate_error_test()

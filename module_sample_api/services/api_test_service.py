@@ -305,3 +305,9 @@ async def post_request_test_with_multipart_form_type_request_body3(
             request_form_string_list_nullable=input_json_object.request_form_string_list_nullable
         ).model_dump()
     )
+
+
+# ----
+# (인위적 에러 발생 테스트)
+async def generate_error_test():
+    raise Exception("Test Error")
