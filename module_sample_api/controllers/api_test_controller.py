@@ -744,3 +744,23 @@ async def return_result_code_through_headers(
         )
 ):
     return await service.return_result_code_through_headers(request, response, error_type)
+
+
+# ----
+@router.post(
+    "/time-delay-test",
+    summary="인위적 응답 지연 테스트",
+    description="임의로 응답 시간을 지연시킵니다."
+)
+async def response_delay_test(
+        request: Request,
+        response: Response,
+        delay_time_sec: int =
+        Query(
+            ...,
+            alias="delayTimeSec",
+            description="지연 시간(초)",
+            example=1
+        )
+):
+    return await service.response_delay_test(request, response, delay_time_sec)

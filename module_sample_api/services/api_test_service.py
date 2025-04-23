@@ -6,6 +6,7 @@ from module_sample_api.configurations.app_conf import AppConf
 import module_sample_api.utils.custom_util as custom_util
 import module_sample_api.models.api_test_model as model
 import json
+import asyncio
 
 
 # [그룹 서비스]
@@ -332,3 +333,18 @@ async def return_result_code_through_headers(
         elif error_type == model.ReturnResultCodeThroughHeadersErrorTypeEnum.C:
             response.headers["api-result-code"] = "3"
         return
+
+
+# ----
+# (인위적 응답 지연 테스트)
+async def response_delay_test(request, response, delay_time_sec):
+    end_time_ms = delay_time_sec * 1000
+    wait_interval = 0.1  # 100ms
+
+    elapsed = 0
+    while elapsed < end_time_ms:
+        await asyncio.sleep(wait_interval)
+        elapsed += wait_interval * 1000  # 누적 시간 (ms)
+
+    response.status_code = status.HTTP_200_OK
+    return {"message": f"{delay_time_sec}초 지연 후 응답 완료"}
