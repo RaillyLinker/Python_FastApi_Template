@@ -1,5 +1,6 @@
 import os
 from fastapi import UploadFile, status, Response, Request
+from fastapi.responses import PlainTextResponse, HTMLResponse
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
 from module_sample_api.configurations.app_conf import AppConf
@@ -348,3 +349,21 @@ async def response_delay_test(request, response, delay_time_sec):
 
     response.status_code = status.HTTP_200_OK
     return {"message": f"{delay_time_sec}초 지연 후 응답 완료"}
+
+
+# ----
+# (text/string 반환 샘플)
+async def return_text_string_test(request, response):
+    return PlainTextResponse("test Complete!", media_type="text/plain; charset=utf-8")
+
+
+# ----
+# (text/html 반환 샘플)
+async def return_html_string_test(request, response):
+    return AppConf.jinja2Templates.TemplateResponse(
+        "return_text_html_test/html_response_example.html",
+        {
+            "request": request,
+            "viewModel": {}
+        }
+    )

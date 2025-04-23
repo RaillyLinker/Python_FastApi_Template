@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request
+from fastapi.responses import PlainTextResponse, HTMLResponse
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
 import module_sample_api.models.api_test_model as model
@@ -764,3 +765,31 @@ async def response_delay_test(
         )
 ):
     return await service.response_delay_test(request, response, delay_time_sec)
+
+
+# ----
+@router.get(
+    "/return-text-string",
+    response_class=PlainTextResponse,
+    summary="text/string 반환 샘플",
+    description="text/string 형식의 Response Body 를 반환합니다."
+)
+async def return_text_string_test(
+        request: Request,
+        response: Response
+):
+    return await service.return_text_string_test(request, response)
+
+
+# ----
+@router.get(
+    "/return-text-html",
+    response_class=HTMLResponse,
+    summary="text/html 반환 샘플",
+    description="text/html 형식의 Response Body 를 반환합니다."
+)
+async def return_html_string_test(
+        request: Request,
+        response: Response
+):
+    return await service.return_html_string_test(request, response)
