@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Path, responses, Form, UploadFile, File
+from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
 import module_sample_api.models.api_test_model as model
@@ -13,6 +13,27 @@ router = APIRouter(
 
 # ----------------------------------------------------------------------------------------------------------------------
 # <API 선언 공간>
+@router.get(
+    "",
+    response_class=responses.PlainTextResponse,
+    summary="기본 요청 테스트 API",
+    description="이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.",
+)
+async def basic_request_test():
+    return await service.basic_request_test()
+
+
+# ----
+@router.get(
+    "/redirect-to-blank",
+    summary="요청 Redirect 테스트 API",
+    description="이 API 를 요청하면 /api-test 로 Redirect 됩니다.",
+)
+async def redirect_test():
+    return await service.redirect_test()
+
+
+# ----
 @router.get(
     "/get-request",
     response_model=model.GetRequestTestOutputVo,
@@ -152,7 +173,6 @@ async def post_request_test_with_application_json_type_request_body2(
 # ----
 @router.post(
     "/post-request-application-json-with-no-param",
-    response_class=responses.PlainTextResponse,
     summary="Post 요청 테스트 (입출력값 없음)",
     description="입출력값이 없는 Post 메소드 요청 테스트"
 )

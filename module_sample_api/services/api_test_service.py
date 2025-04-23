@@ -1,11 +1,25 @@
 import os
 from fastapi import responses, UploadFile
 from typing import Optional, List
+from fastapi.responses import RedirectResponse
+from module_sample_api.configurations.app_conf import AppConf
 import module_sample_api.utils.custom_util as custom_util
 import module_sample_api.models.api_test_model as model
 
 
 # [그룹 서비스]
+# (기본 요청 테스트 API)
+async def basic_request_test():
+    return AppConf.server_profile
+
+
+# ----
+# (요청 Redirect 테스트 API)
+async def redirect_test():
+    return RedirectResponse(url="/api-test")
+
+
+# ----
 # (Get 요청 테스트 (Query Parameter))
 async def get_request_test(
         query_param_string: str,
