@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request
+from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request, Header
 from fastapi.responses import PlainTextResponse, HTMLResponse
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
@@ -839,3 +839,30 @@ async def return_html_string_test(
         response: Response
 ):
     return await service.return_html_string_test(request, response)
+
+
+# ----
+@router.get(
+    "/byte",
+    summary="byte 반환 샘플",
+    response_class=PlainTextResponse,
+    description=(
+            "byte array('a', .. , 'f') 에서 아래와 같은 요청으로 원하는 바이트를 요청 가능<br>"
+            ">> curl http://localhost:12006/byte -i -H \"byteRange: bytes=2-4\""
+    ),
+    responses={
+        200: {"description": "OK"}
+    }
+)
+async def return_byte_data_test(
+        request: Request,
+        response: Response,
+        byte_range: str =
+        Header(
+            None,
+            alias="byteRange",
+            description="byte array('a', 'b', 'c', 'd', 'e', 'f') 중 가져올 범위(0 부터 시작되는 인덱스)",
+            example="bytes=2-4"
+        )
+):
+    return await service.return_byte_data_test(request, response, byte_range)

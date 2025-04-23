@@ -1,6 +1,6 @@
 import os
 from fastapi import UploadFile, status, Response, Request
-from fastapi.responses import PlainTextResponse, HTMLResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
 from module_sample_api.configurations.app_conf import AppConf
@@ -8,6 +8,8 @@ import module_sample_api.utils.custom_util as custom_util
 import module_sample_api.models.api_test_model as model
 import json
 import asyncio
+import re
+from io import BytesIO
 
 
 # [그룹 서비스]
@@ -367,3 +369,32 @@ async def return_html_string_test(request, response):
             "viewModel": {}
         }
     )
+
+
+# ----
+# (byte 반환 샘플)
+async def return_byte_data_test(
+        request: Request,
+        response: Response,
+        byte_range: Optional[str]
+):
+    full_data = bytearray([ord(c) for c in ['a', 'b', 'c', 'd', 'e', 'f']])
+
+    start = 0
+    end = len(full_data) - 1
+
+    if byte_range:
+        match = re.match(r"bytes=(\d+)-(\d+)", byte_range.lower())
+        if match:
+            start = int(match.group(1))
+            end = int(match.group(2))
+
+    partial_data = full_data[start:end + 1]
+
+    # Set headers
+    response.headers["Content-Range"] = f"bytes {start}-{end}/{len(full_data)}"
+    response.headers["Accept-Ranges"] = "bytes"
+    response.headers["Content-Length"] = str(len(partial_data))
+    response.headers["Content-Type"] = "text/plain; charset=utf-8"
+
+    return StreamingResponse(BytesIO(partial_data), media_type="text/plain")
