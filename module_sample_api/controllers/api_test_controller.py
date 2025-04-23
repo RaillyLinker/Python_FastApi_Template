@@ -539,8 +539,6 @@ async def post_request_test_with_multipart_form_type_request_body3(
             ...,
             alias="jsonString",
             validation_alias="jsonString",
-
-            # todo
             description="""
                 class PostRequestTestWithMultipartFormTypeRequestBody3InputVo():
                     request_form_string: str = (
