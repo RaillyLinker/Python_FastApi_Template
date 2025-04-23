@@ -1,7 +1,7 @@
 import os
 from shutil import copyfileobj
 from fastapi import UploadFile, Request, HTTPException
-from typing import Optional, Tuple, Generator
+from typing import Optional, Tuple, AsyncGenerator
 from datetime import datetime
 from fastapi.responses import StreamingResponse
 import mimetypes
@@ -54,28 +54,6 @@ def multipart_file_local_save(
 
 
 # (비디오 스트리밍 처리)
-CHUNK_SIZE = 1024 * 1024  # 1MB
-
-
-# 비동기 파일 청크 제너레이터
-async def file_chunk_generator(file_path: str, start: int = 0, end: int = None) -> Generator[bytes, None, None]:
-    loop = asyncio.get_event_loop()
-    with open(file_path, "rb") as f:
-        f.seek(start)
-        remaining = (end - start + 1) if end else None
-
-        while True:
-            chunk_size = CHUNK_SIZE if not remaining else min(CHUNK_SIZE, remaining)
-            data = await loop.run_in_executor(None, f.read, chunk_size)
-            if not data:
-                break
-            yield data
-            if remaining:
-                remaining -= len(data)
-                if remaining <= 0:
-                    break
-
-
 # 비동기 비디오 스트리밍 응답 생성기
 class VideoStreamResponseBuilder:
     def __init__(self, file_path: str, chunk_size: int = 1024 * 1024):
@@ -88,7 +66,7 @@ class VideoStreamResponseBuilder:
         self.file_size = os.path.getsize(self.file_path)
         self.content_type = mimetypes.guess_type(self.file_path)[0] or "application/octet-stream"
 
-    async def file_chunk_generator(self, start: int = 0, end: Optional[int] = None) -> Generator[bytes, None, None]:
+    async def _file_chunk_generator(self, start: int = 0, end: Optional[int] = None) -> AsyncGenerator[bytes, None]:
         loop = asyncio.get_event_loop()
         with open(self.file_path, "rb") as f:
             f.seek(start)
@@ -110,7 +88,10 @@ class VideoStreamResponseBuilder:
 
         if range_header:
             range_value = range_header.strip().lower().replace("bytes=", "")
-            range_start_str, range_end_str = range_value.split("-")
+            try:
+                range_start_str, range_end_str = range_value.split("-")
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid Range header format")
             range_start = int(range_start_str)
             range_end = int(range_end_str) if range_end_str.strip() else self.file_size - 1
 
@@ -127,7 +108,7 @@ class VideoStreamResponseBuilder:
             }
 
             return StreamingResponse(
-                content=self.file_chunk_generator(range_start, range_end),
+                content=self._file_chunk_generator(range_start, range_end),
                 status_code=206,
                 headers=headers,
             )
@@ -140,6 +121,6 @@ class VideoStreamResponseBuilder:
         }
 
         return StreamingResponse(
-            content=self.file_chunk_generator(),
+            content=self._file_chunk_generator(),
             headers=headers,
         )
