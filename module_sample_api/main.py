@@ -15,6 +15,7 @@ from module_sample_api.configurations.app_conf import AppConf
 from module_sample_api.configurations.swagger_conf import SwaggerConf
 from module_sample_api.middlewares.limit_upload_size_middleware import LimitUploadSizeMiddleware
 from module_sample_api.configurations.logging_config import setup_logging
+from module_sample_api.middlewares.logging_middleware import LoggingMiddleware
 
 # [FastAPI 실행 Main]
 # FastAPI 객체 생성
@@ -71,6 +72,7 @@ app.add_middleware(
     allow_methods=AppConf.cors_allow_methods,  # GET, POST, PUT, DELETE 등
     allow_headers=AppConf.cors_allow_headers
 )
+app.add_middleware(LoggingMiddleware)
 
 # FastAPI 서버 실행
 # main.py 위쪽 코드 부터 순차 실행 후 __main__ 코드 실행. 그리고 다시 위 코드가 __main__ 앞까지 실행 됩니다.
