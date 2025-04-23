@@ -18,7 +18,12 @@ from module_sample_api.configurations.logging_config import setup_logging
 
 # [FastAPI 실행 Main]
 # FastAPI 객체 생성
-app = FastAPI()
+app = FastAPI(
+    # swagger Docs 접속 가능 설정
+    docs_url="/docs" if AppConf.swagger_docs_enable else None,
+    redoc_url="/redoc" if AppConf.swagger_docs_enable else None,
+    openapi_url="/openapi.json" if AppConf.swagger_docs_enable else None
+)
 
 # python 실행 명령어에서 profile 인자 받기 (소문자로 인식, 실행 예시 : python main.py --profile dev)
 parser = ArgumentParser(description="Run FastAPI application")
