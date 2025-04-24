@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, BigInteger
+from sqlalchemy import Column, Integer, String, BigInteger, text
 from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
@@ -13,7 +13,6 @@ class Db1TemplateTestData(Base):
         'comment': '테스트 정보 테이블(논리적 삭제 적용)'
     }
 
-    # Primary key
     uid = (
         Column(
             "uid",
@@ -29,7 +28,7 @@ class Db1TemplateTestData(Base):
             "row_create_date",
             DATETIME(fsp=3),
             nullable=False,
-            default=func.now(),
+            server_default=func.now(),
             comment="행 생성일"
         )
     )
@@ -39,7 +38,7 @@ class Db1TemplateTestData(Base):
             "row_update_date",
             DATETIME(fsp=3),
             nullable=False,
-            default=func.now(),
+            server_default=func.now(),
             onupdate=func.now(),
             comment="행 수정일"
         )
@@ -50,7 +49,7 @@ class Db1TemplateTestData(Base):
             "row_delete_date_str",
             String(50),
             nullable=False,
-            default='/',
+            server_default=text("'/'"),
             comment="행 삭제일(yyyy_MM_dd_T_HH_mm_ss_SSS_z, 삭제되지 않았다면 /)"
         )
     )
