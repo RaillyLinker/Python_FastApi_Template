@@ -10,7 +10,6 @@ import json
 import asyncio
 import re
 from io import BytesIO
-import mimetypes
 
 
 # [그룹 서비스]
