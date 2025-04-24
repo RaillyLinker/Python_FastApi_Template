@@ -19,7 +19,7 @@ async def basic_request_test(
         request: Request,
         response: Response
 ):
-    return Response(
+    return PlainTextResponse(
         status_code=200,
         content=AppConf.server_profile
     )

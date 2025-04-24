@@ -219,8 +219,12 @@ async def post_request_test_with_application_json_type_request_body2(
     summary="Post 요청 테스트 (입출력값 없음)",
     description="입출력값이 없는 Post 메소드 요청 테스트",
     responses={
-        200: {"description": "OK"}
-    }
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        }
+    },
+    response_class=Response
 )
 async def post_request_test_with_no_input_and_output(
         request: Request,
@@ -991,10 +995,7 @@ async def post_upload_to_server_test(
     summary="by_product_files 폴더에서 파일 다운받기",
     description="업로드 API 를 사용하여 by_product_files 로 업로드한 파일을 다운로드",
     responses={
-        200: {
-            "description": "OK",
-            "content": {"application/octet-stream": {}},
-        },
+        200: {"description": "OK"},
         204: {
             "description": "Response Body가 없습니다. Response Headers를 확인하세요.",
             "headers": {
