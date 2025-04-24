@@ -1,5 +1,5 @@
 import os
-from fastapi import UploadFile, status, Response, Request, HTTPException
+from fastapi import UploadFile, status, Response, Request
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
@@ -10,6 +10,7 @@ import json
 import asyncio
 import re
 from io import BytesIO
+import mimetypes
 
 
 # [그룹 서비스]
@@ -458,4 +459,22 @@ async def post_empty_list_request_test(
     return model.PostEmptyListRequestTestOutputVo(
         requestQueryStringList=string_list,
         requestBodyStringList=request_body.request_body_string_list
+    )
+
+
+# ----
+# (by_product_files 폴더로 파일 업로드)
+async def post_upload_to_server_test(
+        request: Request,
+        response: Response,
+        multipart_file: UploadFile
+):
+    # 저장 경로 설정
+    save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
+
+    # 파일 저장 (필수)
+    saved_file_name = custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+
+    return model.PostUploadToServerTestOutputVo(
+        file_download_full_url=f"http://127.0.0.1:12006/api-test/download-from-server/{saved_file_name}"
     )

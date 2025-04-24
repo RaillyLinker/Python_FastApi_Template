@@ -955,3 +955,31 @@ async def post_empty_list_request_test(
         )
 ):
     return await service.post_empty_list_request_test(request, response, string_list, request_body)
+
+
+# ----
+@router.post(
+    "/upload-to-server",
+    response_model=model.PostUploadToServerTestOutputVo,
+    summary="by_product_files 폴더로 파일 업로드",
+    description="multipart File 을 하나 업로드하여 서버의 by_product_files 폴더에 저장",
+    responses={
+        200: {"description": "OK"}
+    }
+)
+async def post_upload_to_server_test(
+        request: Request,
+        response: Response,
+        multipart_file: UploadFile =
+        File(
+            ...,
+            alias="multipartFile",
+            validation_alias="multipartFile",
+            description="멀티 파트 파일"
+        )
+):
+    return await service.post_upload_to_server_test(
+        request,
+        response,
+        multipart_file
+    )

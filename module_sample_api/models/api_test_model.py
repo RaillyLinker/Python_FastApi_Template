@@ -927,3 +927,19 @@ class PostEmptyListRequestTestOutputVo(BaseModel):
             examples=[["testString1", "testString2"]]
         )
     )
+
+
+# ----
+# (by_product_files 폴더로 파일 업로드)
+class PostUploadToServerTestOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    file_download_full_url: str = (
+        Field(
+            ...,
+            alias="fileDownloadFullUrl",
+            description="파일 다운로드 경로",
+            examples=["http://127.0.0.1:8080/service1/tk/v1/file-test/download-from-server/file.txt"]
+        )
+    )
