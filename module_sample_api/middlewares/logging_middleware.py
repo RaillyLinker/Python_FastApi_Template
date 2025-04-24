@@ -14,7 +14,6 @@ VISIBLE_CONTENT_TYPES = [
     "application/json",
     "application/xml",
     "text/plain",
-    "text/html",
     "application/*+json",
     "application/*+xml",
 ]
