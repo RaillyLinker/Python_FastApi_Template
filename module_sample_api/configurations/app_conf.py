@@ -6,12 +6,6 @@ from fastapi import FastAPI
 
 # [API 설정 상수]
 class AppConf:
-    # 서버 실행 프로필(local, dev, profile, ...)
-    # 서버 실행시 python 입력값을 기반으로 입력됨
-    # python 입력값이 없을시 아래 설정값이 기본
-    # 이 프로필을 기반으로 아래 값들을 설정 해도 됩니다.
-    server_profile = "local"
-
     # 서버명(로그 파일 등을 이 기준으로 사용하기에 모듈별 수정 필요)
     server_name = "sample_api"
 
@@ -63,6 +57,12 @@ class AppConf:
     }
 
     # ---- (자동 할당 상수) ----
+    # 서버 실행 프로필(local, dev, profile, ...)
+    # 서버 실행시 python 입력값을 기반으로 입력됨
+    # python 입력값이 없을시 아래 설정값이 기본
+    # 이 프로필을 기반으로 아래 값들을 설정 해도 됩니다.
+    server_profile = "local"
+
     # FastApi app
     app: FastAPI
 
