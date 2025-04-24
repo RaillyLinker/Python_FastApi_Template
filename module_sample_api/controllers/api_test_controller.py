@@ -783,7 +783,7 @@ async def return_result_code_through_headers(
         response: Response,
         error_type: model.ReturnResultCodeThroughHeadersErrorTypeEnum =
         Query(
-            default=None,
+            default=...,
             alias="errorType",
             description="정상적이지 않은 상황을 만들도록 가정된 변수입니다.",
             example="A"

@@ -62,7 +62,7 @@ class AppConf:
     # python 입력값이 없을시 아래 설정값이 기본
     # 이 프로필을 기반으로 아래 값들을 설정 해도 됩니다.
     server_profile = "local"
-    
+
     # FastApi app
     app: FastAPI
 
