@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request, Header, Body
-from fastapi.responses import PlainTextResponse, HTMLResponse, StreamingResponse
+from fastapi.responses import PlainTextResponse, HTMLResponse, StreamingResponse, FileResponse
 from typing import Optional, List
 import module_sample_api.services.api_test_service as service
 import module_sample_api.models.api_test_model as model
@@ -983,3 +983,37 @@ async def post_upload_to_server_test(
         response,
         multipart_file
     )
+
+
+# ----
+@router.get(
+    "/download-from-server/{file_name}",
+    summary="by_product_files 폴더에서 파일 다운받기",
+    description="업로드 API 를 사용하여 by_product_files 로 업로드한 파일을 다운로드",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"application/octet-stream": {}},
+        },
+        204: {
+            "description": "Response Body가 없습니다. Response Headers를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>1 : fileName에 해당하는 파일이 존재하지 않습니다.",
+                    "schema": {"type": "string"},
+                }
+            },
+        },
+    },
+    response_class=FileResponse
+)
+async def get_file_download_test(
+        request: Request,
+        response: Response,
+        file_name: str = Path(
+            ...,
+            description="by_product_files/test 폴더 안의 파일명",
+            example="sample.txt"
+        )
+):
+    return await service.get_file_download_test(request, response, file_name)

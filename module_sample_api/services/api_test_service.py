@@ -1,6 +1,6 @@
 import os
 from fastapi import UploadFile, status, Response, Request
-from fastapi.responses import PlainTextResponse, StreamingResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse, FileResponse
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
 from module_sample_api.configurations.app_conf import AppConf
@@ -10,6 +10,7 @@ import json
 import asyncio
 import re
 from io import BytesIO
+from pathlib import Path as PathlibPath
 
 
 # [그룹 서비스]
@@ -476,4 +477,31 @@ async def post_upload_to_server_test(
 
     return model.PostUploadToServerTestOutputVo(
         file_download_full_url=f"http://127.0.0.1:12006/api-test/download-from-server/{saved_file_name}"
+    )
+
+
+# ----
+# (by_product_files 폴더에서 파일 다운받기)
+async def get_file_download_test(
+        request: Request,
+        response: Response,
+        file_name: str
+):
+    # 프로젝트 루트 경로
+    save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
+
+    # 파일 절대 경로
+    file_path = os.path.join(save_directory_path, file_name)
+    file_path_obj = PathlibPath(file_path)
+
+    if file_path_obj.is_dir() or not file_path_obj.exists():
+        # 디렉토리이거나 파일이 존재하지 않음
+        return Response(status_code=204, headers={"api-result-code": "1"})
+
+    # 파일 존재: FileResponse를 사용하여 다운로드
+    return FileResponse(
+        path=file_path,
+        filename=file_name,
+        media_type="application/octet-stream",
+        status_code=200
     )
