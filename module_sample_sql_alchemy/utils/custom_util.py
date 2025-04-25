@@ -2,7 +2,7 @@ import os
 from shutil import copyfileobj
 from fastapi import UploadFile, Request, HTTPException
 from typing import Optional, Tuple, AsyncGenerator
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from fastapi.responses import StreamingResponse
 import mimetypes
 import asyncio
@@ -123,3 +123,57 @@ class MediaStreamResponseBuilder:
             content=self._file_chunk_generator(),
             headers=headers,
         )
+
+
+# (타임존 문자열 -> timezone 객체)
+_TIMEZONE_OFFSETS = {
+    "UTC": timezone.utc,
+    "GMT": timezone.utc,
+
+    # 아시아
+    "KST": timezone(timedelta(hours=9)),  # Korea Standard Time
+    "JST": timezone(timedelta(hours=9)),  # Japan Standard Time
+    "CST": timezone(timedelta(hours=8)),  # China Standard Time
+    "IST": timezone(timedelta(hours=5, minutes=30)),  # India Standard Time
+
+    # 유럽
+    "CET": timezone(timedelta(hours=1)),  # Central European Time
+    "EET": timezone(timedelta(hours=2)),  # Eastern European Time
+    "BST": timezone(timedelta(hours=1)),  # British Summer Time (예시)
+    "CEST": timezone(timedelta(hours=2)),  # Central European Summer Time
+
+    # 미주
+    "EST": timezone(timedelta(hours=-5)),  # Eastern Standard Time
+    "EDT": timezone(timedelta(hours=-4)),  # Eastern Daylight Time
+    "CST_US": timezone(timedelta(hours=-6)),  # Central Standard Time (US)
+    "CDT": timezone(timedelta(hours=-5)),  # Central Daylight Time
+    "MST": timezone(timedelta(hours=-7)),  # Mountain Standard Time
+    "MDT": timezone(timedelta(hours=-6)),  # Mountain Daylight Time
+    "PST": timezone(timedelta(hours=-8)),  # Pacific Standard Time
+    "PDT": timezone(timedelta(hours=-7)),  # Pacific Daylight Time
+
+    # 오세아니아
+    "AEST": timezone(timedelta(hours=10)),  # Australian Eastern Standard Time
+    "AEDT": timezone(timedelta(hours=11)),  # Australian Eastern Daylight Time
+    "ACST": timezone(timedelta(hours=9, minutes=30)),  # Australian Central Standard
+    "NZST": timezone(timedelta(hours=12)),  # New Zealand Standard Time
+
+    # 기타
+    "MSK": timezone(timedelta(hours=3)),  # Moscow Time
+    "HST": timezone(timedelta(hours=-10)),  # Hawaii Standard Time
+    "AKST": timezone(timedelta(hours=-9)),  # Alaska Standard Time
+    "AST": timezone(timedelta(hours=-4)),  # Atlantic Standard Time
+    "WAT": timezone(timedelta(hours=1)),  # West Africa Time
+    "CAT": timezone(timedelta(hours=2)),  # Central Africa Time
+    "EAT": timezone(timedelta(hours=3)),  # East Africa Time
+}
+
+
+def get_timezone_from_str(
+        # 타임존 문자열 (예: "KST", "UTC")
+        tz_str: str
+) -> timezone:
+    tz = _TIMEZONE_OFFSETS.get(tz_str.upper())
+    if tz is None:
+        raise ValueError(f"지원하지 않는 타임존 문자열입니다: {tz_str}")
+    return tz

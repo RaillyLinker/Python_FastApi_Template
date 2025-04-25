@@ -7,6 +7,7 @@ import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.templ
     as template_test_data_repository
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import get_async_db
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
+import module_sample_sql_alchemy.utils.custom_util as custom_util
 
 
 # [그룹 서비스]
@@ -29,13 +30,7 @@ async def post_insert_data_sample(
             minute = int(parts[5])
             second = int(parts[6])
             microsecond = int(parts[7]) * 1000
-            tz_str = parts[8]
-
-            # 타임존 처리 (KST = UTC+9)
-            if tz_str == "KST":
-                tzinfo = timezone(timedelta(hours=9))
-            else:
-                tzinfo = timezone.utc  # 필요에 따라 확장
+            tzinfo = custom_util.get_timezone_from_str(parts[8])
 
             # datetime 객체 생성
             date_string = datetime(year, month, day, hour, minute, second, microsecond, tzinfo)
