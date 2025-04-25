@@ -1,13 +1,13 @@
 import random
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 from fastapi import Response, Request
 from fastapi.responses import JSONResponse
 import module_sample_sql_alchemy.models.sql_alchemy_test_model as model
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_test_data_repository \
     as template_test_data_repository
+import module_sample_sql_alchemy.utils.custom_util as custom_util
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import get_async_db
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
-import module_sample_sql_alchemy.utils.custom_util as custom_util
 
 
 # [그룹 서비스]
