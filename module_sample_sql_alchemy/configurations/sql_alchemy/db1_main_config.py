@@ -38,14 +38,17 @@ _async_session_maker = (
 )
 
 
-# DB 세션을 반환하는 함수
+# (DB 세션을 반환하는 함수)
 @asynccontextmanager
 async def get_async_db() -> AsyncSession:
     async with _async_session_maker() as session:
         yield session
 
 
-# Transactional 데코레이터
+# (Transactional 데코레이터)
+# Transaction 을 적용 하려는 함수 위에,
+# @sql_alchemy_transactional 이렇게 붙이고, 해당 함수에는,
+# db: AsyncSession 이것을 인자값으로 받도록 처리
 def sql_alchemy_transactional(handler: Callable[..., Awaitable]):
     @wraps(handler)
     async def wrapper(*args, **kwargs):
