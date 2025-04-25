@@ -19,10 +19,8 @@ async def post_insert_data_sample(
 ):
     async with get_async_db() as db:  # 여기가 중요
         try:
-            # 문자열을 "_" 기준으로 나누기
+            # yyyy_MM_dd_'T'_HH_mm_ss_SSS_z 형식 string -> datetime
             parts = request_body.date_string.split('_')
-
-            # 각 요소 파싱
             year = int(parts[0])
             month = int(parts[1])
             day = int(parts[2])
@@ -30,11 +28,10 @@ async def post_insert_data_sample(
             minute = int(parts[5])
             second = int(parts[6])
             microsecond = int(parts[7]) * 1000
-            tzinfo = custom_util.get_timezone_from_str(parts[8])
+            tz_info = custom_util.get_timezone_from_str(parts[8])
+            date_string = datetime(year, month, day, hour, minute, second, microsecond, tz_info)
 
-            # datetime 객체 생성
-            date_string = datetime(year, month, day, hour, minute, second, microsecond, tzinfo)
-
+            # 데이터 저장
             new_entity = await template_test_data_repository.save(
                 db,
                 Db1TemplateTestData(
