@@ -1,5 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from contextlib import asynccontextmanager
+from functools import wraps
+from typing import Callable, Awaitable
 
 # DB 유저 인증 정보
 _user_name = "root"
@@ -41,3 +43,19 @@ _async_session_maker = (
 async def get_async_db() -> AsyncSession:
     async with _async_session_maker() as session:
         yield session
+
+
+# Transactional 데코레이터
+def sql_alchemy_transactional(handler: Callable[..., Awaitable]):
+    @wraps(handler)
+    async def wrapper(*args, **kwargs):
+        async with get_async_db() as db:
+            try:
+                result = await handler(*args, db=db, **kwargs)
+                await db.commit()
+                return result
+            except Exception as e:
+                await db.rollback()
+                raise e
+
+    return wrapper
