@@ -4,7 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 
-# 데이터 upsert(동일 pk 가 존재 하면 update, 없다면 insert)
+# [SqlAlchemy 레포지토리]
+# 데이터 변경 함수 사용시 commit, rollback 처리를 해주세요.
+
+# 데이터 save(동일 pk 가 존재 하면 update, 없다면 insert)
 async def save(db: AsyncSession, entity: Db1TemplateTestData):
     db.add(entity)
     await db.flush()
