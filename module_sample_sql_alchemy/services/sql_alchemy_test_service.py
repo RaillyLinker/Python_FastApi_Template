@@ -49,7 +49,9 @@ async def post_insert_data_sample(
                 )
             )
 
-            result_obj = JSONResponse(
+            await db.commit()
+
+            return JSONResponse(
                 status_code=200,
                 content=model.PostInsertDataSampleOutputVo(
                     uid=new_entity.uid,
@@ -61,10 +63,6 @@ async def post_insert_data_sample(
                     test_datetime=""
                 ).model_dump()
             )
-
-            await db.commit()
-
-            return result_obj
         except Exception as e:
             await db.rollback()
             raise e
