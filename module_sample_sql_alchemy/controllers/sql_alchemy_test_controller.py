@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Query, Path, Form, UploadFile, File, responses, Response, Request, Header, Body
-from fastapi.responses import PlainTextResponse, HTMLResponse, StreamingResponse, FileResponse
-from typing import Optional, List
-import module_sample_sql_alchemy.services.api_test_service as service
-import module_sample_sql_alchemy.models.api_test_model as model
+from fastapi import APIRouter, Response, Request, Body
+import module_sample_sql_alchemy.models.sql_alchemy_test_model as model
+import module_sample_sql_alchemy.services.sql_alchemy_test_service as service
 
 # [그룹 컨트롤러]
 # Router 설정
@@ -14,17 +12,22 @@ router = APIRouter(
 
 # ----------------------------------------------------------------------------------------------------------------------
 # <API 선언 공간>
-@router.get(
-    "",
-    response_class=responses.PlainTextResponse,
-    summary="기본 요청 테스트 API",
-    description="이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.",
+@router.post(
+    "/row",
+    response_model=model.PostInsertDataSampleOutputVo,
+    summary="DB Row 입력 테스트 API",
+    description="테스트 테이블에 Row 를 입력합니다.",
     responses={
         200: {"description": "OK"}
     }
 )
-async def basic_request_test(
+async def post_insert_data_sample(
         request: Request,
-        response: Response
+        response: Response,
+        request_body: model.PostInsertDataSampleInputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
 ):
-    return await service.basic_request_test(request, response)
+    return await service.post_insert_data_sample(request, response, request_body)

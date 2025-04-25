@@ -1,0 +1,87 @@
+from pydantic import BaseModel, Field
+
+
+# [그룹 모델]
+# (DB Row 입력 테스트 API)
+class PostInsertDataSampleInputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    content: str = (
+        Field(
+            ...,
+            alias="content",
+            description="글 본문",
+            examples=["테스트 텍스트입니다."]
+        )
+    )
+    date_string: str = (
+        Field(
+            ...,
+            alias="dateString",
+            description="원하는 날짜(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
+
+
+class PostInsertDataSampleOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    uid: int = (
+        Field(
+            ...,
+            alias="uid",
+            description="글 고유번호",
+            examples=[1]
+        )
+    )
+    create_date: str = (
+        Field(
+            ...,
+            alias="createDate",
+            description="글 작성일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
+    update_date: str = (
+        Field(
+            ...,
+            alias="updateDate",
+            description="글 수정일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
+    delete_date: str = (
+        Field(
+            ...,
+            alias="deleteDate",
+            description="글 삭제일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z, Null 이면 /)",
+            examples=["/"]
+        )
+    )
+    content: str = (
+        Field(
+            ...,
+            alias="content",
+            description="글 본문",
+            examples=["테스트 텍스트입니다."]
+        )
+    )
+    random_num: int = (
+        Field(
+            ...,
+            alias="randomNum",
+            description="자동 생성 숫자",
+            examples=[1]
+        )
+    )
+    test_datetime: str = (
+        Field(
+            ...,
+            alias="testDatetime",
+            description="테스트용 일시 데이터(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )

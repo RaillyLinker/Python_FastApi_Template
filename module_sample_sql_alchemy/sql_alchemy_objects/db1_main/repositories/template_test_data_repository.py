@@ -11,6 +11,7 @@ from sqlalchemy import select
 async def save(db: AsyncSession, entity: Db1TemplateTestData):
     db.add(entity)
     await db.flush()
+    await db.refresh(entity)
     return entity
 
 
