@@ -50,11 +50,20 @@ async def post_insert_data_sample(
         status_code=200,
         content=model.PostInsertDataSampleOutputVo(
             uid=new_entity.uid,
-            create_date="",
-            update_date="",
+            create_date=
+            new_entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_create_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_create_date.tzname()}",
+            update_date=
+            new_entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_update_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_update_date.tzname()}",
             delete_date=new_entity.row_delete_date_str,
             content=new_entity.content,
             random_num=new_entity.random_num,
-            test_datetime=""
+            test_datetime=
+            new_entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.test_datetime.microsecond // 1000:03d}"
+            f"_{new_entity.test_datetime.tzname()}",
         ).model_dump()
     )
