@@ -399,3 +399,88 @@ class GetRowsPageSampleOutputVo(BaseModel):
             description="아이템 리스트"
         )
     )
+
+
+# ----
+# (DB Rows 조회 테스트 (네이티브 쿼리 페이징))
+class GetRowsNativeQueryPageSampleOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    class TestEntityVo(BaseModel):
+        class Config:
+            validate_by_name = True
+
+        uid: int = (
+            Field(
+                ...,
+                alias="uid",
+                description="글 고유번호",
+                examples=[1]
+            )
+        )
+        create_date: str = (
+            Field(
+                ...,
+                alias="createDate",
+                description="글 작성일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+                examples=["2024_05_02_T_15_14_49_552_KST"]
+            )
+        )
+        update_date: str = (
+            Field(
+                ...,
+                alias="updateDate",
+                description="글 수정일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+                examples=["2024_05_02_T_15_14_49_552_KST"]
+            )
+        )
+        content: str = (
+            Field(
+                ...,
+                alias="content",
+                description="글 본문",
+                examples=["테스트 텍스트입니다."]
+            )
+        )
+        random_num: int = (
+            Field(
+                ...,
+                alias="randomNum",
+                description="자동 생성 숫자",
+                examples=[1]
+            )
+        )
+        test_datetime: str = (
+            Field(
+                ...,
+                alias="testDatetime",
+                description="테스트용 일시 데이터(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+                examples=["2024_05_02_T_15_14_49_552_KST"]
+            )
+        )
+        distance: int = (
+            Field(
+                ...,
+                alias="distance",
+                description="기준과의 절대거리",
+                examples=[1]
+            )
+        )
+
+    total_elements: int = (
+        Field(
+            ...,
+            alias="totalElements",
+            description="아이템 전체 개수",
+            examples=[1]
+        )
+    )
+
+    test_entity_vo_list: List[TestEntityVo] = (
+        Field(
+            ...,
+            alias="testEntityVoList",
+            description="아이템 리스트"
+        )
+    )

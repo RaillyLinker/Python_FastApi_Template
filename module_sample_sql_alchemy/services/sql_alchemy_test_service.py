@@ -317,3 +317,53 @@ async def get_rows_page_sample(
             test_entity_vo_list=test_entity_vo_list
         ).model_dump()
     )
+
+
+# ----
+# (DB Rows 조회 테스트 (네이티브 쿼리 페이징))
+@sql_alchemy_transactional_view_only
+async def get_rows_native_query_page_sample(
+        request: Request,
+        response: Response,
+        page: int,
+        page_elements_count: int,
+        num: int,
+        db: AsyncSession
+):
+    entities, total_elements = await template_test_data_repository.find_page_all_from_template_test_data_by_not_deleted_with_random_num_distance(
+        db,
+        page,
+        page_elements_count,
+        num
+    )
+
+    # 엔티티 -> VO 매핑
+    test_entity_vo_list = [
+        model.GetRowsNativeQueryPageSampleOutputVo.TestEntityVo(
+            uid=entity.uid,
+            createDate=
+            entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_create_date.microsecond // 1000:03d}"
+            f"_{entity.row_create_date.tzname()}",
+            updateDate=
+            entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_update_date.microsecond // 1000:03d}"
+            f"_{entity.row_update_date.tzname()}",
+            content=entity.content,
+            randomNum=entity.random_num,
+            testDatetime=
+            entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.test_datetime.microsecond // 1000:03d}"
+            f"_{entity.test_datetime.tzname()}",
+            distance=entity.distance
+        )
+        for entity in entities
+    ]
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetRowsNativeQueryPageSampleOutputVo(
+            total_elements=total_elements,
+            test_entity_vo_list=test_entity_vo_list
+        ).model_dump()
+    )

@@ -232,3 +232,52 @@ async def get_rows_page_sample(
         page,
         page_elements_count
     )
+
+
+# ----
+@router.get(
+    "/rows/native-paging",
+    response_model=model.GetRowsNativeQueryPageSampleOutputVo,
+    summary="DB Rows 조회 테스트 (네이티브 쿼리 페이징)",
+    description="테스트 테이블의 Rows 를 네이티브 쿼리로 페이징하여 반환합니다.<br>"
+                "num 을 기준으로 근사치 정렬도 수행합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_rows_native_query_page_sample(
+        request: Request,
+        response: Response,
+        page: int =
+        Query(
+            ...,
+            alias="page",
+            description="원하는 페이지(1부터 시작)",
+            example=1
+        ),
+        page_elements_count: int =
+        Query(
+            ...,
+            alias="pageElementsCount",
+            description="페이지 아이템 개수",
+            example=10
+        ),
+        num: int =
+        Query(
+            ...,
+            alias="num",
+            description="근사값의 기준",
+            example=1
+        )
+):
+    return await service.get_rows_native_query_page_sample(
+        request,
+        response,
+        page,
+        page_elements_count,
+        num
+    )
+
+# todo : native query paging, save update, native update, orm update

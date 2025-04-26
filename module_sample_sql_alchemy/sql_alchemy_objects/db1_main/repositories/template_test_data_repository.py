@@ -196,3 +196,66 @@ async def find_all_by_row_delete_date_str_order_by_row_create_date(
     total_elements = count_result.scalar_one()
 
     return entities, total_elements
+
+
+# ----
+# (네이티브 페이지네이션 샘플)
+async def find_page_all_from_template_test_data_by_not_deleted_with_random_num_distance(
+        db: AsyncSession,
+        page: int,
+        page_elements_count: int,
+        num: int
+) -> (List[value_objects.FindPageAllFromTemplateTestDataByNotDeletedWithRandomNumDistanceOutputVo], int):
+    offset = (page - 1) * page_elements_count
+
+    # 본문 조회 (distance 기준 정렬)
+    result = await db.execute(
+        text("""
+            SELECT 
+                test_data.uid AS uid,
+                test_data.row_create_date AS row_create_date,
+                test_data.row_update_date AS row_update_date,
+                test_data.content AS content,
+                test_data.random_num AS random_num,
+                test_data.test_datetime AS test_datetime,
+                ABS(test_data.random_num - :num) AS distance
+            FROM 
+                template.test_data AS test_data
+            WHERE 
+                test_data.row_delete_date_str = '/'
+            ORDER BY 
+                distance
+            LIMIT :limit OFFSET :offset
+        """),
+        {"num": num, "limit": page_elements_count, "offset": offset}
+    )
+
+    rows = result.mappings().all()
+
+    entities = [
+        value_objects.FindPageAllFromTemplateTestDataByNotDeletedWithRandomNumDistanceOutputVo(
+            uid=row["uid"],
+            row_create_date=row["row_create_date"],
+            row_update_date=row["row_update_date"],
+            content=row["content"],
+            random_num=row["random_num"],
+            test_datetime=row["test_datetime"],
+            distance=row["distance"]
+        )
+        for row in rows
+    ]
+
+    # 총 개수 조회
+    count_result = await db.execute(
+        text("""
+            SELECT 
+                COUNT(*) 
+            FROM 
+                template.test_data AS test_data
+            WHERE 
+                test_data.row_delete_date_str = '/'
+        """)
+    )
+    total_elements = count_result.scalar_one()
+
+    return entities, total_elements
