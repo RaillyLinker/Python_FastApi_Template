@@ -6,6 +6,7 @@ from datetime import datetime, timezone, timedelta
 from fastapi.responses import StreamingResponse
 import mimetypes
 import asyncio
+import re
 
 
 # (파일명, 경로, 확장자 분리 함수)
@@ -177,3 +178,49 @@ def get_timezone_from_str(
     if tz is None:
         raise ValueError(f"지원하지 않는 타임존 문자열입니다: {tz_str}")
     return tz
+
+
+# (date_str to datetime)
+def parse_custom_datetime(dt_str: str, format_str: str) -> datetime:
+    # format을 '_' 단위로 쪼갠다
+    format_parts = format_str.split('_')
+    value_parts = dt_str.split('_')
+
+    if len(format_parts) != len(value_parts):
+        raise ValueError(f"Format parts and value parts count mismatch: {format_parts} vs {value_parts}")
+
+    # 초기값
+    year = month = day = hour = minute = second = microsecond = None
+    tzinfo = None
+
+    for fmt, val in zip(format_parts, value_parts):
+        if fmt == "yyyy":
+            year = int(val)
+        elif fmt == "MM":
+            month = int(val)
+        elif fmt == "dd":
+            day = int(val)
+        elif fmt == "HH":
+            hour = int(val)
+        elif fmt == "mm":
+            minute = int(val)
+        elif fmt == "ss":
+            second = int(val)
+        elif re.fullmatch(r"S+", fmt):
+            # 'S', 'SS', 'SSS' 등 모두 지원
+            # val 길이에 맞춰서 미세조정
+            ms_length = len(fmt)  # 예: SSS -> 3
+            factor = 10 ** (6 - ms_length)
+            microsecond = int(val) * factor
+        elif fmt == "z":
+            tzinfo = get_timezone_from_str(val)
+
+    if None in (year, month, day, hour, minute, second):
+        raise ValueError("Missing required datetime parts")
+
+    if microsecond is None:
+        microsecond = 0
+    if tzinfo is None:
+        tzinfo = timezone.utc  # 기본 UTC 설정 (원하면 바꿀 수 있음)
+
+    return datetime(year, month, day, hour, minute, second, microsecond, tzinfo)

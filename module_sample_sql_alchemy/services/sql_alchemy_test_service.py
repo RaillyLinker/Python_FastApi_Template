@@ -24,16 +24,7 @@ async def post_insert_data_sample(
         db: AsyncSession
 ):
     # yyyy_MM_dd_'T'_HH_mm_ss_SSS_z 형식 string -> datetime
-    parts = request_body.date_string.split('_')
-    year = int(parts[0])
-    month = int(parts[1])
-    day = int(parts[2])
-    hour = int(parts[4])
-    minute = int(parts[5])
-    second = int(parts[6])
-    microsecond = int(parts[7]) * 1000
-    tz_info = custom_util.get_timezone_from_str(parts[8])
-    date_string = datetime(year, month, day, hour, minute, second, microsecond, tz_info)
+    datetime_obj = custom_util.parse_custom_datetime(request_body.date_string, "yyyy_MM_dd_'T'_HH_mm_ss_SSS_z")
 
     # 데이터 저장
     now_datetime = datetime.now()
@@ -45,7 +36,7 @@ async def post_insert_data_sample(
             row_delete_date_str="/",
             content=request_body.content,
             random_num=random.randint(0, 99999999),
-            test_datetime=date_string
+            test_datetime=datetime_obj
         )
     )
 
@@ -242,16 +233,7 @@ async def get_rows_order_by_row_create_date_sample(
         db: AsyncSession
 ):
     # yyyy_MM_dd_'T'_HH_mm_ss_SSS_z 형식 string -> datetime
-    parts = date_string.split('_')
-    year = int(parts[0])
-    month = int(parts[1])
-    day = int(parts[2])
-    hour = int(parts[4])
-    minute = int(parts[5])
-    second = int(parts[6])
-    microsecond = int(parts[7]) * 1000
-    tz_info = custom_util.get_timezone_from_str(parts[8])
-    datetime_obj = datetime(year, month, day, hour, minute, second, microsecond, tz_info)
+    datetime_obj = custom_util.parse_custom_datetime(date_string, "yyyy_MM_dd_'T'_HH_mm_ss_SSS_z")
 
     entity_list = await template_test_data_repository.find_all_from_template_test_data_by_not_deleted_with_row_create_date_distance(
         db,
