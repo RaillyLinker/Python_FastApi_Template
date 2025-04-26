@@ -272,3 +272,29 @@ async def find_page_all_from_template_test_data_by_not_deleted_with_random_num_d
     total_elements = count_result.scalar_one()
 
     return entities, total_elements
+
+
+# ----
+# (네이티브 데이터 수정 샘플)
+async def update_to_template_test_data_set_content_and_test_date_time_by_uid(
+        db: AsyncSession,
+        uid: int,
+        content: str,
+        test_datetime: datetime
+):
+    await db.execute(
+        text("""
+            UPDATE 
+            template.test_data 
+            SET 
+            content = :content, 
+            test_datetime = :testDatetime 
+            WHERE 
+            uid = :uid
+        """),
+        {
+            "uid": uid,
+            "content": content,
+            "testDatetime": test_datetime
+        }
+    )
