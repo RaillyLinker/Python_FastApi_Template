@@ -86,6 +86,19 @@ async def find_by_id(db: AsyncSession, pk: int):
 
 
 # ---- (커스텀 쿼리 함수 추가 공간) ----
+# (데이터 pk 로 검색(0 or 1 result))
+async def find_by_uid_and_row_delete_date_str(db: AsyncSession, pk: int, row_delete_date_str: str):
+    stmt = select(Db1TemplateTestData).where(
+        Db1TemplateTestData.uid == pk and
+        Db1TemplateTestData.row_delete_date_str == row_delete_date_str
+    )
+    result = await db.execute(stmt)
+    entity = result.scalar_one_or_none()
+    # Entity 안의 datetime 에 타임존 정보 입력
+    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
+    return entity
+
+
 # (입력값 거리 측정 쿼리)
 async def find_all_by_not_deleted_with_random_distance(
         db: AsyncSession,

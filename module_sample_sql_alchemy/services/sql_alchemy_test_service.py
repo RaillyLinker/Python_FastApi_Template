@@ -367,3 +367,52 @@ async def get_rows_native_query_page_sample(
             test_entity_vo_list=test_entity_vo_list
         ).model_dump()
     )
+
+
+# ----
+# (DB Rows 삭제 테스트 API)
+@sql_alchemy_transactional
+async def put_row_sample(
+        request: Request,
+        response: Response,
+        test_table_uid: int,
+        request_body: model.PutRowSampleInputVo,
+        db: AsyncSession
+):
+    entity = await template_test_data_repository.find_by_uid_and_row_delete_date_str(db, test_table_uid, "/")
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    entity.content = request_body.content
+
+    # yyyy_MM_dd_'T'_HH_mm_ss_SSS_z 형식 string -> datetime
+    datetime_obj = custom_util.parse_custom_datetime(request_body.date_string, "yyyy_MM_dd_'T'_HH_mm_ss_SSS_z")
+    entity.test_datetime = datetime_obj
+
+    # 데이터 저장
+    new_entity = await template_test_data_repository.save(db, entity)
+
+    return JSONResponse(
+        status_code=200,
+        content=model.PutRowSampleOutputVo(
+            uid=new_entity.uid,
+            create_date=
+            new_entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_create_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_create_date.tzname()}",
+            update_date=
+            new_entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_update_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_update_date.tzname()}",
+            content=new_entity.content,
+            random_num=new_entity.random_num,
+            test_datetime=
+            new_entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.test_datetime.microsecond // 1000:03d}"
+            f"_{new_entity.test_datetime.tzname()}",
+        ).model_dump()
+    )
