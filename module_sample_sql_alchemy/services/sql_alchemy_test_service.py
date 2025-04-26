@@ -8,8 +8,10 @@ import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.templ
     as template_test_data_repository
 import module_sample_sql_alchemy.utils.custom_util as custom_util
 import tzlocal
-from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import sql_alchemy_transactional
+from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import sql_alchemy_transactional, \
+    sql_alchemy_transactional_view_only
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
+from typing import List
 
 
 # [그룹 서비스]
@@ -135,4 +137,53 @@ async def delete_row_sample(
 
     return Response(
         status_code=200
+    )
+
+
+# ----
+# (DB Row 삭제 테스트 API)
+@sql_alchemy_transactional_view_only
+async def get_rows(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    entity_list = await template_test_data_repository.find_all(db)
+
+    test_entity_vo_list: List[model.GetSelectRowsSampleOutputVo.TestEntityVo] = []
+    logical_delete_entity_vo_list: List[model.GetSelectRowsSampleOutputVo.TestEntityVo] = []
+
+    for entity in entity_list:
+        entity_output = model.GetSelectRowsSampleOutputVo.TestEntityVo(
+            uid=entity.uid,
+            create_date=
+            entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_create_date.microsecond // 1000:03d}"
+            f"_{entity.row_create_date.tzname()}",
+            update_date=
+            entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_update_date.microsecond // 1000:03d}"
+            f"_{entity.row_update_date.tzname()}",
+            delete_date=entity.row_delete_date_str,
+            content=entity.content,
+            random_num=entity.random_num,
+            test_datetime=
+            entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.test_datetime.microsecond // 1000:03d}"
+            f"_{entity.test_datetime.tzname()}",
+        )
+
+        if entity.row_delete_date_str == "/":
+            # 논리 삭제되지 않은 데이터
+            test_entity_vo_list.append(entity_output)
+        else:
+            # 논리 삭제된 데이터
+            logical_delete_entity_vo_list.append(entity_output)
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetSelectRowsSampleOutputVo(
+            test_entity_vo_list=test_entity_vo_list,
+            logical_delete_entity_vo_list=logical_delete_entity_vo_list
+        ).model_dump()
     )

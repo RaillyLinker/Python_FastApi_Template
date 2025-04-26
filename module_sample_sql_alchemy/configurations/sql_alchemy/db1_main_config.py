@@ -66,3 +66,17 @@ def sql_alchemy_transactional(handler: Callable[..., Awaitable]):
                 raise e
 
     return wrapper
+
+
+# (Transactional view only 데코레이터)
+# sql alchemy 의 async db 를 사용하는 단순한 조회 함수 위에,
+# @sql_alchemy_transactional_view_only 이렇게 붙이고, 해당 함수에는,
+# db: AsyncSession 이것을 인자값으로 받도록 처리
+def sql_alchemy_transactional_view_only(handler: Callable[..., Awaitable]):
+    @wraps(handler)
+    async def wrapper(*args, **kwargs):
+        async with get_async_db() as db:
+            result = await handler(*args, db=db, **kwargs)
+            return result
+
+    return wrapper

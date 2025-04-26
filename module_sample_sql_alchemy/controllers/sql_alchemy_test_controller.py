@@ -112,3 +112,25 @@ async def delete_row_sample(
         index,
         delete_logically
     )
+
+
+# ----
+@router.get(
+    "/rows",
+    response_model=model.GetSelectRowsSampleOutputVo,
+    summary="DB Rows 조회 테스트 API",
+    description="테스트 테이블의 모든 Rows 를 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_rows(
+        request: Request,
+        response: Response
+):
+    return await service.get_rows(
+        request,
+        response
+    )
