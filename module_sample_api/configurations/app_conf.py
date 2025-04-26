@@ -6,13 +6,29 @@ from fastapi import FastAPI
 
 # [API 설정 상수]
 class AppConf:
+    # ---- (자동 할당 상수) ----
+    # 서버 실행 프로필(local, dev, profile, ...)
+    # 서버 실행시 python 입력값을 기반으로 입력됨
+    # python 입력값이 없을시 아래 설정값이 기본
+    # 이 프로필을 기반으로 아래 값들을 설정 해도 됩니다.
+    server_profile = "local"
+
+    # FastApi app
+    app: FastAPI
+
+    # 서버 고유값 (런타임 시에 고정되도록 생성)
+    server_uuid = f"{int(time() * 1000)}/{uuid4()}"
+
+    # main.py 파일의 부모 폴더 경로
+    # ex : C:\dev\python\Python_Fastapi_Template\module_sample_api
+    module_folder_path = ""
+
+    # jinja2 HTML Templates 객체
+    jinja2Templates: Jinja2Templates
+
+    # ---- (수동 설정 상수) ----
     # 서버명(로그 파일 등을 이 기준으로 사용하기에 모듈별 수정 필요)
     server_name = "sample_api"
-
-    # 서버가 어떤 IP 주소에서 접근을 허용할지를 설정하는 옵션
-    # "127.0.0.1" 또는 "localhost"	로컬 컴퓨터에서만 접근 가능 (외부에서 접근 불가)
-    # "0.0.0.0"	모든 IP에서 접근 허용 (같은 네트워크의 다른 장치나 외부에서도 접속 가능)
-    uvicorn_host = "0.0.0.0"
 
     # 서버 점유 포트
     uvicorn_port = 12006
@@ -52,23 +68,3 @@ class AppConf:
         "name": "MIT",
         "url": "https://opensource.org/licenses/MIT",
     }
-
-    # ---- (자동 할당 상수) ----
-    # 서버 실행 프로필(local, dev, profile, ...)
-    # 서버 실행시 python 입력값을 기반으로 입력됨
-    # python 입력값이 없을시 아래 설정값이 기본
-    # 이 프로필을 기반으로 아래 값들을 설정 해도 됩니다.
-    server_profile = "local"
-
-    # FastApi app
-    app: FastAPI
-
-    # 서버 고유값 (런타임 시에 고정되도록 생성)
-    server_uuid = f"{int(time() * 1000)}/{uuid4()}"
-
-    # main.py 파일의 부모 폴더 경로
-    # ex : C:\dev\python\Python_Fastapi_Template\module_sample_api
-    module_folder_path = ""
-
-    # jinja2 HTML Templates 객체
-    jinja2Templates: Jinja2Templates

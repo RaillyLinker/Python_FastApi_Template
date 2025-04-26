@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     uvicorn.run(
         "main:app",
-        host=AppConf.uvicorn_host,
+        host="0.0.0.0",
         port=AppConf.uvicorn_port,
         reload=False  # 개발 환경에서 코드 변경시 자동으로 서버 재시작 기능(오동작 우려가 있기에 False 고정)
     )
