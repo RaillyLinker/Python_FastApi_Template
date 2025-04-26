@@ -35,6 +35,18 @@ async def save(db: AsyncSession, entity: Db1TemplateTestData):
     db.add(entity)
     await db.flush()
     await db.refresh(entity)
+
+    for column in mapper.columns:
+        if isinstance(column.type, DateTime):  # Datetime 타입 변수만 탐지
+            attr_name = column.name  # 컬럼명 ex : row_create_date
+            value = getattr(entity, attr_name)  # 입력된 값 ex : 2025-04-26 10:14:13.335610
+
+            if value is not None:
+                # DB 타임존 설정으로 타임존 변경(기존에는 None)
+                value = value.replace(tzinfo=db_timezone)
+                # 객체 내 변수 값 수정
+                setattr(entity, attr_name, value)
+
     return entity
 
 
