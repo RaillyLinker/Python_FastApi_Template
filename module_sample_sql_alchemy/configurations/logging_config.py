@@ -1,15 +1,15 @@
 import logging
 import os
-import pytz
+import tzlocal
 import datetime
-import module_sample_sql_alchemy.configurations.app_conf as app_conf
 import concurrent_log_handler
+import module_sample_sql_alchemy.configurations.app_conf as app_conf
 
 
 # [로깅 포메터]
 class CustomFormatter(logging.Formatter):
     def formatTime(self, record, datefmt=None):
-        dt = datetime.datetime.fromtimestamp(record.created, tz=pytz.timezone(app_conf.AppConf.server_timezone))
+        dt = datetime.datetime.fromtimestamp(record.created, tz=tzlocal.get_localzone())
         millis = int(dt.microsecond / 1000)  # 마이크로초를 밀리초로 변환
         s = dt.strftime("%Y_%m_%d_T_%H_%M_%S") + f"_{millis:03d}_{dt.tzname()}"
         return s
