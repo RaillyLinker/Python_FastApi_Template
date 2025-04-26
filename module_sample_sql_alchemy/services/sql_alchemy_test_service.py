@@ -187,3 +187,46 @@ async def get_rows(
             logical_delete_entity_vo_list=logical_delete_entity_vo_list
         ).model_dump()
     )
+
+
+# ----
+# (DB Row 삭제 테스트 API)
+@sql_alchemy_transactional_view_only
+async def get_rows_order_by_random_num_sample(
+        request: Request,
+        response: Response,
+        num: int,
+        db: AsyncSession
+):
+    entity_list = await template_test_data_repository.find_all_by_not_deleted_with_random_distance(db, num)
+
+    test_entity_vo_list: List[model.GetRowsOrderByRandomNumSampleOutputVo.TestEntityVo] = []
+
+    for entity in entity_list:
+        entity_output = model.GetRowsOrderByRandomNumSampleOutputVo.TestEntityVo(
+            uid=entity.uid,
+            create_date=
+            entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_create_date.microsecond // 1000:03d}"
+            f"_{entity.row_create_date.tzname()}",
+            update_date=
+            entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_update_date.microsecond // 1000:03d}"
+            f"_{entity.row_update_date.tzname()}",
+            content=entity.content,
+            random_num=entity.random_num,
+            test_datetime=
+            entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.test_datetime.microsecond // 1000:03d}"
+            f"_{entity.test_datetime.tzname()}",
+            distance=entity.distance
+        )
+
+        test_entity_vo_list.append(entity_output)
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetRowsOrderByRandomNumSampleOutputVo(
+            test_entity_vo_list=test_entity_vo_list
+        ).model_dump()
+    )

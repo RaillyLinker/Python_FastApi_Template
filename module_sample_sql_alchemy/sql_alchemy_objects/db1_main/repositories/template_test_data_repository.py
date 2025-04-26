@@ -1,11 +1,12 @@
-from sqlalchemy import select
-from sqlalchemy import DateTime
+from sqlalchemy import select, text, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
 import tzlocal
 import module_sample_sql_alchemy.utils.sql_alchemy_util as sql_alchemy_util
+import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_test_data_vo as value_objects
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
+from typing import List
 
 
 # [SqlAlchemy 레포지토리]
@@ -80,3 +81,45 @@ async def find_by_id(db: AsyncSession, pk: int):
     # Entity 안의 datetime 에 타임존 정보 입력
     sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
     return entity
+
+
+# ---- (커스텀 쿼리 함수 추가 공간) ----
+# (입력값 거리 측정 쿼리)
+async def find_all_by_not_deleted_with_random_distance(
+        db: AsyncSession,
+        num: int
+) -> List[value_objects.FindAllFromTemplateTestDataByNotDeletedWithRandomNumDistanceOutputVo]:
+    query = text("""
+        SELECT 
+            test_data.uid AS uid, 
+            test_data.row_create_date AS "rowCreateDate", 
+            test_data.row_update_date AS "rowUpdateDate", 
+            test_data.content AS content, 
+            test_data.random_num AS "randomNum", 
+            test_data.test_datetime AS "testDatetime", 
+            ABS(test_data.random_num - :num) AS distance 
+        FROM 
+            template.test_data AS test_data 
+        WHERE 
+            test_data.row_delete_date_str = '/' 
+        ORDER BY 
+            distance
+    """)
+
+    result = await db.execute(query, {"num": num})
+    rows = result.mappings().all()  # key-value dict로 가져옴
+
+    output = [
+        value_objects.FindAllFromTemplateTestDataByNotDeletedWithRandomNumDistanceOutputVo(
+            uid=row["uid"],
+            row_create_date=row["rowCreateDate"].astimezone(db_timezone),
+            row_update_date=row["rowUpdateDate"].astimezone(db_timezone),
+            content=row["content"],
+            random_num=row["randomNum"],
+            test_datetime=row["testDatetime"].astimezone(db_timezone),
+            distance=row["distance"]
+        )
+        for row in rows
+    ]
+
+    return output

@@ -134,3 +134,33 @@ async def get_rows(
         request,
         response
     )
+
+
+# ----
+@router.get(
+    "/rows/order-by-random-num-nearest",
+    response_model=model.GetRowsOrderByRandomNumSampleOutputVo,
+    summary="DB 테이블의 random_num 컬럼 근사치 기준으로 정렬한 리스트 조회 API",
+    description="테이블의 row 중 random_num 컬럼과 num 파라미터의 값의 근사치로 정렬한 리스트 반환",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_rows_order_by_random_num_sample(
+        request: Request,
+        response: Response,
+        num: int =
+        Query(
+            ...,
+            alias="num",
+            description="근사값 정렬의 기준",
+            example=1
+        )
+):
+    return await service.get_rows_order_by_random_num_sample(
+        request,
+        response,
+        num
+    )
