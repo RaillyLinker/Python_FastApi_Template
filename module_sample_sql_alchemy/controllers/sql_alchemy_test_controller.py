@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, Request, Body
+from fastapi import APIRouter, Response, Request, Body, Query
 import module_sample_sql_alchemy.models.sql_alchemy_test_model as model
 import module_sample_sql_alchemy.services.sql_alchemy_test_service as service
 
@@ -31,3 +31,34 @@ async def post_insert_data_sample(
         )
 ):
     return await service.post_insert_data_sample(request, response, request_body)
+
+
+# ----
+@router.delete(
+    "/rows",
+    summary="DB Rows 삭제 테스트 API",
+    description="테스트 테이블의 모든 Row 를 모두 삭제합니다.",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        }
+    },
+    response_class=Response
+)
+async def delete_rows_sample(
+        request: Request,
+        response: Response,
+        delete_logically: bool =
+        Query(
+            ...,
+            alias="deleteLogically",
+            description="논리적 삭제 여부",
+            example=True
+        )
+):
+    return await service.delete_rows_sample(
+        request,
+        response,
+        delete_logically
+    )

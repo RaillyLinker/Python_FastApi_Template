@@ -43,23 +43,23 @@ async def save(db: AsyncSession, entity: Db1TemplateTestData):
     return entity
 
 
+# 모든 데이터 삭제
+async def delete_all(db: AsyncSession):
+    stmt = select(Db1TemplateTestData)
+    result = await db.execute(stmt)
+    entity_list = result.scalars().all()
+
+    for entity in entity_list:
+        await db.delete(entity)
+
+
 # 데이터 pk 로 delete
 async def delete_by_id(db: AsyncSession, pk: int):
     stmt = select(Db1TemplateTestData).where(Db1TemplateTestData.uid == pk)
     result = await db.execute(stmt)
-    obj = result.scalar_one_or_none()
-    if obj:
-        await db.delete(obj)
-
-
-# 데이터 pk 로 검색(0 or 1 result)
-async def find_by_id(db: AsyncSession, pk: int):
-    stmt = select(Db1TemplateTestData).where(Db1TemplateTestData.uid == pk)
-    result = await db.execute(stmt)
     entity = result.scalar_one_or_none()
-    # Entity 안의 datetime 에 타임존 정보 입력
-    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
-    return entity
+    if entity:
+        await db.delete(entity)
 
 
 # 모든 데이터 검색
@@ -70,3 +70,13 @@ async def find_all(db: AsyncSession):
     # Entity 안의 datetime 에 타임존 정보 입력
     sql_alchemy_util.apply_timezone_to_datetime_fields_in_list(entity_list, db_timezone)
     return entity_list
+
+
+# 데이터 pk 로 검색(0 or 1 result)
+async def find_by_id(db: AsyncSession, pk: int):
+    stmt = select(Db1TemplateTestData).where(Db1TemplateTestData.uid == pk)
+    result = await db.execute(stmt)
+    entity = result.scalar_one_or_none()
+    # Entity 안의 datetime 에 타임존 정보 입력
+    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
+    return entity

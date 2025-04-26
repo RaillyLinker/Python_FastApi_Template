@@ -7,6 +7,7 @@ import module_sample_sql_alchemy.models.sql_alchemy_test_model as model
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_test_data_repository \
     as template_test_data_repository
 import module_sample_sql_alchemy.utils.custom_util as custom_util
+import tzlocal
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import sql_alchemy_transactional
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 
@@ -66,4 +67,33 @@ async def post_insert_data_sample(
             f"_{new_entity.test_datetime.microsecond // 1000:03d}"
             f"_{new_entity.test_datetime.tzname()}",
         ).model_dump()
+    )
+
+
+# ----
+# (DB Rows 삭제 테스트 API)
+@sql_alchemy_transactional
+async def delete_rows_sample(
+        request: Request,
+        response: Response,
+        delete_logically: bool,
+        db: AsyncSession
+):
+    if delete_logically:
+        entity_list = await template_test_data_repository.find_all(db)
+        for entity in entity_list:
+            if entity.row_delete_date_str != "/":
+                continue
+
+            now_datetime = datetime.now().replace(tzinfo=tzlocal.get_localzone())
+            entity.row_delete_date_str = \
+                (now_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                 f"_{now_datetime.microsecond // 1000:03d}" +
+                 f"_{now_datetime.tzname()}")
+            await template_test_data_repository.save(db, entity)
+    else:
+        await template_test_data_repository.delete_all(db)
+
+    return Response(
+        status_code=200
     )
