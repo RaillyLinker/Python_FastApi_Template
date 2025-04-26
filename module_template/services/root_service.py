@@ -1,4 +1,4 @@
-from module_template.configurations.app_conf import AppConf
+import module_template.configurations.app_conf as app_conf
 from fastapi.responses import FileResponse
 from fastapi import Request, Response
 
@@ -9,14 +9,14 @@ async def get_root(
         request: Request,
         response: Response
 ):
-    return AppConf.jinja2Templates.TemplateResponse(
+    return app_conf.jinja2Templates.TemplateResponse(
         "home_page/home_page.html",
         {
             "request": request,
             "viewModel": {
-                "homeTitle": AppConf.server_name,
-                "env": AppConf.server_profile,
-                "showApiDocumentBtn": AppConf.swagger_docs_enable
+                "homeTitle": app_conf.server_name,
+                "env": app_conf.server_profile,
+                "showApiDocumentBtn": app_conf.swagger_docs_enable
             }
         }
     )
@@ -28,4 +28,4 @@ async def get_favicon(
         request: Request,
         response: Response
 ):
-    return FileResponse(f"{AppConf.module_folder_path}/z_resources/static/favicon.ico")
+    return FileResponse(f"{app_conf.module_folder_path}/z_resources/static/favicon.ico")

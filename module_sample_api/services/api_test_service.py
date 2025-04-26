@@ -3,7 +3,7 @@ from fastapi import UploadFile, Response, Request
 from fastapi.responses import PlainTextResponse, StreamingResponse, FileResponse, JSONResponse
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
-from module_sample_api.configurations.app_conf import AppConf
+import module_sample_api.configurations.app_conf as app_conf
 import module_sample_api.utils.custom_util as custom_util
 import module_sample_api.models.api_test_model as model
 import json
@@ -21,7 +21,7 @@ async def basic_request_test(
 ):
     return PlainTextResponse(
         status_code=200,
-        content=AppConf.server_profile
+        content=app_conf.server_profile
     )
 
 
@@ -403,7 +403,7 @@ async def return_text_string_test(request, response):
 # ----
 # (text/html 반환 샘플)
 async def return_html_string_test(request, response):
-    return AppConf.jinja2Templates.TemplateResponse(
+    return app_conf.jinja2Templates.TemplateResponse(
         "return_text_html_test/html_response_example.html",
         {
             "request": request,
@@ -449,7 +449,7 @@ async def video_streaming_test(
         video_height: model.VideoStreamingTestVideoHeight
 ):
     # 모듈 루트 경로
-    module_root_path = AppConf.module_folder_path
+    module_root_path = app_conf.module_folder_path
 
     # 비디오 파일 경로 구성
     base_path = os.path.join(module_root_path, "z_resources/static/video_streaming_test")
@@ -474,7 +474,7 @@ async def video_streaming_test(
 # (오디오 스트리밍 샘플)
 async def audio_streaming_test(request, response):
     # 모듈 루트 경로
-    module_root_path = AppConf.module_folder_path
+    module_root_path = app_conf.module_folder_path
 
     # 비디오 파일 경로 구성
     base_path = os.path.join(module_root_path, "z_resources/static/audio_streaming_test")

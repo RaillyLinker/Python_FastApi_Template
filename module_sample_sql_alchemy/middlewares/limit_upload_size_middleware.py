@@ -1,7 +1,7 @@
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.responses import JSONResponse
-from module_sample_sql_alchemy.configurations.app_conf import AppConf
+import module_sample_sql_alchemy.configurations.app_conf as app_conf
 
 
 # [파일 업로드 사이즈 제한 미들웨어]
@@ -10,8 +10,8 @@ from module_sample_sql_alchemy.configurations.app_conf import AppConf
 class LimitUploadSizeMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         content_length = request.headers.get("Content-Length")
-        if content_length and int(content_length) > AppConf.max_upload_size:
-            max_size_mb = AppConf.max_upload_size / (1024 * 1024)
+        if content_length and int(content_length) > app_conf.max_upload_size:
+            max_size_mb = app_conf.max_upload_size / (1024 * 1024)
             return JSONResponse(
                 status_code=413,
                 content={

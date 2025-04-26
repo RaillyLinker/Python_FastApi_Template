@@ -24,13 +24,13 @@ def setup_logging():
     log_level = logging.INFO
 
     # 로그 저장 위치 설정 및 생성(프로젝트 루트의 by_product_files 안의 모듈명 안에 logs 로 저장)
-    log_dir = f"./by_product_files/{app_conf.AppConf.server_name}/logs/{app_conf.AppConf.server_profile}"
+    log_dir = f"./by_product_files/{app_conf.server_name}/logs/{app_conf.server_profile}"
     os.makedirs(log_dir, exist_ok=True)
 
     # 로깅 포메터 생성
     formatter = CustomFormatter(message_format)
 
-    log_file = os.path.join(log_dir, f"{app_conf.AppConf.server_profile}_logfile.log")
+    log_file = os.path.join(log_dir, f"{app_conf.server_profile}_logfile.log")
 
     # 로그 파일 생성 핸들러
     # 파일 크기가 설정 크기를 넘어서면 로그 파일 분할(오래된 파일일수록 뒤에 붙은 숫자가 커짐)

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
-from module_template.configurations.app_conf import AppConf
+import module_template.configurations.app_conf as app_conf
 
 
 # [Swagger 문서 설정]
@@ -12,11 +12,11 @@ class SwaggerConf:
 
         openapi_schema = (
             get_openapi(
-                title=AppConf.swagger_doc_title,
-                description=AppConf.swagger_doc_description,
-                version=AppConf.swagger_doc_version,
-                contact=AppConf.swagger_doc_contact,
-                license_info=AppConf.swagger_doc_license_info,
+                title=app_conf.swagger_doc_title,
+                description=app_conf.swagger_doc_description,
+                version=app_conf.swagger_doc_version,
+                contact=app_conf.swagger_doc_contact,
+                license_info=app_conf.swagger_doc_license_info,
                 routes=app.routes
             )
         )
