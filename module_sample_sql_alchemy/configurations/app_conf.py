@@ -52,17 +52,3 @@ cors_allow_methods = ["*"]
 # CORS Headers
 # 요청 시 어떤 헤더들을 허용할지 설정
 cors_allow_headers = ["*"]
-
-# Swagger 문서 공지
-swagger_doc_title = "SAMPLE-SQL-ALCHEMY"
-swagger_doc_description = "API 명세입니다."
-swagger_doc_version = "1.0.0"
-swagger_doc_contact = {
-    "name": "Railly Linker",
-    "url": "https://railly-linker.tistory.com",
-    "email": "raillylinker@gmail.com",
-}
-swagger_doc_license_info = {
-    "name": "MIT",
-    "url": "https://opensource.org/licenses/MIT",
-}
