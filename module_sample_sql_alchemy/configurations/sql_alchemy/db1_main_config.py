@@ -2,10 +2,14 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from contextlib import asynccontextmanager
 from functools import wraps
 from typing import Callable, Awaitable
+from zoneinfo import ZoneInfo
 
 # DB 유저 인증 정보
 _user_name = "root"
 _password = "todo1234!"
+
+# DB 타임존 설정
+db_timezone = ZoneInfo("Asia/Seoul")
 
 # 비동기 MySQL URL
 _database_url = (

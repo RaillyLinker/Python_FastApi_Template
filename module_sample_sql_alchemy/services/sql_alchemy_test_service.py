@@ -36,6 +36,9 @@ async def post_insert_data_sample(
     new_entity = await template_test_data_repository.save(
         db,
         Db1TemplateTestData(
+            row_create_date=datetime.now(),
+            row_update_date=datetime.now(),
+            row_delete_date_str="/",
             content=request_body.content,
             random_num=random.randint(0, 99999999),
             test_datetime=date_string
