@@ -33,11 +33,12 @@ async def post_insert_data_sample(
     date_string = datetime(year, month, day, hour, minute, second, microsecond, tz_info)
 
     # 데이터 저장
+    now_datetime = datetime.now()
     new_entity = await template_test_data_repository.save(
         db,
         Db1TemplateTestData(
-            row_create_date=datetime.now(),
-            row_update_date=datetime.now(),
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
             row_delete_date_str="/",
             content=request_body.content,
             random_num=random.randint(0, 99999999),
