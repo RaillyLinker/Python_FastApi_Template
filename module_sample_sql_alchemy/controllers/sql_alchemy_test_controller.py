@@ -363,4 +363,45 @@ async def put_row_native_query_sample(
 ):
     return await service.put_row_native_query_sample(request, response, test_table_uid, request_body)
 
-# todo : native update, orm update
+
+# ----
+@router.put(
+    "/row/{testTableUid}/orm",
+    summary="DB Row 수정 테스트 (ORM)",
+    description="테스트 테이블의 Row 하나를 ORM 으로 수정합니다.",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        },
+        204: {
+            "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>"
+                                   "1 : testTableUid 에 해당하는 정보가 데이터베이스에 존재하지 않습니다.",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    response_class=Response
+)
+async def put_row_orm_sample(
+        request: Request,
+        response: Response,
+        test_table_uid: int = Path(
+            ...,
+            alias="testTableUid",
+            description="test 테이블의 uid",
+            example=1
+        ),
+        request_body: model.PutRowOrmSampleInputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
+):
+    return await service.put_row_orm_sample(request, response, test_table_uid, request_body)

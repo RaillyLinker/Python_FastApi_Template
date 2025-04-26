@@ -1,4 +1,4 @@
-from sqlalchemy import select, text, DateTime
+from sqlalchemy import select, text, DateTime, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
 import tzlocal
@@ -298,3 +298,22 @@ async def update_to_template_test_data_set_content_and_test_date_time_by_uid(
             "testDatetime": test_datetime
         }
     )
+
+
+# ----
+# (ORM 데이터 수정 샘플)
+async def update_to_template_test_data_set_content_and_test_date_time_by_uid_orm(
+        db: AsyncSession,
+        uid: int,
+        content: str,
+        test_datetime: datetime
+):
+    stmt = (
+        update(Db1TemplateTestData)
+        .where(Db1TemplateTestData.uid == uid)
+        .values(
+            content=content,
+            test_datetime=test_datetime
+        )
+    )
+    await db.execute(stmt)

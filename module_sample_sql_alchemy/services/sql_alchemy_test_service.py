@@ -450,3 +450,37 @@ async def put_row_native_query_sample(
     return Response(
         status_code=200
     )
+
+
+# ----
+# (DB Row 수정 테스트 (ORM))
+@sql_alchemy_transactional
+async def put_row_orm_sample(
+        request: Request,
+        response: Response,
+        test_table_uid: int,
+        request_body: model.PutRowOrmSampleInputVo,
+        db: AsyncSession
+):
+    entity = await template_test_data_repository.find_by_uid_and_row_delete_date_str(db, test_table_uid, "/")
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    # yyyy_MM_dd_'T'_HH_mm_ss_SSS_z 형식 string -> datetime
+    datetime_obj = custom_util.parse_custom_datetime(request_body.date_string, "yyyy_MM_dd_'T'_HH_mm_ss_SSS_z")
+
+    # 데이터 수정
+    await template_test_data_repository.update_to_template_test_data_set_content_and_test_date_time_by_uid_orm(
+        db,
+        test_table_uid,
+        request_body.content,
+        datetime_obj
+    )
+
+    return Response(
+        status_code=200
+    )

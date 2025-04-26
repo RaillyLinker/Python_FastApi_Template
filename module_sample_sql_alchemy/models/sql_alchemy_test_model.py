@@ -586,3 +586,27 @@ class PutRowNativeQuerySampleInputVo(BaseModel):
             examples=["2024_05_02_T_15_14_49_552_KST"]
         )
     )
+
+
+# ----
+# (DB Row 수정 테스트 (ORM))
+class PutRowOrmSampleInputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    content: str = (
+        Field(
+            ...,
+            alias="content",
+            description="글 본문",
+            examples=["테스트 텍스트 수정글입니다."]
+        )
+    )
+    date_string: str = (
+        Field(
+            ...,
+            alias="dateString",
+            description="원하는 날짜(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
