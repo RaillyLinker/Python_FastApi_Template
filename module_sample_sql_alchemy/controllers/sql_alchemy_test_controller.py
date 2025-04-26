@@ -164,3 +164,33 @@ async def get_rows_order_by_random_num_sample(
         response,
         num
     )
+
+
+# ----
+@router.get(
+    "/rows/order-by-create-date-nearest",
+    response_model=model.GetRowsOrderByRowCreateDateSampleOutputVo,
+    summary="DB 테이블의 row_create_date 컬럼 근사치 기준으로 정렬한 리스트 조회 API",
+    description="테이블의 row 중 row_create_date 컬럼과 dateString 파라미터의 값의 근사치로 정렬한 리스트 반환",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_rows_order_by_row_create_date_sample(
+        request: Request,
+        response: Response,
+        date_string: str =
+        Query(
+            ...,
+            alias="dateString",
+            description="원하는 날짜(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            example="2024_05_02_T_15_14_49_552_KST"
+        )
+):
+    return await service.get_rows_order_by_row_create_date_sample(
+        request,
+        response,
+        date_string
+    )

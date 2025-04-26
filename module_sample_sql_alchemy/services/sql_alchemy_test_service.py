@@ -190,7 +190,7 @@ async def get_rows(
 
 
 # ----
-# (DB Row 삭제 테스트 API)
+# (DB 테이블의 random_num 컬럼 근사치 기준으로 정렬한 리스트 조회 API)
 @sql_alchemy_transactional_view_only
 async def get_rows_order_by_random_num_sample(
         request: Request,
@@ -227,6 +227,64 @@ async def get_rows_order_by_random_num_sample(
     return JSONResponse(
         status_code=200,
         content=model.GetRowsOrderByRandomNumSampleOutputVo(
+            test_entity_vo_list=test_entity_vo_list
+        ).model_dump()
+    )
+
+
+# ----
+# (DB 테이블의 row_create_date 컬럼 근사치 기준으로 정렬한 리스트 조회 API)
+@sql_alchemy_transactional_view_only
+async def get_rows_order_by_row_create_date_sample(
+        request: Request,
+        response: Response,
+        date_string: str,
+        db: AsyncSession
+):
+    # yyyy_MM_dd_'T'_HH_mm_ss_SSS_z 형식 string -> datetime
+    parts = date_string.split('_')
+    year = int(parts[0])
+    month = int(parts[1])
+    day = int(parts[2])
+    hour = int(parts[4])
+    minute = int(parts[5])
+    second = int(parts[6])
+    microsecond = int(parts[7]) * 1000
+    tz_info = custom_util.get_timezone_from_str(parts[8])
+    datetime_obj = datetime(year, month, day, hour, minute, second, microsecond, tz_info)
+
+    entity_list = await template_test_data_repository.find_all_from_template_test_data_by_not_deleted_with_row_create_date_distance(
+        db,
+        datetime_obj
+    )
+
+    test_entity_vo_list: List[model.GetRowsOrderByRowCreateDateSampleOutputVo.TestEntityVo] = []
+
+    for entity in entity_list:
+        entity_output = model.GetRowsOrderByRowCreateDateSampleOutputVo.TestEntityVo(
+            uid=entity.uid,
+            create_date=
+            entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_create_date.microsecond // 1000:03d}"
+            f"_{entity.row_create_date.tzname()}",
+            update_date=
+            entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_update_date.microsecond // 1000:03d}"
+            f"_{entity.row_update_date.tzname()}",
+            content=entity.content,
+            random_num=entity.random_num,
+            test_datetime=
+            entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.test_datetime.microsecond // 1000:03d}"
+            f"_{entity.test_datetime.tzname()}",
+            time_diff_micro_sec=entity.time_diff_micro_sec
+        )
+
+        test_entity_vo_list.append(entity_output)
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetRowsOrderByRowCreateDateSampleOutputVo(
             test_entity_vo_list=test_entity_vo_list
         ).model_dump()
     )
