@@ -97,3 +97,42 @@ async def delete_rows_sample(
     return Response(
         status_code=200
     )
+
+
+# ----
+# (DB Row 삭제 테스트 API)
+@sql_alchemy_transactional
+async def delete_row_sample(
+        request: Request,
+        response: Response,
+        index: int,
+        delete_logically: bool,
+        db: AsyncSession
+):
+    entity = await template_test_data_repository.find_by_id(db, index)
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    if delete_logically:
+        if entity.row_delete_date_str != "/":
+            return Response(
+                status_code=204,
+                headers={"api-result-code": "1"}
+            )
+
+        now_datetime = datetime.now().replace(tzinfo=tzlocal.get_localzone())
+        entity.row_delete_date_str = \
+            (now_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+             f"_{now_datetime.microsecond // 1000:03d}" +
+             f"_{now_datetime.tzname()}")
+        await template_test_data_repository.save(db, entity)
+    else:
+        await template_test_data_repository.delete_by_id(db, index)
+
+    return Response(
+        status_code=200
+    )
