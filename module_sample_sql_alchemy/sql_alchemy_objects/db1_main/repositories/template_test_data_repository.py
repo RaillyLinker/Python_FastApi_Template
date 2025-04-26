@@ -2,9 +2,10 @@ from sqlalchemy import select
 from sqlalchemy import DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
+import tzlocal
+import module_sample_sql_alchemy.utils.sql_alchemy_util as sql_alchemy_util
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
-import tzlocal
 
 
 # [SqlAlchemy 레포지토리]
@@ -36,16 +37,8 @@ async def save(db: AsyncSession, entity: Db1TemplateTestData):
     await db.flush()
     await db.refresh(entity)
 
-    for column in mapper.columns:
-        if isinstance(column.type, DateTime):  # Datetime 타입 변수만 탐지
-            attr_name = column.name  # 컬럼명 ex : row_create_date
-            value = getattr(entity, attr_name)  # 입력된 값 ex : 2025-04-26 10:14:13.335610
-
-            if value is not None:
-                # DB 타임존 설정으로 타임존 변경(기존에는 None)
-                value = value.replace(tzinfo=db_timezone)
-                # 객체 내 변수 값 수정
-                setattr(entity, attr_name, value)
+    # Entity 안의 datetime 에 타임존 정보 입력
+    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
 
     return entity
 
@@ -63,11 +56,17 @@ async def delete_by_id(db: AsyncSession, pk: int):
 async def find_by_id(db: AsyncSession, pk: int):
     stmt = select(Db1TemplateTestData).where(Db1TemplateTestData.uid == pk)
     result = await db.execute(stmt)
-    return result.scalar_one_or_none()
+    entity = result.scalar_one_or_none()
+    # Entity 안의 datetime 에 타임존 정보 입력
+    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
+    return entity
 
 
 # 모든 데이터 검색
 async def find_all(db: AsyncSession):
     stmt = select(Db1TemplateTestData)
     result = await db.execute(stmt)
-    return result.scalars().all()
+    entity_list = result.scalars().all()
+    # Entity 안의 datetime 에 타임존 정보 입력
+    sql_alchemy_util.apply_timezone_to_datetime_fields_in_list(entity_list, db_timezone)
+    return entity_list
