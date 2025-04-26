@@ -8,6 +8,7 @@ from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_te
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
 from typing import List
 from datetime import datetime
+from sqlalchemy import func
 
 
 # [SqlAlchemy 레포지토리]
@@ -166,3 +167,32 @@ async def find_all_from_template_test_data_by_not_deleted_with_row_create_date_d
     ]
 
     return output
+
+
+# ----
+# (페이지네이션 샘플)
+async def find_all_by_row_delete_date_str_order_by_row_create_date(
+        db: AsyncSession,
+        page: int,
+        page_elements_count: int
+):
+    offset = (page - 1) * page_elements_count
+
+    # 필터링 + 정렬 + 페이지네이션
+    result = await db.execute(
+        select(Db1TemplateTestData)
+        .where(Db1TemplateTestData.row_delete_date_str == "/")
+        .order_by(Db1TemplateTestData.row_create_date)
+        .offset(offset)
+        .limit(page_elements_count)
+    )
+    entities = result.scalars().all()
+
+    # 총 개수 계산
+    count_result = await db.execute(
+        select(func.count(Db1TemplateTestData.uid))
+        .where(Db1TemplateTestData.row_delete_date_str == "/")
+    )
+    total_elements = count_result.scalar_one()
+
+    return entities, total_elements

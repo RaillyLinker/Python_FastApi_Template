@@ -194,3 +194,41 @@ async def get_rows_order_by_row_create_date_sample(
         response,
         date_string
     )
+
+
+# ----
+@router.get(
+    "/rows/paging",
+    response_model=model.GetRowsPageSampleOutputVo,
+    summary="DB Rows 조회 테스트 (페이징)",
+    description="테스트 테이블의 Rows 를 페이징하여 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_rows_page_sample(
+        request: Request,
+        response: Response,
+        page: int =
+        Query(
+            ...,
+            alias="page",
+            description="원하는 페이지(1부터 시작)",
+            example=1
+        ),
+        page_elements_count: int =
+        Query(
+            ...,
+            alias="pageElementsCount",
+            description="페이지 아이템 개수",
+            example=10
+        )
+):
+    return await service.get_rows_page_sample(
+        request,
+        response,
+        page,
+        page_elements_count
+    )
