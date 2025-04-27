@@ -3,14 +3,18 @@ from datetime import datetime
 from fastapi import Response, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
+import tzlocal
+from typing import List
+import module_sample_sql_alchemy.utils.custom_util as custom_util
+from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import sql_alchemy_transactional
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 import module_sample_sql_alchemy.models.sql_alchemy_test_model as model
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_test_data_repository \
     as template_test_data_repository
-import module_sample_sql_alchemy.utils.custom_util as custom_util
-import tzlocal
-from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import sql_alchemy_transactional
-from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
-from typing import List
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_logical_delete_unique_data import \
+    Db1TemplateLogicalDeleteUniqueData
+import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_local_delete_unique_data_repository \
+    as template_local_delete_unique_data_repository
 
 
 # [그룹 서비스]
@@ -634,5 +638,44 @@ async def get_row_by_native_query_sample(
             entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
             f"_{entity.test_datetime.microsecond // 1000:03d}"
             f"_{entity.test_datetime.tzname()}",
+        ).model_dump()
+    )
+
+
+# ----
+# (유니크 테스트 테이블 Row 입력 API)
+@sql_alchemy_transactional()
+async def post_unique_test_table_row_sample(
+        request: Request,
+        response: Response,
+        request_body: model.PostUniqueTestTableRowSampleInputVo,
+        db: AsyncSession
+):
+    # 데이터 저장
+    now_datetime = datetime.now()
+    new_entity = await template_local_delete_unique_data_repository.save(
+        db,
+        Db1TemplateLogicalDeleteUniqueData(
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
+            row_delete_date_str="/",
+            unique_value=request_body.unique_value
+        )
+    )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.PostUniqueTestTableRowSampleOutputVo(
+            uid=new_entity.uid,
+            create_date=
+            new_entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_create_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_create_date.tzname()}",
+            update_date=
+            new_entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_update_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_update_date.tzname()}",
+            delete_date=new_entity.row_delete_date_str,
+            unique_value=new_entity.unique_value
         ).model_dump()
     )

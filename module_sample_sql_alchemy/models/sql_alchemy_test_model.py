@@ -751,3 +751,65 @@ class GetRowByNativeQuerySampleOutputVo(BaseModel):
             examples=["2024_05_02_T_15_14_49_552_KST"]
         )
     )
+
+
+# ----
+# (DB Row 입력 테스트 API)
+class PostUniqueTestTableRowSampleInputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    unique_value: int = (
+        Field(
+            ...,
+            alias="uniqueValue",
+            description="유니크 값",
+            examples=[1]
+        )
+    )
+
+
+class PostUniqueTestTableRowSampleOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    uid: int = (
+        Field(
+            ...,
+            alias="uid",
+            description="글 고유번호",
+            examples=[1]
+        )
+    )
+    create_date: str = (
+        Field(
+            ...,
+            alias="createDate",
+            description="글 작성일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
+    update_date: str = (
+        Field(
+            ...,
+            alias="updateDate",
+            description="글 수정일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
+    delete_date: str = (
+        Field(
+            ...,
+            alias="deleteDate",
+            description="글 삭제일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z, Null 이면 /)",
+            examples=["/"]
+        )
+    )
+    unique_value: int = (
+        Field(
+            ...,
+            alias="uniqueValue",
+            description="유니크 값",
+            examples=[1]
+        )
+    )

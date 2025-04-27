@@ -533,3 +533,26 @@ async def get_row_by_native_query_sample(
         response,
         test_table_uid
     )
+
+
+# ----
+@router.post(
+    "/unique-test-table",
+    response_model=model.PostUniqueTestTableRowSampleOutputVo,
+    summary="유니크 테스트 테이블 Row 입력 API",
+    description="유니크 테스트 테이블에 Row 를 입력합니다.<br>"
+                "논리적 삭제를 적용한 본 테이블에서 유니크 값은, 유니크 값 컬럼과 행 삭제일 데이터와의 혼합입니다.",
+    responses={
+        200: {"description": "OK"}
+    }
+)
+async def post_unique_test_table_row_sample(
+        request: Request,
+        response: Response,
+        request_body: model.PostUniqueTestTableRowSampleInputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
+):
+    return await service.post_unique_test_table_row_sample(request, response, request_body)
