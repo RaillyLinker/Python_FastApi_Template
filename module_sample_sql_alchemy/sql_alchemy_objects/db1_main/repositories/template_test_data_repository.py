@@ -12,7 +12,8 @@ from sqlalchemy import func
 
 
 # [SqlAlchemy 레포지토리]
-# 데이터 변경 함수 사용시 commit, rollback 처리를 해주세요.
+# 모든 함수에는 @sql_alchemy_func 를 붙이고, 이로 인하여 반환값은 단일 값을 반환하거나,
+# return entities, total_elements 이렇게 return 값이 많을 경우 최대 2개만을 허용합니다.
 
 # 데이터 save(동일 pk 가 존재 하면 update, 없다면 insert)
 @sql_alchemy_func
