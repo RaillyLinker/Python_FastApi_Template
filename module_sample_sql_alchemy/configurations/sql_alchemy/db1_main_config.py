@@ -1,7 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from contextlib import asynccontextmanager
 from functools import wraps
-from typing import Callable, Awaitable
 from zoneinfo import ZoneInfo
 
 # DB 유저 인증 정보
