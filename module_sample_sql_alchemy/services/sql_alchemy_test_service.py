@@ -533,3 +533,56 @@ async def get_row_where_searching_keyword_sample(
             test_entity_vo_list=test_entity_vo_list
         ).model_dump()
     )
+
+
+# ----
+# (트랜젝션 동작 테스트)
+@sql_alchemy_transactional
+async def post_transaction_test(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    # 데이터 저장
+    now_datetime = datetime.now()
+    await template_test_data_repository.save(
+        db,
+        Db1TemplateTestData(
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
+            row_delete_date_str="/",
+            content="error test",
+            random_num=random.randint(0, 99999999),
+            test_datetime=now_datetime
+        )
+    )
+
+    raise Exception("Transaction Rollback Test!")
+
+
+# ----
+# (트랜젝션 비동작 테스트(try-catch))
+@sql_alchemy_transactional
+async def post_try_transaction_test(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    try:
+        # 데이터 저장
+        now_datetime = datetime.now()
+        await template_test_data_repository.save(
+            db,
+            Db1TemplateTestData(
+                row_create_date=now_datetime,
+                row_update_date=now_datetime,
+                row_delete_date_str="/",
+                content="error test",
+                random_num=random.randint(0, 99999999),
+                test_datetime=now_datetime
+            )
+        )
+
+        raise Exception("Transaction Rollback Test!")
+    except Exception as e:
+        print(e)

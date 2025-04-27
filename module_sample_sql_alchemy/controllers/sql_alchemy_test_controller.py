@@ -451,3 +451,43 @@ async def get_row_where_searching_keyword_sample(
         page_elements_count,
         search_keyword
     )
+
+
+# ----
+@router.post(
+    "/transaction-rollback-sample",
+    summary="트랜젝션 동작 테스트",
+    description="정보 입력 후 Exception 이 발생했을 때 롤백되어 데이터가 저장되지 않는지를 테스트하는 API",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        }
+    },
+    response_class=Response
+)
+async def post_transaction_test(
+        request: Request,
+        response: Response
+):
+    return await service.post_transaction_test(request, response)
+
+
+# ----
+@router.post(
+    "/try-catch-no-transaction-exception-sample",
+    summary="트랜젝션 비동작 테스트(try-catch)",
+    description="에러 발생문이 try-catch 문 안에 있을 때, DB 정보 입력 후 Exception 이 발생 해도 트랜젝션이 동작하지 않는지에 대한 테스트 API",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        }
+    },
+    response_class=Response
+)
+async def post_try_transaction_test(
+        request: Request,
+        response: Response
+):
+    return await service.post_try_transaction_test(request, response)
