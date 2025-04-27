@@ -25,6 +25,7 @@ _async_engine = (
         # 커넥션이 죽어 있다면 → 버리고 새로 연결.
         # 결과적으로, "OperationalError: MySQL server has gone away", "connection closed" 같은 에러를 방지할 수 있음.
         pool_pre_ping=True,
+        pool_recycle=1800,  # 30분마다 커넥션 재생성
         pool_size=20,  # 커넥션 풀 크기
         max_overflow=10,  # 커넥션 풀을 넘어서 생성할 수 있는 커넥션 수
         pool_timeout=30,  # 커넥션 풀에서 대기할 최대 시간
