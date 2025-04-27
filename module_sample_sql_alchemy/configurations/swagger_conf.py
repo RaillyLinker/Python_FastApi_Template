@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
+from typing import Any
 import module_sample_sql_alchemy.configurations.swagger_doc_conf_info as swagger_doc_conf_info
 
 
 # [Swagger 문서 설정]
 class SwaggerConf:
     @staticmethod
-    def custom_openapi(app: FastAPI):
+    def custom_openapi(app: FastAPI) -> dict[str, Any]:
         if app.openapi_schema:
             return app.openapi_schema
 

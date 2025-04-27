@@ -8,7 +8,7 @@ import module_template.configurations.app_conf as app_conf
 
 # [로깅 포메터]
 class CustomFormatter(logging.Formatter):
-    def formatTime(self, record, datefmt=None):
+    def formatTime(self, record, datefmt=None) -> str:
         dt = datetime.datetime.fromtimestamp(record.created, tz=tzlocal.get_localzone())
         millis = int(dt.microsecond / 1000)  # 마이크로초를 밀리초로 변환
         s = dt.strftime("%Y_%m_%d_T_%H_%M_%S") + f"_{millis:03d}_{dt.tzname()}"
