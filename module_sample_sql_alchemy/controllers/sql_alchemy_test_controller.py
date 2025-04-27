@@ -405,3 +405,49 @@ async def put_row_orm_sample(
         )
 ):
     return await service.put_row_orm_sample(request, response, test_table_uid, request_body)
+
+
+# ----
+@router.get(
+    "/search-content",
+    response_model=model.GetRowWhereSearchingKeywordSampleOutputVo,
+    summary="DB 정보 검색 테스트",
+    description="글 본문 내용중 searchKeyword 가 포함된 rows 를 검색하여 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_row_where_searching_keyword_sample(
+        request: Request,
+        response: Response,
+        page: int =
+        Query(
+            ...,
+            alias="page",
+            description="원하는 페이지(1부터 시작)",
+            example=1
+        ),
+        page_elements_count: int =
+        Query(
+            ...,
+            alias="pageElementsCount",
+            description="페이지 아이템 개수",
+            example=10
+        ),
+        search_keyword: str =
+        Query(
+            ...,
+            alias="searchKeyword",
+            description="검색어",
+            example="테스트"
+        )
+):
+    return await service.get_row_where_searching_keyword_sample(
+        request,
+        response,
+        page,
+        page_elements_count,
+        search_keyword
+    )

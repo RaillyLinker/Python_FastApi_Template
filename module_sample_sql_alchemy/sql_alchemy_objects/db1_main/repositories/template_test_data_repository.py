@@ -317,3 +317,67 @@ async def update_to_template_test_data_set_content_and_test_date_time_by_uid_orm
         )
     )
     await db.execute(stmt)
+
+
+# ----
+# (키워드 검색 샘플)
+async def find_page_all_from_template_test_data_by_search_keyword(
+        db: AsyncSession,
+        page: int,
+        page_elements_count: int,
+        search_keyword: str
+):
+    offset = (page - 1) * page_elements_count
+
+    # 본문 조회 (검색 키워드 기반)
+    result = await db.execute(
+        text("""
+            SELECT 
+                test_data.uid AS uid,
+                test_data.row_create_date AS row_create_date,
+                test_data.row_update_date AS row_update_date,
+                test_data.content AS content,
+                test_data.random_num AS random_num,
+                test_data.test_datetime AS test_datetime
+            FROM 
+                template.test_data AS test_data
+            WHERE 
+                REPLACE(test_data.content, ' ', '') LIKE REPLACE(CONCAT('%', :search_keyword, '%'), ' ', '')
+                AND test_data.row_delete_date_str = '/'
+            ORDER BY 
+                test_data.row_create_date DESC
+            LIMIT :limit OFFSET :offset
+        """),
+        {"search_keyword": search_keyword, "limit": page_elements_count, "offset": offset}
+    )
+
+    rows = result.mappings().all()
+
+    entities = [
+        value_objects.FindPageAllFromTemplateTestDataBySearchKeywordOutputVo(
+            uid=row["uid"],
+            row_create_date=row["row_create_date"],
+            row_update_date=row["row_update_date"],
+            content=row["content"],
+            random_num=row["random_num"],
+            test_datetime=row["test_datetime"]
+        )
+        for row in rows
+    ]
+
+    # 총 개수 조회
+    count_result = await db.execute(
+        text("""
+            SELECT 
+                COUNT(*)
+            FROM 
+                template.test_data AS test_data
+            WHERE 
+                REPLACE(test_data.content, ' ', '') LIKE REPLACE(CONCAT('%', :search_keyword, '%'), ' ', '')
+                AND test_data.row_delete_date_str = '/'
+        """),
+        {"search_keyword": search_keyword}
+    )
+    total_elements = count_result.scalar_one()
+
+    return entities, total_elements
