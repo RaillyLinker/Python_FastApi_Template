@@ -2,10 +2,10 @@ from sqlalchemy import select, text, DateTime, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
 import tzlocal
-import module_sample_sql_alchemy.utils.sql_alchemy_util as sql_alchemy_util
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_test_data_vo as value_objects
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
+from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_func
 from typing import List, Sequence, Optional, Tuple
 from datetime import datetime
 from sqlalchemy import func
@@ -15,6 +15,7 @@ from sqlalchemy import func
 # 데이터 변경 함수 사용시 commit, rollback 처리를 해주세요.
 
 # 데이터 save(동일 pk 가 존재 하면 update, 없다면 insert)
+@sql_alchemy_func
 async def save(db: AsyncSession, entity: Db1TemplateTestData) -> Db1TemplateTestData:
     # datetime 필드 자동 탐지 및 타임존 변환
     mapper = inspect(entity.__class__)
@@ -40,13 +41,11 @@ async def save(db: AsyncSession, entity: Db1TemplateTestData) -> Db1TemplateTest
     await db.flush()
     await db.refresh(entity)
 
-    # Entity 안의 datetime 에 타임존 정보 입력
-    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
-
     return entity
 
 
 # 모든 데이터 삭제
+@sql_alchemy_func
 async def delete_all(db: AsyncSession):
     stmt = select(Db1TemplateTestData)
     result = await db.execute(stmt)
@@ -57,6 +56,7 @@ async def delete_all(db: AsyncSession):
 
 
 # 데이터 pk 로 delete
+@sql_alchemy_func
 async def delete_by_id(db: AsyncSession, pk: int):
     stmt = select(Db1TemplateTestData).where(Db1TemplateTestData.uid == pk)
     result = await db.execute(stmt)
@@ -66,27 +66,26 @@ async def delete_by_id(db: AsyncSession, pk: int):
 
 
 # 모든 데이터 검색
+@sql_alchemy_func
 async def find_all(db: AsyncSession) -> Sequence[Db1TemplateTestData]:
     stmt = select(Db1TemplateTestData)
     result = await db.execute(stmt)
     entity_list = result.scalars().all()
-    # Entity 안의 datetime 에 타임존 정보 입력
-    sql_alchemy_util.apply_timezone_to_datetime_fields_in_list(entity_list, db_timezone)
     return entity_list
 
 
 # 데이터 pk 로 검색(0 or 1 result)
+@sql_alchemy_func
 async def find_by_id(db: AsyncSession, pk: int) -> Optional[Db1TemplateTestData]:
     stmt = select(Db1TemplateTestData).where(Db1TemplateTestData.uid == pk)
     result = await db.execute(stmt)
     entity = result.scalar_one_or_none()
-    # Entity 안의 datetime 에 타임존 정보 입력
-    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
     return entity
 
 
 # ---- (커스텀 쿼리 함수 추가 공간) ----
 # (데이터 pk 로 검색(0 or 1 result))
+@sql_alchemy_func
 async def find_by_uid_and_row_delete_date_str(
         db: AsyncSession,
         pk: int,
@@ -98,12 +97,11 @@ async def find_by_uid_and_row_delete_date_str(
     )
     result = await db.execute(stmt)
     entity = result.scalar_one_or_none()
-    # Entity 안의 datetime 에 타임존 정보 입력
-    sql_alchemy_util.apply_timezone_to_datetime_fields(entity, db_timezone)
     return entity
 
 
 # (입력값 거리 측정 쿼리)
+@sql_alchemy_func
 async def find_all_by_not_deleted_with_random_distance(
         db: AsyncSession,
         num: int
@@ -146,6 +144,7 @@ async def find_all_by_not_deleted_with_random_distance(
 
 # ----
 # (입력 date 값 거리 측정 쿼리)
+@sql_alchemy_func
 async def find_all_from_template_test_data_by_not_deleted_with_row_create_date_distance(
         db: AsyncSession,
         date: datetime
@@ -188,6 +187,7 @@ async def find_all_from_template_test_data_by_not_deleted_with_row_create_date_d
 
 # ----
 # (페이지네이션 샘플)
+@sql_alchemy_func
 async def find_all_by_row_delete_date_str_order_by_row_create_date(
         db: AsyncSession,
         page: int,
@@ -217,6 +217,7 @@ async def find_all_by_row_delete_date_str_order_by_row_create_date(
 
 # ----
 # (네이티브 페이지네이션 샘플)
+@sql_alchemy_func
 async def find_page_all_from_template_test_data_by_not_deleted_with_random_num_distance(
         db: AsyncSession,
         page: int,
@@ -280,6 +281,7 @@ async def find_page_all_from_template_test_data_by_not_deleted_with_random_num_d
 
 # ----
 # (네이티브 데이터 수정 샘플)
+@sql_alchemy_func
 async def update_to_template_test_data_set_content_and_test_date_time_by_uid(
         db: AsyncSession,
         uid: int,
@@ -306,6 +308,7 @@ async def update_to_template_test_data_set_content_and_test_date_time_by_uid(
 
 # ----
 # (ORM 데이터 수정 샘플)
+@sql_alchemy_func
 async def update_to_template_test_data_set_content_and_test_date_time_by_uid_orm(
         db: AsyncSession,
         uid: int,
@@ -325,6 +328,7 @@ async def update_to_template_test_data_set_content_and_test_date_time_by_uid_orm
 
 # ----
 # (키워드 검색 샘플)
+@sql_alchemy_func
 async def find_page_all_from_template_test_data_by_search_keyword(
         db: AsyncSession,
         page: int,
@@ -389,6 +393,7 @@ async def find_page_all_from_template_test_data_by_search_keyword(
 
 # ----
 # (데이터 카운팅)
+@sql_alchemy_func
 async def count_by_row_delete_date_str(
         db: AsyncSession,
         row_delete_date_str: str
@@ -403,6 +408,7 @@ async def count_by_row_delete_date_str(
 
 # ----
 # (데이터 카운팅)
+@sql_alchemy_func
 async def count_from_template_test_data_by_not_deleted(
         db: AsyncSession,
         row_delete_date_str: str
