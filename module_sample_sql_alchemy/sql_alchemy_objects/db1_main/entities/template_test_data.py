@@ -6,10 +6,12 @@ Base = declarative_base()
 
 class Db1TemplateTestData(Base):
     __tablename__ = 'test_data'
-    __table_args__ = {
-        'schema': 'template',
-        'comment': '테스트 정보 테이블(논리적 삭제 적용)'
-    }
+    __table_args__ = (
+        {
+            'schema': 'template',
+            'comment': '테스트 정보 테이블(논리적 삭제 적용)'
+        }
+    )
 
     uid = (
         Column(

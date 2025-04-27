@@ -2,13 +2,13 @@ from sqlalchemy import select, text, DateTime, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
 import tzlocal
-import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_test_data_vo as value_objects
-from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
-from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
-from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_func
 from typing import List, Sequence, Optional, Tuple
 from datetime import datetime
 from sqlalchemy import func
+from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_func
+from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
+import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_test_data_vo as value_objects
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 
 
 # [SqlAlchemy 레포지토리]
@@ -130,11 +130,11 @@ async def find_all_by_not_deleted_with_random_distance(
     output = [
         value_objects.FindAllFromTemplateTestDataByNotDeletedWithRandomNumDistanceOutputVo(
             uid=row["uid"],
-            row_create_date=row["rowCreateDate"].astimezone(db_timezone),
-            row_update_date=row["rowUpdateDate"].astimezone(db_timezone),
+            row_create_date=row["rowCreateDate"],
+            row_update_date=row["rowUpdateDate"],
             content=row["content"],
             random_num=row["randomNum"],
-            test_datetime=row["testDatetime"].astimezone(db_timezone),
+            test_datetime=row["testDatetime"],
             distance=row["distance"]
         )
         for row in rows
@@ -173,11 +173,11 @@ async def find_all_from_template_test_data_by_not_deleted_with_row_create_date_d
     output = [
         value_objects.FindAllFromTemplateTestDataByNotDeletedWithRowCreateDateDistanceOutputVo(
             uid=row["uid"],
-            row_create_date=row["rowCreateDate"].astimezone(db_timezone),
-            row_update_date=row["rowUpdateDate"].astimezone(db_timezone),
+            row_create_date=row["rowCreateDate"],
+            row_update_date=row["rowUpdateDate"],
             content=row["content"],
             random_num=row["randomNum"],
-            test_datetime=row["testDatetime"].astimezone(db_timezone),
+            test_datetime=row["testDatetime"],
             time_diff_micro_sec=row["timeDiffMicroSec"]
         )
         for row in rows
@@ -281,33 +281,6 @@ async def find_page_all_from_template_test_data_by_not_deleted_with_random_num_d
 
 
 # ----
-# (네이티브 데이터 수정 샘플)
-@sql_alchemy_func
-async def update_to_template_test_data_set_content_and_test_date_time_by_uid(
-        db: AsyncSession,
-        uid: int,
-        content: str,
-        test_datetime: datetime
-):
-    await db.execute(
-        text("""
-            UPDATE 
-            template.test_data 
-            SET 
-            content = :content, 
-            test_datetime = :testDatetime 
-            WHERE 
-            uid = :uid
-        """),
-        {
-            "uid": uid,
-            "content": content,
-            "testDatetime": test_datetime
-        }
-    )
-
-
-# ----
 # (ORM 데이터 수정 샘플)
 @sql_alchemy_func
 async def update_to_template_test_data_set_content_and_test_date_time_by_uid_orm(
@@ -321,7 +294,8 @@ async def update_to_template_test_data_set_content_and_test_date_time_by_uid_orm
         .where(Db1TemplateTestData.uid == uid)
         .values(
             content=content,
-            test_datetime=test_datetime
+            test_datetime=test_datetime,
+            row_update_date=datetime.now()
         )
     )
     await db.execute(stmt)

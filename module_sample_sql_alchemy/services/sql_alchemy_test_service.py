@@ -392,6 +392,9 @@ async def put_row_sample(
     datetime_obj = custom_util.parse_custom_datetime(request_body.date_string, "yyyy_MM_dd_'T'_HH_mm_ss_SSS_z")
     entity.test_datetime = datetime_obj
 
+    now_datetime = datetime.now()
+    entity.row_update_date = now_datetime
+
     # 데이터 저장
     new_entity = await template_test_data_repository.save(db, entity)
 
@@ -414,40 +417,6 @@ async def put_row_sample(
             f"_{new_entity.test_datetime.microsecond // 1000:03d}"
             f"_{new_entity.test_datetime.tzname()}",
         ).model_dump()
-    )
-
-
-# ----
-# (DB Row 수정 테스트 (네이티브 쿼리))
-@sql_alchemy_transactional()
-async def put_row_native_query_sample(
-        request: Request,
-        response: Response,
-        test_table_uid: int,
-        request_body: model.PutRowNativeQuerySampleInputVo,
-        db: AsyncSession
-):
-    entity = await template_test_data_repository.find_by_uid_and_row_delete_date_str(db, test_table_uid, "/")
-
-    if entity is None:
-        return Response(
-            status_code=204,
-            headers={"api-result-code": "1"}
-        )
-
-    # yyyy_MM_dd_'T'_HH_mm_ss_SSS_z 형식 string -> datetime
-    datetime_obj = custom_util.parse_custom_datetime(request_body.date_string, "yyyy_MM_dd_'T'_HH_mm_ss_SSS_z")
-
-    # 데이터 수정
-    await template_test_data_repository.update_to_template_test_data_set_content_and_test_date_time_by_uid(
-        db,
-        test_table_uid,
-        request_body.content,
-        datetime_obj
-    )
-
-    return Response(
-        status_code=200
     )
 
 
