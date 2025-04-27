@@ -8,15 +8,14 @@ import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.templ
     as template_test_data_repository
 import module_sample_sql_alchemy.utils.custom_util as custom_util
 import tzlocal
-from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import sql_alchemy_transactional, \
-    sql_alchemy_transactional_view_only
+from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import sql_alchemy_transactional
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 from typing import List
 
 
 # [그룹 서비스]
 # (DB Row 입력 테스트 API)
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def post_insert_data_sample(
         request: Request,
         response: Response,
@@ -65,7 +64,7 @@ async def post_insert_data_sample(
 
 # ----
 # (DB Rows 삭제 테스트 API)
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def delete_rows_sample(
         request: Request,
         response: Response,
@@ -94,7 +93,7 @@ async def delete_rows_sample(
 
 # ----
 # (DB Row 삭제 테스트 API)
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def delete_row_sample(
         request: Request,
         response: Response,
@@ -133,7 +132,7 @@ async def delete_row_sample(
 
 # ----
 # (DB Row 삭제 테스트 API)
-@sql_alchemy_transactional_view_only
+@sql_alchemy_transactional(view_only=True)
 async def get_rows(
         request: Request,
         response: Response,
@@ -182,7 +181,7 @@ async def get_rows(
 
 # ----
 # (DB 테이블의 random_num 컬럼 근사치 기준으로 정렬한 리스트 조회 API)
-@sql_alchemy_transactional_view_only
+@sql_alchemy_transactional(view_only=True)
 async def get_rows_order_by_random_num_sample(
         request: Request,
         response: Response,
@@ -225,7 +224,7 @@ async def get_rows_order_by_random_num_sample(
 
 # ----
 # (DB 테이블의 row_create_date 컬럼 근사치 기준으로 정렬한 리스트 조회 API)
-@sql_alchemy_transactional_view_only
+@sql_alchemy_transactional(view_only=True)
 async def get_rows_order_by_row_create_date_sample(
         request: Request,
         response: Response,
@@ -274,7 +273,7 @@ async def get_rows_order_by_row_create_date_sample(
 
 # ----
 # (DB Rows 조회 테스트 (페이징))
-@sql_alchemy_transactional_view_only
+@sql_alchemy_transactional(view_only=True)
 async def get_rows_page_sample(
         request: Request,
         response: Response,
@@ -321,7 +320,7 @@ async def get_rows_page_sample(
 
 # ----
 # (DB Rows 조회 테스트 (네이티브 쿼리 페이징))
-@sql_alchemy_transactional_view_only
+@sql_alchemy_transactional(view_only=True)
 async def get_rows_native_query_page_sample(
         request: Request,
         response: Response,
@@ -371,7 +370,7 @@ async def get_rows_native_query_page_sample(
 
 # ----
 # (DB Row 수정 테스트 API)
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def put_row_sample(
         request: Request,
         response: Response,
@@ -420,7 +419,7 @@ async def put_row_sample(
 
 # ----
 # (DB Row 수정 테스트 (네이티브 쿼리))
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def put_row_native_query_sample(
         request: Request,
         response: Response,
@@ -454,7 +453,7 @@ async def put_row_native_query_sample(
 
 # ----
 # (DB Row 수정 테스트 (ORM))
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def put_row_orm_sample(
         request: Request,
         response: Response,
@@ -488,7 +487,7 @@ async def put_row_orm_sample(
 
 # ----
 # (DB Rows 조회 테스트 (네이티브 쿼리 페이징))
-@sql_alchemy_transactional_view_only
+@sql_alchemy_transactional(view_only=True)
 async def get_row_where_searching_keyword_sample(
         request: Request,
         response: Response,
@@ -537,7 +536,7 @@ async def get_row_where_searching_keyword_sample(
 
 # ----
 # (트랜젝션 동작 테스트)
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def post_transaction_test(
         request: Request,
         response: Response,
@@ -562,7 +561,7 @@ async def post_transaction_test(
 
 # ----
 # (트랜젝션 비동작 테스트(try-catch))
-@sql_alchemy_transactional
+@sql_alchemy_transactional()
 async def post_try_transaction_test(
         request: Request,
         response: Response,

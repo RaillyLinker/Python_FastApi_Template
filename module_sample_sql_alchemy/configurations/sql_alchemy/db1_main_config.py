@@ -51,32 +51,25 @@ async def get_async_db() -> AsyncSession:
 
 # (Transactional 데코레이터)
 # Transaction 을 적용 하려는 함수 위에,
-# @sql_alchemy_transactional 이렇게 붙이고, 해당 함수에는,
+# @sql_alchemy_transactional(view_only=True) 이렇게 붙이고, 해당 함수에는,
 # db: AsyncSession 이것을 인자값으로 받도록 처리
-def sql_alchemy_transactional(handler: Callable[..., Awaitable]):
-    @wraps(handler)
-    async def wrapper(*args, **kwargs):
-        async with get_async_db() as db:
-            try:
-                result = await handler(*args, db=db, **kwargs)
-                await db.commit()
-                return result
-            except Exception as e:
-                await db.rollback()
-                raise e
+def sql_alchemy_transactional(view_only: bool = False):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            async with get_async_db() as db:
+                if view_only:
+                    result = await func(*args, db=db, **kwargs)
+                    return result
+                else:
+                    try:
+                        result = await func(*args, db=db, **kwargs)
+                        await db.commit()
+                        return result
+                    except Exception as e:
+                        await db.rollback()
+                        raise e
 
-    return wrapper
+        return wrapper
 
-
-# (Transactional view only 데코레이터)
-# sql alchemy 의 async db 를 사용하는 단순한 조회 함수 위에,
-# @sql_alchemy_transactional_view_only 이렇게 붙이고, 해당 함수에는,
-# db: AsyncSession 이것을 인자값으로 받도록 처리
-def sql_alchemy_transactional_view_only(handler: Callable[..., Awaitable]):
-    @wraps(handler)
-    async def wrapper(*args, **kwargs):
-        async with get_async_db() as db:
-            result = await handler(*args, db=db, **kwargs)
-            return result
-
-    return wrapper
+    return decorator
