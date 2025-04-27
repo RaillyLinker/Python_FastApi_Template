@@ -6,7 +6,7 @@ import module_sample_sql_alchemy.utils.sql_alchemy_util as sql_alchemy_util
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_test_data_vo as value_objects
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_test_data import Db1TemplateTestData
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
-from typing import List
+from typing import List, Sequence, Optional, Tuple
 from datetime import datetime
 from sqlalchemy import func
 
@@ -15,7 +15,7 @@ from sqlalchemy import func
 # 데이터 변경 함수 사용시 commit, rollback 처리를 해주세요.
 
 # 데이터 save(동일 pk 가 존재 하면 update, 없다면 insert)
-async def save(db: AsyncSession, entity: Db1TemplateTestData):
+async def save(db: AsyncSession, entity: Db1TemplateTestData) -> Db1TemplateTestData:
     # datetime 필드 자동 탐지 및 타임존 변환
     mapper = inspect(entity.__class__)
     for column in mapper.columns:
@@ -66,7 +66,7 @@ async def delete_by_id(db: AsyncSession, pk: int):
 
 
 # 모든 데이터 검색
-async def find_all(db: AsyncSession):
+async def find_all(db: AsyncSession) -> Sequence[Db1TemplateTestData]:
     stmt = select(Db1TemplateTestData)
     result = await db.execute(stmt)
     entity_list = result.scalars().all()
@@ -76,7 +76,7 @@ async def find_all(db: AsyncSession):
 
 
 # 데이터 pk 로 검색(0 or 1 result)
-async def find_by_id(db: AsyncSession, pk: int):
+async def find_by_id(db: AsyncSession, pk: int) -> Optional[Db1TemplateTestData]:
     stmt = select(Db1TemplateTestData).where(Db1TemplateTestData.uid == pk)
     result = await db.execute(stmt)
     entity = result.scalar_one_or_none()
@@ -87,7 +87,11 @@ async def find_by_id(db: AsyncSession, pk: int):
 
 # ---- (커스텀 쿼리 함수 추가 공간) ----
 # (데이터 pk 로 검색(0 or 1 result))
-async def find_by_uid_and_row_delete_date_str(db: AsyncSession, pk: int, row_delete_date_str: str):
+async def find_by_uid_and_row_delete_date_str(
+        db: AsyncSession,
+        pk: int,
+        row_delete_date_str: str
+) -> Optional[Db1TemplateTestData]:
     stmt = select(Db1TemplateTestData).where(
         Db1TemplateTestData.uid == pk and
         Db1TemplateTestData.row_delete_date_str == row_delete_date_str
@@ -188,7 +192,7 @@ async def find_all_by_row_delete_date_str_order_by_row_create_date(
         db: AsyncSession,
         page: int,
         page_elements_count: int
-):
+) -> Tuple[Sequence[Db1TemplateTestData], int]:
     offset = (page - 1) * page_elements_count
 
     # 필터링 + 정렬 + 페이지네이션
@@ -218,7 +222,7 @@ async def find_page_all_from_template_test_data_by_not_deleted_with_random_num_d
         page: int,
         page_elements_count: int,
         num: int
-) -> (List[value_objects.FindPageAllFromTemplateTestDataByNotDeletedWithRandomNumDistanceOutputVo], int):
+) -> Tuple[List[value_objects.FindPageAllFromTemplateTestDataByNotDeletedWithRandomNumDistanceOutputVo], int]:
     offset = (page - 1) * page_elements_count
 
     # 본문 조회 (distance 기준 정렬)
@@ -326,7 +330,7 @@ async def find_page_all_from_template_test_data_by_search_keyword(
         page: int,
         page_elements_count: int,
         search_keyword: str
-):
+) -> Tuple[List[value_objects.FindPageAllFromTemplateTestDataBySearchKeywordOutputVo], int]:
     offset = (page - 1) * page_elements_count
 
     # 본문 조회 (검색 키워드 기반)
