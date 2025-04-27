@@ -585,3 +585,45 @@ async def post_try_transaction_test(
         raise Exception("Transaction Rollback Test!")
     except Exception as e:
         print(e)
+
+
+# ----
+# (DB Rows 조회 테스트 (카운팅))
+@sql_alchemy_transactional(view_only=True)
+async def get_rows_count_sample(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    entity_count = await template_test_data_repository.count_by_row_delete_date_str(
+        db,
+        "/"
+    )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetRowsCountSampleOutputVo(
+            total_elements=entity_count
+        ).model_dump()
+    )
+
+
+# ----
+# (DB Rows 조회 테스트 (네이티브 카운팅))
+@sql_alchemy_transactional(view_only=True)
+async def get_rows_count_by_native_query_sample(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    entity_count = await template_test_data_repository.count_from_template_test_data_by_not_deleted(
+        db,
+        "/"
+    )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetRowsCountByNativeQuerySample(
+            total_elements=entity_count
+        ).model_dump()
+    )

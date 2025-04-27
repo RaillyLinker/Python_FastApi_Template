@@ -385,3 +385,39 @@ async def find_page_all_from_template_test_data_by_search_keyword(
     total_elements = count_result.scalar_one()
 
     return entities, total_elements
+
+
+# ----
+# (데이터 카운팅)
+async def count_by_row_delete_date_str(
+        db: AsyncSession,
+        row_delete_date_str: str
+) -> int:
+    stmt = select(func.count()).select_from(Db1TemplateTestData).where(
+        Db1TemplateTestData.row_delete_date_str == row_delete_date_str
+    )
+    result = await db.execute(stmt)
+    count = result.scalar_one()  # scalar_one()은 결과에서 단일 값(카운트)을 반환
+    return count
+
+
+# ----
+# (데이터 카운팅)
+async def count_from_template_test_data_by_not_deleted(
+        db: AsyncSession,
+        row_delete_date_str: str
+) -> int:
+    # Native SQL 쿼리
+    query = text("""
+        SELECT COUNT(*)
+        FROM template.test_data AS test_data
+        WHERE test_data.row_delete_date_str = :row_delete_date_str
+    """)
+
+    # 쿼리 실행
+    result = await db.execute(query, {"row_delete_date_str": row_delete_date_str})
+
+    # 카운트 값 추출
+    count = result.scalar_one()  # scalar_one()으로 결과에서 카운트 값을 추출
+
+    return count

@@ -491,3 +491,47 @@ async def post_try_transaction_test(
         response: Response
 ):
     return await service.post_try_transaction_test(request, response)
+
+
+# ----
+@router.get(
+    "/rows/counting",
+    response_model=model.GetRowsCountSampleOutputVo,
+    summary="DB Rows 조회 테스트 (카운팅)",
+    description="테스트 테이블의 Rows 를 카운팅하여 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_rows_count_sample(
+        request: Request,
+        response: Response
+):
+    return await service.get_rows_count_sample(
+        request,
+        response
+    )
+
+
+# ----
+@router.get(
+    "/rows/native-counting",
+    response_model=model.GetRowsCountByNativeQuerySample,
+    summary="DB Rows 조회 테스트 (네이티브 카운팅)",
+    description="테스트 테이블의 Rows 를 네이티브 쿼리로 카운팅하여 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_rows_count_by_native_query_sample(
+        request: Request,
+        response: Response
+):
+    return await service.get_rows_count_by_native_query_sample(
+        request,
+        response
+    )

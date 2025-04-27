@@ -687,3 +687,35 @@ class GetRowWhereSearchingKeywordSampleOutputVo(BaseModel):
             description="아이템 리스트"
         )
     )
+
+
+# ----
+# (DB Rows 조회 테스트 (카운팅))
+class GetRowsCountSampleOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    total_elements: int = (
+        Field(
+            ...,
+            alias="totalElements",
+            description="아이템 전체 개수",
+            examples=[1]
+        )
+    )
+
+
+# ----
+# (DB Rows 조회 테스트 (네이티브 카운팅))
+class GetRowsCountByNativeQuerySample(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    total_elements: int = (
+        Field(
+            ...,
+            alias="totalElements",
+            description="아이템 전체 개수",
+            examples=[1]
+        )
+    )
