@@ -627,3 +627,43 @@ async def get_rows_count_by_native_query_sample(
             total_elements=entity_count
         ).model_dump()
     )
+
+
+# ----
+# (DB Row 조회 테스트 (네이티브))
+@sql_alchemy_transactional(view_only=True)
+async def get_row_by_native_query_sample(
+        request: Request,
+        response: Response,
+        test_table_uid: int,
+        db: AsyncSession
+):
+    entity = await template_test_data_repository.find_by_id(db, test_table_uid)
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.PostInsertDataSampleOutputVo(
+            uid=entity.uid,
+            create_date=
+            entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_create_date.microsecond // 1000:03d}"
+            f"_{entity.row_create_date.tzname()}",
+            update_date=
+            entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_update_date.microsecond // 1000:03d}"
+            f"_{entity.row_update_date.tzname()}",
+            delete_date=entity.row_delete_date_str,
+            content=entity.content,
+            random_num=entity.random_num,
+            test_datetime=
+            entity.test_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.test_datetime.microsecond // 1000:03d}"
+            f"_{entity.test_datetime.tzname()}",
+        ).model_dump()
+    )

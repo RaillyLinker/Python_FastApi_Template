@@ -428,3 +428,30 @@ async def count_from_template_test_data_by_not_deleted(
     count = result.scalar_one()  # scalar_one()으로 결과에서 카운트 값을 추출
 
     return count
+
+
+# ----
+# (데이터 하나 조회)
+@sql_alchemy_func
+async def find_from_template_test_data_by_not_deleted_and_uid(
+        db: AsyncSession,
+        pk: int
+) -> Optional[Db1TemplateTestData]:
+    # Native SQL 쿼리
+    query = text("""
+            SELECT 
+            test_data.uid AS uid, 
+            test_data.content AS content, 
+            test_data.random_num AS randomNum, 
+            test_data.test_datetime AS testDatetime, 
+            test_data.row_create_date AS rowCreateDate, 
+            test_data.row_update_date AS rowUpdateDate 
+            FROM 
+            template.test_data AS test_data 
+            WHERE 
+            test_data.row_delete_date_str = '/' AND 
+            test_data.uid = :testTableUid
+    """)
+    result = await db.execute(query, {"testTableUid": pk})
+    entity = result.scalar_one_or_none()
+    return entity

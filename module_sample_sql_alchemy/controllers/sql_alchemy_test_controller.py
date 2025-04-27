@@ -535,3 +535,44 @@ async def get_rows_count_by_native_query_sample(
         request,
         response
     )
+
+
+# ----
+@router.get(
+    "/row/native/{testTableUid}",
+    response_model=model.GetRowByNativeQuerySampleOutputVo,
+    summary="DB Row 조회 테스트 (네이티브)",
+    description="테스트 테이블의 Row 하나를 네이티브 쿼리로 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        },
+        204: {
+            "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>"
+                                   "1 : testTableUid 에 해당하는 데이터가 데이터베이스에 존재하지 않습니다.",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+)
+async def get_row_by_native_query_sample(
+        request: Request,
+        response: Response,
+        test_table_uid: int = Path(
+            ...,
+            alias="testTableUid",
+            description="글 인덱스",
+            example=1
+        )
+):
+    return await service.get_row_by_native_query_sample(
+        request,
+        response,
+        test_table_uid
+    )
