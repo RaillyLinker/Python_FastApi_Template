@@ -1,13 +1,14 @@
-from sqlalchemy import Column, Integer, String, BigInteger, DateTime
+from sqlalchemy import Column, String, BigInteger, DateTime
+from sqlalchemy.orm import relationship
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import Base
 
 
-class Db1TemplateTestData(Base):
-    __tablename__ = 'test_data'
+class Db1TemplateFkTestParent(Base):
+    __tablename__ = "fk_test_parent"
     __table_args__ = (
         {
             'schema': 'template',
-            'comment': '테스트 정보 테이블(논리적 삭제 적용)'
+            'comment': 'Foreign Key 테스트용 테이블 (부모 테이블)'
         }
     )
 
@@ -48,29 +49,20 @@ class Db1TemplateTestData(Base):
         )
     )
 
-    content = (
+    parent_name = (
         Column(
-            "content",
+            "parent_name",
             String(255),
             nullable=False,
-            comment="테스트 본문"
+            comment="부모 테이블 이름"
         )
     )
 
-    random_num = (
-        Column(
-            "random_num",
-            Integer,
-            nullable=False,
-            comment="테스트 랜덤 번호"
-        )
-    )
-
-    test_datetime = (
-        Column(
-            "test_datetime",
-            DateTime(),
-            nullable=False,
-            comment="테스트용 일시 데이터"
+    fk_test_many_to_one_child_list = (
+        relationship(
+            "Db1TemplateFkTestManyToOneChild",
+            back_populates="fk_test_parent",
+            cascade="all, delete-orphan",
+            lazy="select"
         )
     )

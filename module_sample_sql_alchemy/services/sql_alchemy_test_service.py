@@ -15,6 +15,10 @@ from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_lo
     Db1TemplateLogicalDeleteUniqueData
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_local_delete_unique_data_repository \
     as template_local_delete_unique_data_repository
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk_test_parent import \
+    Db1TemplateFkTestParent
+import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_fk_test_many_to_one_child_repository \
+    as template_fk_test_many_to_one_child_repository
 
 
 # [그룹 서비스]
@@ -816,4 +820,42 @@ async def delete_unique_test_table_row_sample(
 
     return Response(
         status_code=200
+    )
+
+
+# ----
+# (외래키 부모 테이블 Row 입력 API)
+@sql_alchemy_transactional()
+async def post_fk_parent_row_sample(
+        request: Request,
+        response: Response,
+        request_body: model.PostFkParentRowSampleInputVo,
+        db: AsyncSession
+):
+    # 데이터 저장
+    now_datetime = datetime.now()
+    new_entity = await template_fk_test_many_to_one_child_repository.save(
+        db,
+        Db1TemplateFkTestParent(
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
+            row_delete_date_str="/",
+            parent_name=request_body.fk_parent_name
+        )
+    )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.PostFkParentRowSampleOutputVo(
+            uid=new_entity.uid,
+            create_date=
+            new_entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_create_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_create_date.tzname()}",
+            update_date=
+            new_entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_update_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_update_date.tzname()}",
+            fk_parent_name=new_entity.parent_name
+        ).model_dump()
     )

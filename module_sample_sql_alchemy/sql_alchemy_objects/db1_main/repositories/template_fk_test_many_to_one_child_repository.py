@@ -1,14 +1,14 @@
-from typing import Sequence, Optional
-import tzlocal
-from sqlalchemy import select, DateTime, and_
+from sqlalchemy import select, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
-from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
+import tzlocal
+from typing import Sequence, Optional
 from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_func
-from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_logical_delete_unique_data import \
-    Db1TemplateLogicalDeleteUniqueData
+from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk_test_many_to_one_child import \
+    Db1TemplateFkTestManyToOneChild
 import \
-    module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_logical_delete_unique_data_vo as template_logical_delete_unique_data_vo
+    module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_fk_test_many_to_one_child_vo as template_fk_test_many_to_one_child_vo
 
 
 # [SqlAlchemy 레포지토리]
@@ -17,7 +17,7 @@ import \
 
 # 데이터 save(동일 pk 가 존재 하면 update, 없다면 insert)
 @sql_alchemy_func
-async def save(db: AsyncSession, entity: Db1TemplateLogicalDeleteUniqueData) -> Db1TemplateLogicalDeleteUniqueData:
+async def save(db: AsyncSession, entity: Db1TemplateFkTestManyToOneChild) -> Db1TemplateFkTestManyToOneChild:
     # datetime 필드 자동 탐지 및 타임존 변환
     mapper = inspect(entity.__class__)
     for column in mapper.columns:
@@ -48,7 +48,7 @@ async def save(db: AsyncSession, entity: Db1TemplateLogicalDeleteUniqueData) -> 
 # 모든 데이터 삭제
 @sql_alchemy_func
 async def delete_all(db: AsyncSession):
-    stmt = select(Db1TemplateLogicalDeleteUniqueData)
+    stmt = select(Db1TemplateFkTestManyToOneChild)
     result = await db.execute(stmt)
     entity_list = result.scalars().all()
 
@@ -59,7 +59,7 @@ async def delete_all(db: AsyncSession):
 # 데이터 pk 로 delete
 @sql_alchemy_func
 async def delete_by_id(db: AsyncSession, pk: int):
-    stmt = select(Db1TemplateLogicalDeleteUniqueData).where(Db1TemplateLogicalDeleteUniqueData.uid == pk)
+    stmt = select(Db1TemplateFkTestManyToOneChild).where(Db1TemplateFkTestManyToOneChild.uid == pk)
     result = await db.execute(stmt)
     entity = result.scalar_one_or_none()
     if entity:
@@ -68,8 +68,8 @@ async def delete_by_id(db: AsyncSession, pk: int):
 
 # 모든 데이터 검색
 @sql_alchemy_func
-async def find_all(db: AsyncSession) -> Sequence[Db1TemplateLogicalDeleteUniqueData]:
-    stmt = select(Db1TemplateLogicalDeleteUniqueData)
+async def find_all(db: AsyncSession) -> Sequence[Db1TemplateFkTestManyToOneChild]:
+    stmt = select(Db1TemplateFkTestManyToOneChild)
     result = await db.execute(stmt)
     entity_list = result.scalars().all()
     return entity_list
@@ -77,27 +77,10 @@ async def find_all(db: AsyncSession) -> Sequence[Db1TemplateLogicalDeleteUniqueD
 
 # 데이터 pk 로 검색(0 or 1 result)
 @sql_alchemy_func
-async def find_by_id(db: AsyncSession, pk: int) -> Optional[Db1TemplateLogicalDeleteUniqueData]:
-    stmt = select(Db1TemplateLogicalDeleteUniqueData).where(Db1TemplateLogicalDeleteUniqueData.uid == pk)
+async def find_by_id(db: AsyncSession, pk: int) -> Optional[Db1TemplateFkTestManyToOneChild]:
+    stmt = select(Db1TemplateFkTestManyToOneChild).where(Db1TemplateFkTestManyToOneChild.uid == pk)
     result = await db.execute(stmt)
     entity = result.scalar_one_or_none()
     return entity
-
 
 # ---- (커스텀 쿼리 함수 추가 공간) ----
-# unique_value 로 조회
-@sql_alchemy_func
-async def find_by_unique_value_and_row_delete_date_str(
-        db: AsyncSession,
-        unique_value: int,
-        row_delete_date_str: str
-) -> Optional[Db1TemplateLogicalDeleteUniqueData]:
-    stmt = select(Db1TemplateLogicalDeleteUniqueData).where(
-        and_(
-            Db1TemplateLogicalDeleteUniqueData.unique_value == unique_value,
-            Db1TemplateLogicalDeleteUniqueData.row_delete_date_str == row_delete_date_str
-        )
-    )
-    result = await db.execute(stmt)
-    entity = result.scalar_one_or_none()
-    return entity

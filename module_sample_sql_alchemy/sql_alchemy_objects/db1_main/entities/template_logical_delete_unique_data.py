@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, String, BigInteger, DateTime, UniqueConstraint
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import Base
 
 
 class Db1TemplateLogicalDeleteUniqueData(Base):

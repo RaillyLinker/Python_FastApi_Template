@@ -669,3 +669,25 @@ async def delete_unique_test_table_row_sample(
         index,
         delete_logically
     )
+
+
+# ----
+@router.post(
+    "/fk-parent",
+    response_model=model.PostFkParentRowSampleOutputVo,
+    summary="외래키 부모 테이블 Row 입력 API",
+    description="외래키 부모 테이블에 Row 를 입력합니다.",
+    responses={
+        200: {"description": "OK"}
+    }
+)
+async def post_fk_parent_row_sample(
+        request: Request,
+        response: Response,
+        request_body: model.PostFkParentRowSampleInputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
+):
+    return await service.post_fk_parent_row_sample(request, response, request_body)
