@@ -1,6 +1,6 @@
 import os
 from fastapi import UploadFile, Response, Request
-from fastapi.responses import PlainTextResponse, StreamingResponse, FileResponse, JSONResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse, JSONResponse
 from typing import Optional, List
 from fastapi.responses import RedirectResponse
 import module_sample_api.configurations.app_conf as app_conf
@@ -10,7 +10,7 @@ import json
 import asyncio
 import re
 from io import BytesIO
-from pathlib import Path as PathlibPath
+import aiofiles
 
 
 # [그룹 서비스]
@@ -538,19 +538,22 @@ async def get_file_download_test(
 
     # 파일 절대 경로
     file_path = os.path.join(save_directory_path, file_name)
-    file_path_obj = PathlibPath(file_path)
 
-    if file_path_obj.is_dir() or not file_path_obj.exists():
+    if os.path.isdir(file_path) or not os.path.exists(file_path):
         # 디렉토리이거나 파일이 존재하지 않음
         return Response(
             status_code=204,
             headers={"api-result-code": "1"}
         )
 
-    # 파일 존재: FileResponse를 사용하여 다운로드
-    return FileResponse(
-        path=file_path,
-        filename=file_name,
+    # 파일이 존재하는 경우: 비동기적으로 파일을 스트리밍
+    async def file_iterator():
+        async with aiofiles.open(file_path, mode='rb') as file:
+            while chunk := await file.read(1024):
+                yield chunk
+
+    return StreamingResponse(
+        file_iterator(),
         media_type="application/octet-stream",
-        status_code=200
+        headers={"Content-Disposition": f"attachment; filename={file_name}"}
     )
