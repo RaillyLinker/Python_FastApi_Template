@@ -1,4 +1,4 @@
-from sqlalchemy import select, DateTime
+from sqlalchemy import select, DateTime, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
 import tzlocal
@@ -81,4 +81,20 @@ async def find_by_id(db: AsyncSession, pk: int) -> Optional[Db1TemplateFkTestMan
     entity = result.scalar_one_or_none()
     return entity
 
+
 # ---- (커스텀 쿼리 함수 추가 공간) ----
+@sql_alchemy_func
+async def find_all_by_fk_test_parent_uid_and_row_delete_date_str(
+        db: AsyncSession,
+        fk_test_parent_uid: int,
+        row_delete_date_str: str
+) -> Sequence[Db1TemplateFkTestManyToOneChild]:
+    stmt = select(Db1TemplateFkTestManyToOneChild).where(
+        and_(
+            Db1TemplateFkTestManyToOneChild.fk_test_parent_uid == fk_test_parent_uid,
+            Db1TemplateFkTestManyToOneChild.row_delete_date_str == row_delete_date_str
+        )
+    )
+    result = await db.execute(stmt)
+    entity_list = result.scalars().all()
+    return entity_list

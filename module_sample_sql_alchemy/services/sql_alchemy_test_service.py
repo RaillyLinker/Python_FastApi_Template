@@ -912,3 +912,61 @@ async def post_fk_child_row_sample(
             fk_child_name=new_entity.child_name
         ).model_dump()
     )
+
+
+# ----
+# (외래키 관련 테이블 Rows 조회 테스트)
+@sql_alchemy_transactional()
+async def select_fk_test_table_rows_sample(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    parent_entity_vo_list: List[model.GetFkTestTableRowsSampleOutputVo.ParentEntityVo] = []
+
+    entity_list = await template_fk_test_parent_repository.find_all_by_row_delete_date_str(db, "/")
+
+    for entity in entity_list:
+        child_entity_vo_list: List[model.GetFkTestTableRowsSampleOutputVo.ParentEntityVo.ChildEntityVo] = []
+
+        child_entity_list = await template_fk_test_many_to_one_child_repository.find_all_by_fk_test_parent_uid_and_row_delete_date_str(
+            db, entity.uid, "/")
+
+        for chile_entity in child_entity_list:
+            child_entity_vo_list.append(
+                model.GetFkTestTableRowsSampleOutputVo.ParentEntityVo.ChildEntityVo(
+                    uid=chile_entity.uid,
+                    create_date=
+                    chile_entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                    f"_{chile_entity.row_create_date.microsecond // 1000:03d}"
+                    f"_{chile_entity.row_create_date.tzname()}",
+                    update_date=
+                    chile_entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                    f"_{chile_entity.row_update_date.microsecond // 1000:03d}"
+                    f"_{chile_entity.row_update_date.tzname()}",
+                    child_name=chile_entity.child_name
+                )
+            )
+
+        parent_entity_vo_list.append(
+            model.GetFkTestTableRowsSampleOutputVo.ParentEntityVo(
+                uid=entity.uid,
+                create_date=
+                entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                f"_{entity.row_create_date.microsecond // 1000:03d}"
+                f"_{entity.row_create_date.tzname()}",
+                update_date=
+                entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                f"_{entity.row_update_date.microsecond // 1000:03d}"
+                f"_{entity.row_update_date.tzname()}",
+                parent_name=entity.parent_name,
+                child_entity_list=child_entity_vo_list
+            )
+        )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetFkTestTableRowsSampleOutputVo(
+            parent_entity_vo_list=parent_entity_vo_list
+        ).model_dump()
+    )

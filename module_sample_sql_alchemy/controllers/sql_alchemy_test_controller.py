@@ -731,3 +731,25 @@ async def post_fk_child_row_sample(
         )
 ):
     return await service.post_fk_child_row_sample(request, response, parent_uid, request_body)
+
+
+# ----
+@router.get(
+    "/fk-table/all",
+    response_model=model.GetFkTestTableRowsSampleOutputVo,
+    summary="외래키 관련 테이블 Rows 조회 테스트",
+    description="외래키 관련 테이블의 모든 Rows 를 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def select_fk_test_table_rows_sample(
+        request: Request,
+        response: Response
+):
+    return await service.select_fk_test_table_rows_sample(
+        request,
+        response
+    )

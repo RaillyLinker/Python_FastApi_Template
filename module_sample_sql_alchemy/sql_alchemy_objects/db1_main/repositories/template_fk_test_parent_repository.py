@@ -83,4 +83,16 @@ async def find_by_id(db: AsyncSession, pk: int) -> Optional[Db1TemplateFkTestPar
     entity = result.scalar_one_or_none()
     return entity
 
+
 # ---- (커스텀 쿼리 함수 추가 공간) ----
+@sql_alchemy_func
+async def find_all_by_row_delete_date_str(
+        db: AsyncSession,
+        row_delete_date_str: str
+) -> Sequence[Db1TemplateFkTestParent]:
+    stmt = select(Db1TemplateFkTestParent).where(
+        Db1TemplateFkTestParent.row_delete_date_str == row_delete_date_str
+    )
+    result = await db.execute(stmt)
+    entity_list = result.scalars().all()
+    return entity_list
