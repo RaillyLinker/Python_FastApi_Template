@@ -7,8 +7,6 @@ from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_fu
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk_test_many_to_one_child import \
     Db1TemplateFkTestManyToOneChild
-import \
-    module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_fk_test_many_to_one_child_vo as template_fk_test_many_to_one_child_vo
 
 
 # [SqlAlchemy 레포지토리]

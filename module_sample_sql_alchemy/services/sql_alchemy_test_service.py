@@ -17,6 +17,10 @@ import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.templ
     as template_local_delete_unique_data_repository
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk_test_parent import \
     Db1TemplateFkTestParent
+import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_fk_test_parent_repository \
+    as template_fk_test_parent_repository
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk_test_many_to_one_child import \
+    Db1TemplateFkTestManyToOneChild
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_fk_test_many_to_one_child_repository \
     as template_fk_test_many_to_one_child_repository
 
@@ -834,7 +838,7 @@ async def post_fk_parent_row_sample(
 ):
     # 데이터 저장
     now_datetime = datetime.now()
-    new_entity = await template_fk_test_many_to_one_child_repository.save(
+    new_entity = await template_fk_test_parent_repository.save(
         db,
         Db1TemplateFkTestParent(
             row_create_date=now_datetime,
@@ -857,5 +861,54 @@ async def post_fk_parent_row_sample(
             f"_{new_entity.row_update_date.microsecond // 1000:03d}"
             f"_{new_entity.row_update_date.tzname()}",
             fk_parent_name=new_entity.parent_name
+        ).model_dump()
+    )
+
+
+# ----
+# (외래키 부모 테이블 Row 입력 API)
+@sql_alchemy_transactional()
+async def post_fk_child_row_sample(
+        request: Request,
+        response: Response,
+        parent_uid: int,
+        request_body: model.PostFkChildRowSampleInputVo,
+        db: AsyncSession
+):
+    entity = await template_fk_test_parent_repository.find_by_id(db, parent_uid)
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    # 데이터 저장
+    now_datetime = datetime.now()
+    new_entity = await template_fk_test_many_to_one_child_repository.save(
+        db,
+        Db1TemplateFkTestManyToOneChild(
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
+            row_delete_date_str="/",
+            child_name=request_body.fk_child_name,
+            fk_test_parent_uid=parent_uid
+        )
+    )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.PostFkChildRowSampleOutputVo(
+            uid=new_entity.uid,
+            create_date=
+            new_entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_create_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_create_date.tzname()}",
+            update_date=
+            new_entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_update_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_update_date.tzname()}",
+            fk_parent_name=new_entity.fk_test_parent.parent_name,
+            fk_child_name=new_entity.child_name
         ).model_dump()
     )

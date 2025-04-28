@@ -989,3 +989,65 @@ class PostFkParentRowSampleOutputVo(BaseModel):
             examples=["홍길동"]
         )
     )
+
+
+# ----
+# (외래키 부모 테이블 아래에 자식 테이블의 Row 입력 API)
+class PostFkChildRowSampleInputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    fk_child_name: str = (
+        Field(
+            ...,
+            alias="fkChildName",
+            description="외래키 테이블 자식 이름",
+            examples=["홍길동"]
+        )
+    )
+
+
+class PostFkChildRowSampleOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    uid: int = (
+        Field(
+            ...,
+            alias="uid",
+            description="글 고유번호",
+            examples=[1]
+        )
+    )
+    create_date: str = (
+        Field(
+            ...,
+            alias="createDate",
+            description="글 작성일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
+    update_date: str = (
+        Field(
+            ...,
+            alias="updateDate",
+            description="글 수정일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+            examples=["2024_05_02_T_15_14_49_552_KST"]
+        )
+    )
+    fk_parent_name: str = (
+        Field(
+            ...,
+            alias="fkParentName",
+            description="외래키 테이블 부모 이름",
+            examples=["홍길동"]
+        )
+    )
+    fk_child_name: str = (
+        Field(
+            ...,
+            alias="fkChildName",
+            description="외래키 테이블 자식 이름",
+            examples=["홍길동"]
+        )
+    )

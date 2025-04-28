@@ -691,3 +691,43 @@ async def post_fk_parent_row_sample(
         )
 ):
     return await service.post_fk_parent_row_sample(request, response, request_body)
+
+
+# ----
+@router.post(
+    "/fk-parent/{parentUid}",
+    response_model=model.PostFkChildRowSampleOutputVo,
+    summary="외래키 부모 테이블 Row 입력 API",
+    description="외래키 부모 테이블에 Row 를 입력합니다.",
+    responses={
+        200: {"description": "OK"},
+        204: {
+            "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>"
+                                   "1 : parentUid 에 해당하는 데이터가 존재하지 않습니다.",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+)
+async def post_fk_child_row_sample(
+        request: Request,
+        response: Response,
+        parent_uid: int = Path(
+            ...,
+            alias="parentUid",
+            description="외래키 부모 테이블 고유번호",
+            example=1
+        ),
+        request_body: model.PostFkChildRowSampleInputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
+):
+    return await service.post_fk_child_row_sample(request, response, parent_uid, request_body)
