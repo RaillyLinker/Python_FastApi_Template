@@ -683,7 +683,7 @@ async def post_unique_test_table_row_sample(
 
 # ----
 # (유니크 테스트 테이블 Rows 조회 테스트)
-@sql_alchemy_transactional()
+@sql_alchemy_transactional(view_only=True)
 async def get_unique_test_table_rows_sample(
         request: Request,
         response: Response,
@@ -777,4 +777,43 @@ async def put_unique_test_table_row_sample(
             f"_{new_entity.row_update_date.tzname()}",
             unique_value=new_entity.unique_value
         ).model_dump()
+    )
+
+
+# ----
+# (유니크 테스트 테이블 Row 삭제 테스트)
+@sql_alchemy_transactional()
+async def delete_unique_test_table_row_sample(
+        request: Request,
+        response: Response,
+        index: int,
+        delete_logically: bool,
+        db: AsyncSession
+):
+    entity = await template_local_delete_unique_data_repository.find_by_id(db, index)
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    if delete_logically:
+        if entity.row_delete_date_str != "/":
+            return Response(
+                status_code=204,
+                headers={"api-result-code": "1"}
+            )
+
+        now_datetime = datetime.now().replace(tzinfo=tzlocal.get_localzone())
+        entity.row_delete_date_str = \
+            (now_datetime.strftime('%Y_%m_%d_T_%H_%M_%S') +
+             f"_{now_datetime.microsecond // 1000:03d}" +
+             f"_{now_datetime.tzname()}")
+        await template_local_delete_unique_data_repository.save(db, entity)
+    else:
+        await template_local_delete_unique_data_repository.delete_by_id(db, index)
+
+    return Response(
+        status_code=200
     )

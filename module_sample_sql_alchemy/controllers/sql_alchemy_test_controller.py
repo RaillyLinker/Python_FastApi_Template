@@ -619,3 +619,53 @@ async def put_unique_test_table_row_sample(
         )
 ):
     return await service.put_unique_test_table_row_sample(request, response, unique_test_table_uid, request_body)
+
+
+# ----
+@router.delete(
+    "/unique-test-table/{index}",
+    summary="유니크 테스트 테이블 Row 삭제 테스트",
+    description="유니크 테스트 테이블의 Row 하나를 삭제합니다.",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        },
+        204: {
+            "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>"
+                                   "1 : index 에 해당하는 데이터가 데이터베이스에 존재하지 않습니다.",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    response_class=Response
+)
+async def delete_unique_test_table_row_sample(
+        request: Request,
+        response: Response,
+        index: int = Path(
+            ...,
+            alias="index",
+            description="글 인덱스",
+            example=1
+        ),
+        delete_logically: bool =
+        Query(
+            ...,
+            alias="deleteLogically",
+            description="논리적 삭제 여부",
+            example=True
+        )
+):
+    return await service.delete_unique_test_table_row_sample(
+        request,
+        response,
+        index,
+        delete_logically
+    )
