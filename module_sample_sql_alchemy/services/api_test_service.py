@@ -230,11 +230,11 @@ async def post_request_test_with_multipart_form_type_request_body(
     save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
 
     # 파일 저장 (필수)
-    custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+    await custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
 
     # 파일 저장 (nullable)
     if multipart_file_nullable is not None:
-        custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
+        await custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
 
     return JSONResponse(
         status_code=200,
@@ -276,12 +276,12 @@ async def post_request_test_with_multipart_form_type_request_body2(
 
     # 파일 저장 (필수)
     for multipart_file in multipart_file_list:
-        custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+        await custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
 
     # 파일 저장 (nullable)
     if multipart_file_list_nullable is not None:
         for multipart_file_nullable in multipart_file_list_nullable:
-            custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
+            await custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
 
     return JSONResponse(
         status_code=200,
@@ -316,11 +316,11 @@ async def post_request_test_with_multipart_form_type_request_body3(
     save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
 
     # 파일 저장 (필수)
-    custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+    await custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
 
     # 파일 저장 (nullable)
     if multipart_file_nullable is not None:
-        custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
+        await custom_util.multipart_file_local_save(save_directory_path, None, multipart_file_nullable)
 
     return JSONResponse(
         status_code=200,
@@ -516,7 +516,7 @@ async def post_upload_to_server_test(
     save_directory_path = os.path.abspath("./by_product_files/sample_api/test")
 
     # 파일 저장 (필수)
-    saved_file_name = custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
+    saved_file_name = await custom_util.multipart_file_local_save(save_directory_path, None, multipart_file)
 
     return JSONResponse(
         status_code=200,

@@ -1,5 +1,4 @@
 import os
-from shutil import copyfileobj
 from fastapi import UploadFile, Request, HTTPException
 from typing import Optional, Tuple, AsyncGenerator
 from datetime import datetime, timezone, timedelta
@@ -7,6 +6,7 @@ from fastapi.responses import StreamingResponse
 import mimetypes
 import asyncio
 import re
+import aiofiles
 
 
 # (파일명, 경로, 확장자 분리 함수)
@@ -19,7 +19,7 @@ def split_file_path(file_path: str) -> Tuple[str, Optional[str]]:
 
 # (Multipart File을 로컬에 저장)
 # 반환값 : 저장된 파일명
-def multipart_file_local_save(
+async def multipart_file_local_save(
         # 파일을 저장할 로컬 위치 Path
         save_directory_path: str,
         # 저장할 파일명(파일명 뒤에 (현재 일시 yyyy_MM_dd_'T'_HH_mm_ss_SSS_z) 가 붙습니다.)
@@ -48,8 +48,9 @@ def multipart_file_local_save(
 
     # multipartFile을 targetPath에 저장
     target_path = os.path.join(save_directory_path, saved_file_name)
-    with open(target_path, 'wb') as f:
-        copyfileobj(multipart_file.file, f)
+    async with aiofiles.open(target_path, 'wb') as out_file:
+        while chunk := await multipart_file.read(1024):  # 1KB씩 읽기
+            await out_file.write(chunk)
 
     return saved_file_name
 
