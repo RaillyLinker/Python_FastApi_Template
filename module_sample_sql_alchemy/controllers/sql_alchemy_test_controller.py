@@ -578,3 +578,44 @@ async def get_unique_test_table_rows_sample(
         request,
         response
     )
+
+
+# ----
+@router.put(
+    "/unique-test-table/{uniqueTestTableUid}",
+    response_model=model.PutUniqueTestTableRowSampleOutputVo,
+    summary="유니크 테스트 테이블 Row 수정 테스트",
+    description="유니크 테스트 테이블의 Row 하나를 수정합니다.",
+    responses={
+        200: {"description": "OK"},
+        204: {
+            "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>"
+                                   "1 : uniqueTestTableUid 에 해당하는 정보가 데이터베이스에 존재하지 않습니다.<br>"
+                                   "2 : uniqueValue 와 일치하는 정보가 이미 데이터베이스에 존재합니다.",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+)
+async def put_unique_test_table_row_sample(
+        request: Request,
+        response: Response,
+        unique_test_table_uid: int = Path(
+            ...,
+            alias="uniqueTestTableUid",
+            description="test 테이블의 uid",
+            example=1
+        ),
+        request_body: model.PutUniqueTestTableRowSampleInputVo =
+        Body(
+            ...,
+            description="Body 파라미터"
+        )
+):
+    return await service.put_unique_test_table_row_sample(request, response, unique_test_table_uid, request_body)

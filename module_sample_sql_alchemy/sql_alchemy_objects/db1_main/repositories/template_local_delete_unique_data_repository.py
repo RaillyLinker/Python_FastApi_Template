@@ -81,4 +81,19 @@ async def find_by_id(db: AsyncSession, pk: int) -> Optional[Db1TemplateLogicalDe
     entity = result.scalar_one_or_none()
     return entity
 
+
 # ---- (커스텀 쿼리 함수 추가 공간) ----
+# unique_value 로 조회
+@sql_alchemy_func
+async def find_by_unique_value_and_row_delete_date_str(
+        db: AsyncSession,
+        unique_value: int,
+        row_delete_date_str: str
+) -> Optional[Db1TemplateLogicalDeleteUniqueData]:
+    stmt = select(Db1TemplateLogicalDeleteUniqueData).where(
+        Db1TemplateLogicalDeleteUniqueData.unique_value == unique_value and
+        Db1TemplateLogicalDeleteUniqueData.row_delete_date_str == row_delete_date_str
+    )
+    result = await db.execute(stmt)
+    entity = result.scalar_one_or_none()
+    return entity

@@ -723,3 +723,58 @@ async def get_unique_test_table_rows_sample(
             logical_delete_entity_vo_list=logical_delete_entity_vo_list
         ).model_dump()
     )
+
+
+# ----
+# (유니크 테스트 테이블 Row 수정 테스트)
+@sql_alchemy_transactional()
+async def put_unique_test_table_row_sample(
+        request: Request,
+        response: Response,
+        unique_test_table_uid: int,
+        request_body: model.PutUniqueTestTableRowSampleInputVo,
+        db: AsyncSession
+):
+    entity = await template_local_delete_unique_data_repository.find_by_id(db, unique_test_table_uid)
+
+    if entity is None or entity.row_delete_date_str != "/":
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    u_entity = await template_local_delete_unique_data_repository.find_by_unique_value_and_row_delete_date_str(
+        db,
+        request_body.unique_value,
+        "/"
+    )
+
+    if u_entity is not None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "2"}
+        )
+
+    # 데이터 수정
+    entity.unique_value = request_body.unique_value
+    now_datetime = datetime.now()
+    entity.row_update_date = now_datetime
+
+    # 데이터 저장
+    new_entity = await template_local_delete_unique_data_repository.save(db, entity)
+
+    return JSONResponse(
+        status_code=200,
+        content=model.PutUniqueTestTableRowSampleOutputVo(
+            uid=new_entity.uid,
+            create_date=
+            new_entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_create_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_create_date.tzname()}",
+            update_date=
+            new_entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{new_entity.row_update_date.microsecond // 1000:03d}"
+            f"_{new_entity.row_update_date.tzname()}",
+            unique_value=new_entity.unique_value
+        ).model_dump()
+    )
