@@ -135,7 +135,7 @@ async def delete_row_sample(
 
 
 # ----
-# (DB Row 삭제 테스트 API)
+# (DB Rows 조회 테스트 API)
 @sql_alchemy_transactional(view_only=True)
 async def get_rows(
         request: Request,
@@ -677,5 +677,49 @@ async def post_unique_test_table_row_sample(
             f"_{new_entity.row_update_date.tzname()}",
             delete_date=new_entity.row_delete_date_str,
             unique_value=new_entity.unique_value
+        ).model_dump()
+    )
+
+
+# ----
+# (유니크 테스트 테이블 Rows 조회 테스트)
+@sql_alchemy_transactional()
+async def get_unique_test_table_rows_sample(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    entity_list = await template_local_delete_unique_data_repository.find_all(db)
+
+    test_entity_vo_list: List[model.GetUniqueTestTableRowsSampleOutputVo.TestEntityVo] = []
+    logical_delete_entity_vo_list: List[model.GetUniqueTestTableRowsSampleOutputVo.TestEntityVo] = []
+
+    for entity in entity_list:
+        entity_output = model.GetUniqueTestTableRowsSampleOutputVo.TestEntityVo(
+            uid=entity.uid,
+            create_date=
+            entity.row_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_create_date.microsecond // 1000:03d}"
+            f"_{entity.row_create_date.tzname()}",
+            update_date=
+            entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+            f"_{entity.row_update_date.microsecond // 1000:03d}"
+            f"_{entity.row_update_date.tzname()}",
+            delete_date=entity.row_delete_date_str,
+            unique_value=entity.unique_value
+        )
+
+        if entity.row_delete_date_str == "/":
+            # 논리 삭제되지 않은 데이터
+            test_entity_vo_list.append(entity_output)
+        else:
+            # 논리 삭제된 데이터
+            logical_delete_entity_vo_list.append(entity_output)
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetUniqueTestTableRowsSampleOutputVo(
+            test_entity_vo_list=test_entity_vo_list,
+            logical_delete_entity_vo_list=logical_delete_entity_vo_list
         ).model_dump()
     )

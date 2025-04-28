@@ -556,3 +556,25 @@ async def post_unique_test_table_row_sample(
         )
 ):
     return await service.post_unique_test_table_row_sample(request, response, request_body)
+
+
+# ----
+@router.get(
+    "/unique-test-table/all",
+    response_model=model.GetUniqueTestTableRowsSampleOutputVo,
+    summary="유니크 테스트 테이블 Rows 조회 테스트",
+    description="유니크 테스트 테이블의 모든 Rows 를 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_unique_test_table_rows_sample(
+        request: Request,
+        response: Response
+):
+    return await service.get_unique_test_table_rows_sample(
+        request,
+        response
+    )
