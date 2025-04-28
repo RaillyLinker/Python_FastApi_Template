@@ -1,8 +1,6 @@
 from sqlalchemy import Column, String, BigInteger, DateTime
 from sqlalchemy.orm import relationship
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import Base
-from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk_test_many_to_one_child import \
-    Db1TemplateFkTestManyToOneChild
 
 
 class Db1TemplateFkTestParent(Base):
@@ -62,7 +60,7 @@ class Db1TemplateFkTestParent(Base):
 
     fk_test_many_to_one_child_list = (
         relationship(
-            Db1TemplateFkTestManyToOneChild,
+            "Db1TemplateFkTestManyToOneChild",
             back_populates="fk_test_parent",
             cascade="all, delete-orphan",
             lazy="select"

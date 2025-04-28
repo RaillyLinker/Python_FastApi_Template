@@ -697,8 +697,8 @@ async def post_fk_parent_row_sample(
 @router.post(
     "/fk-parent/{parentUid}",
     response_model=model.PostFkChildRowSampleOutputVo,
-    summary="외래키 부모 테이블 Row 입력 API",
-    description="외래키 부모 테이블에 Row 를 입력합니다.",
+    summary="외래키 부모 테이블 아래에 자식 테이블의 Row 입력 API",
+    description="외래키 부모 테이블의 아래에 자식 테이블의 Row 를 입력합니다.",
     responses={
         200: {"description": "OK"},
         204: {
