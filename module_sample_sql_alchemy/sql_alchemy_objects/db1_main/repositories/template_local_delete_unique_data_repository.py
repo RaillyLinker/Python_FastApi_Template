@@ -1,6 +1,6 @@
 from typing import Sequence, Optional
 import tzlocal
-from sqlalchemy import select, DateTime
+from sqlalchemy import select, DateTime, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
@@ -91,8 +91,10 @@ async def find_by_unique_value_and_row_delete_date_str(
         row_delete_date_str: str
 ) -> Optional[Db1TemplateLogicalDeleteUniqueData]:
     stmt = select(Db1TemplateLogicalDeleteUniqueData).where(
-        Db1TemplateLogicalDeleteUniqueData.unique_value == unique_value and
-        Db1TemplateLogicalDeleteUniqueData.row_delete_date_str == row_delete_date_str
+        and_(
+            Db1TemplateLogicalDeleteUniqueData.unique_value == unique_value,
+            Db1TemplateLogicalDeleteUniqueData.row_delete_date_str == row_delete_date_str
+        )
     )
     result = await db.execute(stmt)
     entity = result.scalar_one_or_none()
