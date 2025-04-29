@@ -913,3 +913,23 @@ async def delete_fk_parent_row_sample(
         response,
         index
     )
+
+
+# ----
+@router.post(
+    "/fk-transaction-rollback-sample",
+    summary="외래키 테이블 트랜젝션 동작 테스트",
+    description="외래키 테이블에 정보 입력 후 Exception 이 발생했을 때 롤백되어 데이터가 저장되지 않는지를 테스트하는 API",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        }
+    },
+    response_class=Response
+)
+async def fk_table_transaction_test(
+        request: Request,
+        response: Response
+):
+    return await service.fk_table_transaction_test(request, response)

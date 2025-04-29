@@ -1149,3 +1149,48 @@ async def delete_fk_parent_row_sample(
     return Response(
         status_code=200
     )
+
+
+# ----
+# (외래키 부모 테이블 Row 삭제 테스트 (Cascade 기능 확인))
+@sql_alchemy_transactional()
+async def fk_table_transaction_test(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    # 데이터 저장
+    now_datetime = datetime.now()
+    new_entity = await template_fk_test_parent_repository.save(
+        db,
+        Db1TemplateFkTestParent(
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
+            row_delete_date_str="/",
+            parent_name="transaction test"
+        )
+    )
+
+    await template_fk_test_many_to_one_child_repository.save(
+        db,
+        Db1TemplateFkTestManyToOneChild(
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
+            row_delete_date_str="/",
+            child_name="transaction test1",
+            fk_test_parent_uid=new_entity.uid
+        )
+    )
+
+    await template_fk_test_many_to_one_child_repository.save(
+        db,
+        Db1TemplateFkTestManyToOneChild(
+            row_create_date=now_datetime,
+            row_update_date=now_datetime,
+            row_delete_date_str="/",
+            child_name="transaction test2",
+            fk_test_parent_uid=new_entity.uid
+        )
+    )
+
+    raise Exception()
