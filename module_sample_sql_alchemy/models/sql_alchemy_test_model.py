@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 
 # [그룹 모델]
@@ -1253,5 +1253,101 @@ class GetNativeQueryReturnValueTestOutputVo(BaseModel):
             alias="tableColumnBoolValue",
             description="Select 문에서 테이블의 Boolean 컬럼의 결과를 반환한 예시",
             examples=[True]
+        )
+    )
+
+
+# ----
+# (외래키 관련 테이블 Rows 조회 (네이티브 쿼리, 부모 테이블을 자식 테이블의 가장 최근 데이터만 Join))
+class SelectFkTableRowsWithLatestChildSampleOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    class ParentEntityVo(BaseModel):
+        class Config:
+            validate_by_name = True
+
+        class ChildEntityVo(BaseModel):
+            class Config:
+                validate_by_name = True
+
+            uid: int = (
+                Field(
+                    ...,
+                    alias="uid",
+                    description="글 고유번호",
+                    examples=[1]
+                )
+            )
+            create_date: str = (
+                Field(
+                    ...,
+                    alias="createDate",
+                    description="글 작성일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+                    examples=["2024_05_02_T_15_14_49_552_KST"]
+                )
+            )
+            update_date: str = (
+                Field(
+                    ...,
+                    alias="updateDate",
+                    description="글 수정일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+                    examples=["2024_05_02_T_15_14_49_552_KST"]
+                )
+            )
+            child_name: str = (
+                Field(
+                    ...,
+                    alias="childName",
+                    description="자식 테이블 이름",
+                    examples=["test"]
+                )
+            )
+
+        uid: int = (
+            Field(
+                ...,
+                alias="uid",
+                description="글 고유번호",
+                examples=[1]
+            )
+        )
+        create_date: str = (
+            Field(
+                ...,
+                alias="createDate",
+                description="글 작성일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+                examples=["2024_05_02_T_15_14_49_552_KST"]
+            )
+        )
+        update_date: str = (
+            Field(
+                ...,
+                alias="updateDate",
+                description="글 수정일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z)",
+                examples=["2024_05_02_T_15_14_49_552_KST"]
+            )
+        )
+        parent_name: str = (
+            Field(
+                ...,
+                alias="parentName",
+                description="부모 테이블 이름",
+                examples=["test"]
+            )
+        )
+        latest_child_entity: Optional[ChildEntityVo] = (
+            Field(
+                ...,
+                alias="latestChildEntity",
+                description="부모 테이블에 속하는 자식 테이블들 중 가장 최신 데이터"
+            )
+        )
+
+    parent_entity_vo_list: List[ParentEntityVo] = (
+        Field(
+            ...,
+            alias="parentEntityVoList",
+            description="부모 아이템 리스트"
         )
     )

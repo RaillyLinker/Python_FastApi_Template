@@ -805,3 +805,26 @@ async def get_native_query_return_value_test(
         response,
         input_val
     )
+
+
+# ----
+@router.get(
+    "/fk-table-latest-join",
+    response_model=model.SelectFkTableRowsWithLatestChildSampleOutputVo,
+    summary="외래키 관련 테이블 Rows 조회 (네이티브 쿼리, 부모 테이블을 자식 테이블의 가장 최근 데이터만 Join)",
+    description="외래키 관련 테이블의 모든 Rows 를 반환합니다.<br>"
+                "부모 테이블을 Native Query 로 조회할 때, 부모 테이블을 가리키는 자식 테이블들 중 가장 최신 데이터만 Join 하는 예시입니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def select_fk_table_rows_with_latest_child_sample(
+        request: Request,
+        response: Response
+):
+    return await service.select_fk_table_rows_with_latest_child_sample(
+        request,
+        response
+    )

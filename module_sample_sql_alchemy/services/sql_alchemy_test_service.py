@@ -1045,3 +1045,59 @@ async def get_native_query_return_value_test(
             tableColumnBoolValue=result_entity.table_column_bool_value
         ).model_dump()
     )
+
+
+# ----
+# (외래키 관련 테이블 Rows 조회 (네이티브 쿼리, 부모 테이블을 자식 테이블의 가장 최근 데이터만 Join))
+@sql_alchemy_transactional(view_only=True)
+async def select_fk_table_rows_with_latest_child_sample(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    parent_entity_vo_list: List[model.SelectFkTableRowsWithLatestChildSampleOutputVo.ParentEntityVo] = []
+
+    entity_list = await template_fk_test_parent_repository.find_all_from_template_fk_test_parent_with_nearest_child_only(
+        db)
+
+    for entity in entity_list:
+        if entity.child_uid is None:
+            child_entity_vo = None
+        else:
+            child_entity_vo = model.SelectFkTableRowsWithLatestChildSampleOutputVo.ParentEntityVo.ChildEntityVo(
+                uid=entity.child_uid,
+                create_date=(
+                        entity.child_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                        f"_{entity.child_create_date.microsecond // 1000:03d}" +
+                        f"_{entity.child_create_date.tzname()}"
+                ) if entity.child_create_date and entity.child_create_date else None,
+                update_date=(
+                        entity.child_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                        f"_{entity.child_update_date.microsecond // 1000:03d}" +
+                        f"_{entity.child_update_date.tzname()}"
+                ) if entity.child_update_date else None,
+                child_name=entity.child_name
+            )
+
+        parent_entity_vo_list.append(
+            model.SelectFkTableRowsWithLatestChildSampleOutputVo.ParentEntityVo(
+                uid=entity.parent_uid,
+                create_date=
+                entity.parent_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                f"_{entity.parent_create_date.microsecond // 1000:03d}"
+                f"_{entity.parent_create_date.tzname()}",
+                update_date=
+                entity.parent_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                f"_{entity.parent_update_date.microsecond // 1000:03d}"
+                f"_{entity.parent_update_date.tzname()}",
+                parent_name=entity.parent_name,
+                latest_child_entity=child_entity_vo
+            )
+        )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.SelectFkTableRowsWithLatestChildSampleOutputVo(
+            parent_entity_vo_list=parent_entity_vo_list
+        ).model_dump()
+    )
