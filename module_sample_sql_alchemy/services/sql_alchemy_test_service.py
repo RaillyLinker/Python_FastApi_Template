@@ -23,6 +23,10 @@ from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk
     Db1TemplateFkTestManyToOneChild
 import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_fk_test_many_to_one_child_repository \
     as template_fk_test_many_to_one_child_repository
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_just_boolean_test import \
+    Db1TemplateJustBooleanTest
+import module_sample_sql_alchemy.sql_alchemy_objects.db1_main.repositories.template_just_boolean_test_repository \
+    as template_just_boolean_test_repository
 
 
 # [그룹 서비스]
@@ -619,7 +623,7 @@ async def get_row_by_native_query_sample(
         test_table_uid: int,
         db: AsyncSession
 ):
-    entity = await template_test_data_repository.find_by_id(db, test_table_uid)
+    entity = await template_test_data_repository.find_from_template_test_data_by_not_deleted_and_uid(db, test_table_uid)
 
     if entity is None:
         return Response(
@@ -639,7 +643,6 @@ async def get_row_by_native_query_sample(
             entity.row_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
             f"_{entity.row_update_date.microsecond // 1000:03d}"
             f"_{entity.row_update_date.tzname()}",
-            delete_date=entity.row_delete_date_str,
             content=entity.content,
             random_num=entity.random_num,
             test_datetime=
@@ -1007,5 +1010,38 @@ async def get_fk_test_table_rows_by_native_query_sample(
         status_code=200,
         content=model.GetFkTestTableRowsByNativeQuerySampleDot1OutputVo(
             child_entity_vo_list=child_entity_vo_list
+        ).model_dump()
+    )
+
+
+# ----
+# (Native Query 반환값 테스트)
+@sql_alchemy_transactional()
+async def get_native_query_return_value_test(
+        request: Request,
+        response: Response,
+        input_val: bool,
+        db: AsyncSession
+):
+    just_boolean_entity_list = await template_just_boolean_test_repository.find_all(db)
+    if len(just_boolean_entity_list) == 0:
+        await template_just_boolean_test_repository.save(
+            db,
+            Db1TemplateJustBooleanTest(
+                bool_value=True
+            )
+        )
+        await db.commit()
+
+    result_entity = await template_just_boolean_test_repository.multi_case_boolean_return_test(db, input_val)
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetNativeQueryReturnValueTestOutputVo(
+            normalBoolValue=result_entity.normal_bool_value == 1,
+            funcBoolValue=result_entity.func_bool_value == 1,
+            ifBoolValue=result_entity.if_bool_value == 1,
+            caseBoolValue=result_entity.case_bool_value == 1,
+            tableColumnBoolValue=result_entity.table_column_bool_value
         ).model_dump()
     )

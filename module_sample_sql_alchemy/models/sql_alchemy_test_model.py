@@ -54,14 +54,6 @@ class PostInsertDataSampleOutputVo(BaseModel):
             examples=["2024_05_02_T_15_14_49_552_KST"]
         )
     )
-    delete_date: str = (
-        Field(
-            ...,
-            alias="deleteDate",
-            description="글 삭제일(yyyy_MM_dd_'T'_HH_mm_ss_SSS_z, Null 이면 /)",
-            examples=["/"]
-        )
-    )
     content: str = (
         Field(
             ...,
@@ -1213,5 +1205,53 @@ class GetFkTestTableRowsByNativeQuerySampleDot1OutputVo(BaseModel):
             ...,
             alias="childEntityVoList",
             description="자식 아이템 리스트"
+        )
+    )
+
+
+# ----
+# (Native Query 반환값 테스트)
+class GetNativeQueryReturnValueTestOutputVo(BaseModel):
+    class Config:
+        validate_by_name = True
+
+    normalBoolValue: bool = (
+        Field(
+            ...,
+            alias="normalBoolValue",
+            description="Select 문에서 직접적으로 true 를 반환한 예시",
+            examples=[True]
+        )
+    )
+    funcBoolValue: bool = (
+        Field(
+            ...,
+            alias="funcBoolValue",
+            description="Select 문에서 (1=1) 과 같이 비교한 결과를 반환한 예시",
+            examples=[True]
+        )
+    )
+    ifBoolValue: bool = (
+        Field(
+            ...,
+            alias="ifBoolValue",
+            description="Select 문에서 if 문의 결과를 반환한 예시",
+            examples=[True]
+        )
+    )
+    caseBoolValue: bool = (
+        Field(
+            ...,
+            alias="caseBoolValue",
+            description="Select 문에서 case 문의 결과를 반환한 예시",
+            examples=[True]
+        )
+    )
+    tableColumnBoolValue: bool = (
+        Field(
+            ...,
+            alias="tableColumnBoolValue",
+            description="Select 문에서 테이블의 Boolean 컬럼의 결과를 반환한 예시",
+            examples=[True]
         )
     )

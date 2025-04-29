@@ -427,5 +427,18 @@ async def find_from_template_test_data_by_not_deleted_and_uid(
             test_data.uid = :testTableUid
     """)
     result = await db.execute(query, {"testTableUid": pk})
-    entity = result.scalar_one_or_none()
+    row = result.mappings().one_or_none()
+
+    if row is None:
+        return None
+
+    # 수동 매핑
+    entity = Db1TemplateTestData(
+        uid=row["uid"],
+        content=row["content"],
+        random_num=row["randomNum"],
+        test_datetime=row["testDatetime"],
+        row_create_date=row["rowCreateDate"],
+        row_update_date=row["rowUpdateDate"]
+    )
     return entity

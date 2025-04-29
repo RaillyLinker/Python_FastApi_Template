@@ -775,3 +775,33 @@ async def get_fk_test_table_rows_by_native_query_sample(
         request,
         response
     )
+
+
+# ----
+@router.get(
+    "/native-query-return",
+    response_model=model.GetNativeQueryReturnValueTestOutputVo,
+    summary="Native Query 반환값 테스트",
+    description="Native Query Select 문에서 IF, CASE 등의 문구에서 반환되는 값들을 받는 예시",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_native_query_return_value_test(
+        request: Request,
+        response: Response,
+        input_val: bool =
+        Query(
+            ...,
+            alias="inputVal",
+            description="Native Query 비교문에 사용되는 파라미터",
+            example=True
+        )
+):
+    return await service.get_native_query_return_value_test(
+        request,
+        response,
+        input_val
+    )
