@@ -1125,3 +1125,27 @@ async def delete_fk_child_row_sample(
     return Response(
         status_code=200
     )
+
+
+# ----
+# (외래키 부모 테이블 Row 삭제 테스트 (Cascade 기능 확인))
+@sql_alchemy_transactional()
+async def delete_fk_parent_row_sample(
+        request: Request,
+        response: Response,
+        index: int,
+        db: AsyncSession
+):
+    entity = await template_fk_test_parent_repository.find_by_id(db, index)
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    await template_fk_test_parent_repository.delete_by_id(db, index)
+
+    return Response(
+        status_code=200
+    )

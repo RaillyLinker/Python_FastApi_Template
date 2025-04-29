@@ -870,3 +870,46 @@ async def delete_fk_child_row_sample(
         response,
         index
     )
+
+
+# ----
+@router.delete(
+    "/fk-parent/{index}",
+    summary="외래키 부모 테이블 Row 삭제 테스트 (Cascade 기능 확인)",
+    description="외래키 부모 테이블의 Row 하나를 삭제합니다.<br>"
+                "Cascade 설정을 했으므로 부모 테이블이 삭제되면 해당 부모 테이블을 참조중인 다른 모든 자식 테이블들이 삭제되어야 합니다.",
+    responses={
+        200: {
+            "description": "OK",
+            "content": {"*/*": {}}
+        },
+        204: {
+            "description": "Response Body 가 없습니다.<br>Response Headers 를 확인하세요.",
+            "headers": {
+                "api-result-code": {
+                    "description": "(Response Code 반환 원인) - Required<br>"
+                                   "1 : index 에 해당하는 데이터가 데이터베이스에 존재하지 않습니다.",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    response_class=Response
+)
+async def delete_fk_parent_row_sample(
+        request: Request,
+        response: Response,
+        index: int = Path(
+            ...,
+            alias="index",
+            description="글 인덱스",
+            example=1
+        )
+):
+    return await service.delete_fk_parent_row_sample(
+        request,
+        response,
+        index
+    )
