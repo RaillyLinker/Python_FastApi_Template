@@ -1101,3 +1101,27 @@ async def select_fk_table_rows_with_latest_child_sample(
             parent_entity_vo_list=parent_entity_vo_list
         ).model_dump()
     )
+
+
+# ----
+# (외래키 자식 테이블 Row 삭제 테스트)
+@sql_alchemy_transactional()
+async def delete_fk_child_row_sample(
+        request: Request,
+        response: Response,
+        index: int,
+        db: AsyncSession
+):
+    entity = await template_fk_test_many_to_one_child_repository.find_by_id(db, index)
+
+    if entity is None:
+        return Response(
+            status_code=204,
+            headers={"api-result-code": "1"}
+        )
+
+    await template_fk_test_many_to_one_child_repository.delete_by_id(db, index)
+
+    return Response(
+        status_code=200
+    )
