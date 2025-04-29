@@ -38,3 +38,9 @@
   - 모듈 템플릿 (8080)
   - API 테스트 샘플 (12006)
   - SqlAlchemy 테스트 샘플 (12007)
+
+- todo :
+  - jpa 샘플 매핑 api 추가
+  - jpa, redis, kafka, just_security, retrofit2
+  - 비동기 외부 API 호출
+  - 비동기 redis, 비동기 kafka
