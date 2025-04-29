@@ -1,16 +1,14 @@
-from sqlalchemy import select, DateTime, and_, text
-from sqlalchemy.engine import Row
+from typing import Sequence, Optional
+import tzlocal
+from sqlalchemy import select, DateTime, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
-import tzlocal
-from sqlalchemy import Boolean
-from typing import List, Sequence, Optional
-from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_func
-from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
-from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_just_boolean_test import \
-    Db1TemplateJustBooleanTest
 import \
     module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_just_boolean_test_vo as value_objects
+from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
+from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_func
+from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_just_boolean_test import \
+    Db1TemplateJustBooleanTest
 
 
 # [SqlAlchemy 레포지토리]
