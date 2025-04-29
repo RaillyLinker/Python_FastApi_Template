@@ -916,7 +916,7 @@ async def post_fk_child_row_sample(
 
 # ----
 # (외래키 관련 테이블 Rows 조회 테스트)
-@sql_alchemy_transactional()
+@sql_alchemy_transactional(view_only=True)
 async def select_fk_test_table_rows_sample(
         request: Request,
         response: Response,
@@ -968,5 +968,44 @@ async def select_fk_test_table_rows_sample(
         status_code=200,
         content=model.GetFkTestTableRowsSampleOutputVo(
             parent_entity_vo_list=parent_entity_vo_list
+        ).model_dump()
+    )
+
+
+# ----
+# (외래키 관련 테이블 Rows 조회 테스트(Native Join))
+@sql_alchemy_transactional(view_only=True)
+async def get_fk_test_table_rows_by_native_query_sample(
+        request: Request,
+        response: Response,
+        db: AsyncSession
+):
+    child_entity_vo_list: List[model.GetFkTestTableRowsByNativeQuerySampleDot1OutputVo.ChildEntityVo] = []
+
+    entity_list = await template_fk_test_many_to_one_child_repository.find_all_from_template_fk_test_many_to_one_child_inner_join_parent_by_not_deleted(
+        db)
+
+    for entity in entity_list:
+        child_entity_vo_list.append(
+            model.GetFkTestTableRowsByNativeQuerySampleDot1OutputVo.ChildEntityVo(
+                uid=entity.child_uid,
+                create_date=
+                entity.child_create_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                f"_{entity.child_create_date.microsecond // 1000:03d}"
+                f"_{entity.child_create_date.tzname()}",
+                update_date=
+                entity.child_update_date.strftime('%Y_%m_%d_T_%H_%M_%S') +
+                f"_{entity.child_update_date.microsecond // 1000:03d}"
+                f"_{entity.child_update_date.tzname()}",
+                child_name=entity.child_name,
+                parent_uid=entity.parent_uid,
+                parent_name=entity.parent_name
+            )
+        )
+
+    return JSONResponse(
+        status_code=200,
+        content=model.GetFkTestTableRowsByNativeQuerySampleDot1OutputVo(
+            child_entity_vo_list=child_entity_vo_list
         ).model_dump()
     )

@@ -1,12 +1,14 @@
-from sqlalchemy import select, DateTime, and_
+from sqlalchemy import select, DateTime, and_, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect
 import tzlocal
-from typing import Sequence, Optional
+from typing import List, Sequence, Optional
 from module_sample_sql_alchemy.decorators.sql_alchemy_deco import sql_alchemy_func
 from module_sample_sql_alchemy.configurations.sql_alchemy.db1_main_config import db_timezone
 from module_sample_sql_alchemy.sql_alchemy_objects.db1_main.entities.template_fk_test_many_to_one_child import \
     Db1TemplateFkTestManyToOneChild
+import \
+    module_sample_sql_alchemy.sql_alchemy_objects.db1_main.value_objects.template_fk_test_many_to_one_child_vo as value_objects
 
 
 # [SqlAlchemy 레포지토리]
@@ -98,3 +100,44 @@ async def find_all_by_fk_test_parent_uid_and_row_delete_date_str(
     result = await db.execute(stmt)
     entity_list = result.scalars().all()
     return entity_list
+
+
+@sql_alchemy_func
+async def find_all_from_template_fk_test_many_to_one_child_inner_join_parent_by_not_deleted(
+        db: AsyncSession
+) -> List[value_objects.FindAllFromTemplateFkTestManyToOneChildInnerJoinParentByNotDeletedOutputVo]:
+    query = text("""
+            SELECT 
+            fk_test_many_to_one_child.uid AS childUid, 
+            fk_test_many_to_one_child.child_name AS childName, 
+            fk_test_many_to_one_child.row_create_date AS childCreateDate, 
+            fk_test_many_to_one_child.row_update_date AS childUpdateDate, 
+            fk_test_parent.uid AS parentUid, 
+            fk_test_parent.parent_name AS parentName 
+            FROM 
+            template.fk_test_many_to_one_child AS fk_test_many_to_one_child 
+            INNER JOIN 
+            template.fk_test_parent AS fk_test_parent 
+            ON 
+            fk_test_parent.uid = fk_test_many_to_one_child.fk_test_parent_uid AND 
+            fk_test_parent.row_delete_date_str = '/' 
+            WHERE 
+            fk_test_many_to_one_child.row_delete_date_str = '/' 
+    """)
+
+    result = await db.execute(query, {})
+    rows = result.mappings().all()  # key-value dict로 가져옴
+
+    output = [
+        value_objects.FindAllFromTemplateFkTestManyToOneChildInnerJoinParentByNotDeletedOutputVo(
+            child_uid=row["childUid"],
+            child_name=row["childName"],
+            child_create_date=row["childCreateDate"],
+            child_update_date=row["childUpdateDate"],
+            parent_uid=row["parentUid"],
+            parent_name=row["parentName"]
+        )
+        for row in rows
+    ]
+
+    return output

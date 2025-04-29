@@ -753,3 +753,25 @@ async def select_fk_test_table_rows_sample(
         request,
         response
     )
+
+
+# ----
+@router.get(
+    "/fk-table-native-join",
+    response_model=model.GetFkTestTableRowsByNativeQuerySampleDot1OutputVo,
+    summary="외래키 관련 테이블 Rows 조회 테스트(Native Join)",
+    description="외래키 관련 테이블의 모든 Rows 를 Native Query 로 Join 하여 반환합니다.",
+    responses={
+        200: {
+            "description": "OK"
+        }
+    }
+)
+async def get_fk_test_table_rows_by_native_query_sample(
+        request: Request,
+        response: Response
+):
+    return await service.get_fk_test_table_rows_by_native_query_sample(
+        request,
+        response
+    )
